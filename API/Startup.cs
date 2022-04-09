@@ -1,7 +1,7 @@
 using Business.Abstract;
 using Business.Concretes;
 using Domain.Entities;
-using EntityFramework;
+using EntityFramework.Context;
 using EntityFramework.Repository.Abstracts;
 using EntityFramework.Repository.Concretes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

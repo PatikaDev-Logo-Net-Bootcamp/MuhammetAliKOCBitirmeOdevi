@@ -1,4 +1,5 @@
-﻿using EntityFramework.Repository.Abstracts;
+﻿using EntityFramework.Context;
+using EntityFramework.Repository.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

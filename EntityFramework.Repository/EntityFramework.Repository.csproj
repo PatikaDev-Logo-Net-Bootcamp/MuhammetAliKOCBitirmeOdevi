@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EntityFramework\EntityFramework.csproj" />
+    <ProjectReference Include="..\EntityFramework\EntityFramework.Context.csproj" />
   </ItemGroup>
 
 </Project>
