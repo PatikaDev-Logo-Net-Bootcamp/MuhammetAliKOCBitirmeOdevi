@@ -27,7 +27,7 @@ namespace API.Controllers
         public async Task<IActionResult> Authenticate(AuthenticateModel model)
         {
             var token = await jwtService.Authenticate(
-                new UserDTO
+                new LoginDTO
                 {
                     Email = model.Email,
                     Password = model.Password

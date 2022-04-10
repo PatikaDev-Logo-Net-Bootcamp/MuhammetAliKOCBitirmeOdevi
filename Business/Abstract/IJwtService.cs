@@ -9,6 +9,6 @@ namespace Business.Abstract
 {
     public interface IJwtService
     {
-        Task<TokenDTO> Authenticate(UserDTO user);
+        Task<TokenDTO> Authenticate(LoginDTO user);
     }
 }

@@ -24,7 +24,7 @@ namespace Business.Concretes
             this._configuration = configuration;
             this._userManager = userManager;
         }
-        public async Task<TokenDTO> Authenticate(UserDTO user)
+        public async Task<TokenDTO> Authenticate(LoginDTO user)
         {
             var entityUser = await _userManager.FindByEmailAsync(user.Email);
             if (entityUser == null)
