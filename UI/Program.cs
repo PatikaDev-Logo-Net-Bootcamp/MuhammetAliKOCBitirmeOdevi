@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API
+namespace UI
 {
     public class Program
     {
@@ -38,8 +38,7 @@ namespace API
             }
             host.Run();
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

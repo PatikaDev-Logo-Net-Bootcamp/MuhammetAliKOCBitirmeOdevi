@@ -18,36 +18,84 @@ namespace EntityFramework.Context
             await roleManager.CreateAsync(new IdentityRole(Roles.Manager.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
         }
-        public static async Task SeedSuperAdminAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedUserAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            User user1 = new User()
+            List<User> users = new List<User>();
+
+            User superadmin = new User()
             {
                 Id = Guid.NewGuid().ToString(),
-                FirstName = "Muhammet Ali",
-                LastName = "KOÇ",
-                UserName = "MuhammetAliKOC",
-                Email = "malikoc2020@gmail.com",
-                PhoneNumber = "0553 011 80 17",
+                FirstName = "superadmin",
+                LastName = "",
+                UserName = "SuperAdmin",
+                Email = "superadmin@superadmin.com",
+                PhoneNumber = "",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true
                 //Password = "hKaoJdFbclk=",/*123456*/
-
             };
+            users.Add(superadmin);
+
+            User admin = new User()
+            {
+                Id = Guid.NewGuid().ToString(),
+                FirstName = "admin",
+                LastName = "",
+                UserName = "Admin",
+                Email = "admin@admin.com",
+                PhoneNumber = "",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true
+                //Password = "hKaoJdFbclk=",/*123456*/
+            };
+            users.Add(admin);
+
+            User manager = new User()
+            {
+                Id = Guid.NewGuid().ToString(),
+                FirstName = "manager",
+                LastName = "",
+                UserName = "Manager",
+                Email = "manager@manager.com",
+                PhoneNumber = "",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true
+                //Password = "hKaoJdFbclk=",/*123456*/
+            };
+            users.Add(manager);
+
+            User user = new User()
+            {
+                Id = Guid.NewGuid().ToString(),
+                FirstName = "user",
+                LastName = "",
+                UserName = "User",
+                Email = "user@user.com",
+                PhoneNumber = "",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true
+                //Password = "hKaoJdFbclk=",/*123456*/
+            };
+            users.Add(user);
+
+            foreach (var usr in users)
+            {
+                var userEntity = await userManager.FindByEmailAsync(usr.Email);
+                    if (userEntity == null)
+                    {
+                       var result = await userManager.CreateAsync(usr, "Sifre%5");
+                           if (result.Succeeded)
+                           {
+                               await userManager.AddToRoleAsync(usr, usr.UserName);
+                               /*await userManager.AddToRoleAsync(usr, Roles.Manager.ToString());
+                               await userManager.AddToRoleAsync(usr, Roles.Admin.ToString());
+                               await userManager.AddToRoleAsync(usr, Roles.SuperAdmin.ToString());*/
+                           }
+
+                    }
+            }
 
 
-                var user = await userManager.FindByEmailAsync(user1.Email);
-                if (user == null)
-                {
-                   var result = await userManager.CreateAsync(user1, "Sifre%5");
-                       if (result.Succeeded)
-                       {
-                           await userManager.AddToRoleAsync(user1, Roles.User.ToString());
-                           await userManager.AddToRoleAsync(user1, Roles.Manager.ToString());
-                           await userManager.AddToRoleAsync(user1, Roles.Admin.ToString());
-                           await userManager.AddToRoleAsync(user1, Roles.SuperAdmin.ToString());
-                       }
-
-                }
          
         }
     }

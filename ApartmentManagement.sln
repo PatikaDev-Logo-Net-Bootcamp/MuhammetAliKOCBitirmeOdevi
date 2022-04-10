@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{402357F9-F24D-498E-9ECD-7E50CCB49CC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{402357F9-F24D-498E-9ECD-7E50CCB49CC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.Context", "EntityFramework\EntityFramework.Context.csproj", "{463788F4-BEA3-4DF8-8A02-14CB92C82AAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.Context", "EntityFramework\EntityFramework.Context.csproj", "{463788F4-BEA3-4DF8-8A02-14CB92C82AAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.Repository", "EntityFramework.Repository\EntityFramework.Repository.csproj", "{D36176A5-7A27-4FD9-8AA0-976BFAF9694F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.Repository", "EntityFramework.Repository\EntityFramework.Repository.csproj", "{D36176A5-7A27-4FD9-8AA0-976BFAF9694F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{77217377-ED95-4438-9B08-8D6D9D620339}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Business.csproj", "{77217377-ED95-4438-9B08-8D6D9D620339}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{31169C9D-D9D3-435C-82C8-8B623C012BFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{31169C9D-D9D3-435C-82C8-8B623C012BFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{47FA8944-F88F-4944-A0A7-B123E1D62C2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{31169C9D-D9D3-435C-82C8-8B623C012BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31169C9D-D9D3-435C-82C8-8B623C012BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31169C9D-D9D3-435C-82C8-8B623C012BFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47FA8944-F88F-4944-A0A7-B123E1D62C2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47FA8944-F88F-4944-A0A7-B123E1D62C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47FA8944-F88F-4944-A0A7-B123E1D62C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47FA8944-F88F-4944-A0A7-B123E1D62C2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
