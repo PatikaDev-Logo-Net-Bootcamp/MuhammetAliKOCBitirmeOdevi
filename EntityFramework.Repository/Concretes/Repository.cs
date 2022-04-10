@@ -1,4 +1,5 @@
-﻿using EntityFramework.Repository.Abstracts;
+﻿using Domain.Base;
+using EntityFramework.Repository.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EntityFramework.Repository.Concretes
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         public readonly IUnitOfWork unitOfWork;
         public Repository(IUnitOfWork unitOfWork)
@@ -19,6 +20,11 @@ namespace EntityFramework.Repository.Concretes
         public IQueryable<T> GetAll()
         {
             return unitOfWork.Context.Set<T>().AsQueryable();
+        }
+
+        public T GetById(int Id)
+        {
+            return GetAll().Where(x => x.Id == Id).FirstOrDefault();
         }
 
         public void Add(T entity)

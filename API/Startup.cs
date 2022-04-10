@@ -66,7 +66,7 @@ namespace API
                 {
                     Description = @"JWT Authorization header using the Bearer scheme.
                                     Enter 'Bearer' [space] and then your token in the text input below.
-                                    Example: 'Bearer 12345abcdef'",
+                                    Example: 'Bearer aüeaütaeüam436o4m5l764m765ml3lm4mkaðým3...'",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
