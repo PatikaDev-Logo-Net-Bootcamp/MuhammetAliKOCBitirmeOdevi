@@ -11,6 +11,7 @@ namespace Business.DTO
     {
         [Display(Name = "Email")]
         [Required(ErrorMessage = "Email alanı zorunludur.")]
+        [EmailAddress(ErrorMessage ="Lütfen geçerli bir Email adresi giriniz.")]
         public string Email { get; set; }
         [Display(Name = "Şifre")]
         [Required(ErrorMessage = "Şifre alanı zorunludur.")]
