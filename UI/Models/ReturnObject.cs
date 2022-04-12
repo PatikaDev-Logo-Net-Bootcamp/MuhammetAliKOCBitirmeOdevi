@@ -4,12 +4,12 @@
     {
         public ReturnObject()
         {
-            IsSuccess = true;
-            ErrorMessage = "";
+            isSuccess = true;
+            errorMessage = "";
         }
-        public bool IsSuccess { get; set; }
-        public string SuccessMessage { get; set; }
-        public string ErrorMessage { get; set; }
+        public bool isSuccess { get; set; }
+        public string successMessage { get; set; }
+        public string errorMessage { get; set; }
         public object data { get; set; }
     }
 }

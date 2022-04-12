@@ -8,6 +8,16 @@
     <link rel="stylesheet" type="text/css" href="~/lib/DataTable/datatables.min.css" />
 </head>
 
+<div class="row" style="margin-top:50px; margin-bottom:50px;">
+    <div class="col-md-10">
+        <p id="pPageMesaj"></p>
+    </div>
+    <div class="col-md-2">
+        <button type="button" class="btn btn-info btnAdd">Yeni Kullanıcı</button>
+    </div>
+</div>
+
+
 
 <table id="UserListTable" class="table table-hover">
     <thead>
@@ -32,8 +42,8 @@
                 <td>@user.Email</td>
                 <td>@user.PhoneNumber</td>
                 <td>
-                    <button type="button" class="btn btn-primary btnGuncelle" data-userid="@user.Id">Güncelle</button>
-                    <button type="button" class="btn btn-danger btnSil" data-userid="@user.Id">Sil</button>
+                    <button type="button" class="btn btn-primary btnUpdate" data-userid="@user.Id">Güncelle</button>
+                    <button type="button" class="btn btn-danger btnDelete" data-userid="@user.Id">Sil</button>
                 </td>
             </tr>
 
@@ -41,64 +51,126 @@
     </tbody>
 </table>
 
-
-
-<!-- Modal -->
-<div class="modal fade" id="modalAddorUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- Modal Add -->
+<div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Yeni kullanıcı</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="UserForm">
-                        @*asp-controller="User" asp-action="Login" method="post"*@
-                        @Html.AntiForgeryToken()
-                        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
-                        
-                        <input name="Id" id="Id" type="hidden" value="">
-
-                        <div class="form-group">
-                            <label>Ad</label>
-                            <input name="FirstName" id="FirstName" type="text" class="form-control" placeholder="Kullanıcı Ad">
-                            @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
-                        </div>
-                        <div class="form-group">
-                            <label>Soyad</label>
-                            <input name="LastName" id="LastName" type="text" class="form-control" placeholder="Kullanıcı Soyadı">
-                            @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
-                        </div>
-                        <div class="form-group">
-                            <label>Kullanıcı Adı</label>
-                            <input name="UserName" id="UserName" type="text" class="form-control" placeholder="Kullanıcıadı">
-                            @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
-                        </div>
-                        <div class="form-group">
-                            <label>EPosta</label>
-                            <input name="Email" id="Email" type="text" class="form-control" placeholder="Kullanıcı Eposta">
-                            @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
-                        </div>
-                        <div class="form-group">
-                            <label>Telefon Numarası</label>
-                            <input name="PhoneNumber" id="PhoneNumber" type="text" class="form-control" placeholder="Kullanıcı Telefon">
-                            @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
-                        </div>
-
-                        @*<div class="form-group">
-                            <label>Şifre</label>
-                            <input name="Password" id="Password" type="password" class="form-control" placeholder="Kullanıcı Şifresi">
-                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                            </div>*@
 
 
-                    </form>
+                <form id="UserAddForm">
+                    @*asp-controller="User" asp-action="Login" method="post"*@
+                    @Html.AntiForgeryToken()
+                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+
+                    <input name="Id" id="IdForAdd" type="hidden" value="">
+
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input name="FirstName" id="FirstNameForAdd" type="text" class="form-control" placeholder="Kullanıcı Ad">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input name="LastName" id="LastNameForAdd" type="text" class="form-control" placeholder="Kullanıcı Soyadı">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="form-group">
+                        <label>Kullanıcı Adı</label>
+                        <input name="UserName" id="UserNameForAdd" type="text" class="form-control" placeholder="Kullanıcıadı">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="form-group">
+                        <label>EPosta</label>
+                        <input name="Email" id="EmailForAdd" type="text" class="form-control" placeholder="Kullanıcı Eposta">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon Numarası</label>
+                        <input name="PhoneNumber" id="PhoneNumberForAdd" type="text" class="form-control" placeholder="Kullanıcı Telefon">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+
+                    <div id="divPassword" class="form-group">
+                        <label>Şifre</label>
+
+                        <input name="Password" id="PasswordForAdd" type="text" class="form-control" placeholder="Kullanıcı Şifresi" value="Sifre%5">
+                    
+
+
+                        @*@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })*@
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
-                <button type="button" class="btn btn-primary" id="btnSubmit">Güncelle</button>
+                <button type="button" class="btn btn-info" id="btnAddSubmit">Ekle</button>
+
+                <p id="pAddMesajiModal"></p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Update -->
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Kullanıcı Güncelle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form id="UserUpdateForm">
+                    @*asp-controller="User" asp-action="Login" method="post"*@
+                    @Html.AntiForgeryToken()
+                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+
+                    <input name="Id" id="Id" type="hidden" value="">
+
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input name="FirstName" id="FirstNameForUpdate" type="text" class="form-control" placeholder="Kullanıcı Ad">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input name="LastName" id="LastNameForUpdate" type="text" class="form-control" placeholder="Kullanıcı Soyadı">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="form-group">
+                        <label>Kullanıcı Adı</label>
+                        <input name="UserName" id="UserNameForUpdate" type="text" class="form-control" placeholder="Kullanıcıadı">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="form-group">
+                        <label>EPosta</label>
+                        <input name="Email" id="EmailForUpdate" type="text" class="form-control" placeholder="Kullanıcı Eposta">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon Numarası</label>
+                        <input name="PhoneNumber" id="PhoneNumberForUpdate" type="text" class="form-control" placeholder="Kullanıcı Telefon">
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateSubmit">Güncelle</button>
+
+                <p id="pUpdateMesajiModal"></p>
+
             </div>
         </div>
     </div>
@@ -109,116 +181,172 @@
 <script src="~/lib/DataTable/datatables.min.js"></script>
 
 <script type="text/javascript">
-        $(document).ready( function () {
+    $(document).ready( function () {
 
-            //Data Table initilation
-            $('#UserListTable').DataTable({
-                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tümü"]],
-                  //"language": {"url": "/lib/DataTable/Turkish.json"}
-                  "language": {"url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Turkish.json"}
-               });
+        //Data Table initilation
+        $('#UserListTable').DataTable({
+             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tümü"]],
+              //"language": {"url": "/lib/DataTable/Turkish.json"}
+              "language": {"url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Turkish.json"}
+           });
 
 
-            $( ".btnGuncelle").on( "click", function() {
-                 let userid = $(this).data("userid");
-                 console.log('btnGuncelle clicked with data='+userid);
-                 getUser(userid);
-            });
+        $( ".btnAdd").on( "click", function() {
+             modalEmpty();
+              $('#modalAdd').modal();
+        });
 
-           $( "#btnSubmit").on( "click", function() {
-                 getUser(userid);
-            });
+        $( ".btnUpdate").on( "click", function() {
+             let userid = $(this).data("userid");
+             getUserForUpdate(userid);
+        });
+
+        $( ".btnDelete").on( "click", function() {
+
+            if (confirm('Kullanici Silmek İstediğinizden Emin Misiniz?')) {
+               let userid = $(this).data("userid");
+               deleteUser($(this),userid);
+            }
+        });
+
+        $( "#btnAddSubmit").on( "click", function() {
+             addUser();
         });
 
 
+       $( "#btnUpdateSubmit").on( "click", function() {
+             updateUser();
+        });
+    });
+            function modalEmpty(){
+                $("#IdForAdd").val();
+                $("#FirstNameForAdd").val();
+                $("#LastNameForAdd").val();
+                $("#UserNameForAdd").val();
+                $("#EmailForAdd").val();
+                $("#PhoneNumberForAdd").val();
+                $("#PasswordForAdd").val("Sirfe%5");
 
-                function getUser(userid) {
-                        $.ajax({
-                                type: 'POST',
-                                url: '/User/Get',
-                                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                                data: { UserId: userid },
-                                success: function (result) {
+            }
 
-                                    console.log(result);
-                                    if(result.isSuccess){
-                                        $("#Id").val(result.data.id);
-                                        $("#FirstName").val(result.data.firstName);
-                                        $("#LastName").val(result.data.lastName);
-                                        $("#UserName").val(result.data.userName);
-                                        $("#Email").val(result.data.email);
-                                        $("#PhoneNumber").val(result.data.phoneNumber);
 
-                                        $('#modalAddorUpdate').modal();
+            function getUserForUpdate(userid) {
+                    $.ajax({
+                            type: 'POST',
+                            url: '/User/Get',
+                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            data: { UserId: userid },
+                            success: function (result) {
+
+                                //console.log(result);
+                                if(result.isSuccess){
+                                    $("#IdForUpdate").val(result.data.id);
+                                    $("#FirstNameForUpdate").val(result.data.firstName);
+                                    $("#LastNameForUpdate").val(result.data.lastName);
+                                    $("#UserNameForUpdate").val(result.data.userName);
+                                    $("#EmailForUpdate").val(result.data.email);
+                                    $("#PhoneNumberForUpdate").val(result.data.phoneNumber);
+
+                                    $('#modalUpdate').modal();
+                                }else{
+
+                                     $("#pUpdateMesajiModal").val(result.errorMessage);
+                                     $("#pUpdateMesajiModal").css("color", "red");
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                 alert(xhr.status );
+                                 alert(thrownError);
+                                 $("#pUpdateMesajiModal").val("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                 $("#pUpdateMesajiModal").css("color", "red");
+                            }
+                        })
+            }
+
+            function addUser() {
+                    $("#pAddMesajiModal").val("");
+                    var data = $("#UserAddForm").serialize();
+                    console.log(data);
+                    $.ajax({
+                            type: 'POST',
+                            url: '/User/Add',
+                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            data: data,
+                            success: function (result) {
+                                     if(result.isSuccess)
+                                    {
+                                          $("#pAddMesajiModal").val(result.successMessage);
+                                          $("#pAddMesajiModal").css("color", "green");
+                                          setTimeout(function(){ $('#modalAdd').modal('hide')}, second);
                                     }else{
-                                        alert(result.errorMessage);
-                                    }                        
-                                },
-                                error: function () {
-                                         alert("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                         $("#pAddMesajiModal").val(result.errorMessage);
+                                         $("#pAddMesajiModal").css("color", "red");
+                                    }
+                            },
+                            //error: function () {
+                            //        $("#pAddMesajiModal").val("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                            //        $("#pAddMesajiModal").css("color", "red");
+                            //}
+                             error: function (xhr, ajaxOptions, thrownError) {
+                                 alert(xhr.status );
+                                 alert(thrownError);
+                                 $("#pAddMesajiModal").val("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                 $("#pAddMesajiModal").css("color", "red");
+                            }
+                        })
+            }
+
+            function updateUser() {
+                    $("#pUpdateMesajiModal").val("");
+                    var data = $("#UserUpdateForm").serialize();
+                    $.ajax({
+                            type: 'POST',
+                            url: '/User/Update',
+                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            data: data,
+                            success: function (result) {
+                                    if(result.isSuccess)
+                                    {
+                                          $("#pUpdateMesajiModal").val(result.successMessage);
+                                          $("#pUpdateMesajiModal").css("color", "green");
+                                          setTimeout(function(){ $('#modalUpdate').modal('hide')}, second);
+                                    }else{
+                                         $("#pUpdateMesajiModal").val(result.errorMessage);
+                                         $("#pUpdateMesajiModal").css("color", "red");
+                                    }
+                            },
+                            error: function () {
+                                   $("#pUpdateMesajiModal").val("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                   $("#pUpdateMesajiModal").css("color", "red");
+                            }
+                        })
+            }
+
+            function deleteUser(deleteButton, userid) {
+                    $("#pDeleteMesaji").val("");
+                    $.ajax({
+                            type: 'POST',
+                            url: '/User/Delete',
+                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            data: { UserId: userid },
+                            success: function (result) {
+                                if(result.isSuccess)
+                                {
+                                    $("#pPageMesaj").val(result.successMessage);
+                                    $("#pPageMesaj").css("color", "green");
+                                    deleteButton.parent().parent().remove();//satırı sil
+                                }else{
+                                    $("#pPageMesaj").val(result.errorMessage);
+                                    $("#pPageMesaj").css("color", "red");
                                 }
-                            })
-                }
+                            },
+                            error: function () {
+                                $("#pPageMesaj").val("Silme işlemi sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                $("#pPageMesaj").css("color", "red");
+                            }
+                        })
+            }
 
-
-
-                function updateUser() {
-                        var data = $("#UserForm").serialize();
-                        $.ajax({
-                                type: 'POST',
-                                url: '/User/Update',
-                                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                                data: data,
-                                success: function (result) {
-                                    console.log('Successfully received Data ');
-                                    console.log(result);                            
-                                },
-                                error: function () {
-                                        console.log('Failed to receive the Data');
-                                        console.log('Failed ');
-                                }
-                            })
-                }
-
-                function deleteUser(userid) {
-                        $.ajax({
-                                type: 'POST',
-                                url: '/User/Delete',
-                                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                                data: { UserId: userid },
-                                success: function (result) {
-                                    console.log('Successfully received Data ');
-                                    console.log(result);                            
-                                },
-                                error: function () {
-                                        console.log('Failed to receive the Data');
-                                        console.log('Failed ');
-                                }
-                            })
-                }
-
-
-
-
-        function submitStudent() {
-    var data = $("#studenteForm").serialize();
-    console.log(data);
-    alert(data);
-    $.ajax({
-        type: 'POST',
-        url: '/User/CreateStudent',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-        data: data,
-        success: function (result) {
-            alert('Successfully received Data ');
-            console.log(result);
-        },
-        error: function () {
-            alert('Failed to receive the Data');
-            console.log('Failed ');
-        }
-    })
-    }
 </script>
 
 }

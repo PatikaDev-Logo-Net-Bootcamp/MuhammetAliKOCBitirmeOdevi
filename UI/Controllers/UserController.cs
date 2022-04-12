@@ -107,8 +107,8 @@ namespace UI.Controllers
 
             if (model == null)
             {
-                res.IsSuccess = false;
-                res.ErrorMessage = "Kullanıcı bulunamadı.";
+                res.isSuccess = false;
+                res.errorMessage = "Kullanıcı bulunamadı.";
             }
             else
             {
@@ -129,26 +129,26 @@ namespace UI.Controllers
                 if (model != null)
                 {
                     await _userManager.DeleteAsync(model);
-                    res.SuccessMessage = "Silme İşlemi Başarıyla Gerçekleştirilmiştir.";
+                    res.successMessage = "Silme İşlemi Başarıyla Gerçekleştirilmiştir.";
                 }
                 else
                 {
-                    res.IsSuccess = false;
-                    res.ErrorMessage = "Kullanıcı bulunamadı.";
+                    res.isSuccess = false;
+                    res.errorMessage = "Kullanıcı bulunamadı.";
                 }
             }
             catch (Exception ex)
             {
                 _logger.Log(LogLevel.Error, ex.Message);
-                res.IsSuccess = false;
-                res.ErrorMessage = "Silme işlemi sırasında HATA ALINMIŞTIR. Lütfen tekrar deneyiniz. Hata almaya devam ederseniz; Lütfen sistem yöneticinizle iletişime geçiniz.";
+                res.isSuccess = false;
+                res.errorMessage = "Silme işlemi sırasında HATA ALINMIŞTIR. Lütfen tekrar deneyiniz. Hata almaya devam ederseniz; Lütfen sistem yöneticinizle iletişime geçiniz.";
             }
 
             return new JsonResult(res);
         }
 
         [HttpPost]
-        public async Task<JsonResult> AddorUpdate(UserDTO user)
+        public async Task<JsonResult> Add([FromBody]UserAddDTO user)
         {
             var res = new ReturnObject();
 
@@ -160,7 +160,7 @@ namespace UI.Controllers
                     {
                         FirstName = user.FirstName,
                         LastName = user.LastName,   
-                        PictureUrl = user.PictureUrl,
+                        PictureUrl = "",
                         Email = user.Email,
                         NormalizedEmail = user.Email.Normalize(),
                         UserName = user.UserName,
@@ -177,40 +177,69 @@ namespace UI.Controllers
                     var createRes = await _userManager.CreateAsync(userEntity,user.Password);
                     if (createRes.Succeeded)
                     {
-                        res.SuccessMessage = $"{userEntity.FirstName} {userEntity.LastName} başarıyla eklenmiştir.";
+                        res.successMessage = $"{userEntity.FirstName} {userEntity.LastName} başarıyla eklenmiştir.";
                     }
                     else
                     {
-                        res.IsSuccess = false;
-                        res.ErrorMessage = "Kullanıcı Oluştururken HATA ALINMIŞTIR.";
+                        res.isSuccess = false;
+                        res.errorMessage = "Kullanıcı Oluştururken HATA ALINMIŞTIR.";
                     }
+                }
+                else//Eklenen kaydın id alanı boş gelmeliydi. Dolu geliyorsa bu güncelleme olmalıydı; ekleme değil.
+                {                     
+                        res.isSuccess = false;
+                        res.errorMessage = "Bu kullanıcı daha önce eklenmiş. Lütfen kullanıcı bilgilerini kontrol ederek işleminizi yeniden deneyiniz.";                   
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex.Message);
+                res.isSuccess = false;
+                res.errorMessage = "İşlem sırasında HATA ALINMIŞTIR. Lütfen tekrar deneyiniz. Hata almaya devam ederseniz; Lütfen sistem yöneticinizle iletişime geçiniz.";
+            }
+
+            return new JsonResult(res);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Update(UserDTO user)
+        {
+            var res = new ReturnObject();
+
+            try
+            {
+                if (string.IsNullOrEmpty(user.Id))//Güncellenen kaydın id alanı boş olamaz!
+                {
+                    res.isSuccess = false;
+                    res.errorMessage = "Kullanıcı kimlik bilgisi bulunamamıştır!";
                 }
                 else//update işlemi
                 {
-                    var userEntity = _userManager.Users.Where(x => x.Id == user.Id).FirstOrDefault();                   
+                    var userEntity = _userManager.Users.Where(x => x.Id == user.Id).FirstOrDefault();
                     if (userEntity != null)
                     {
                         userEntity.FirstName = user.FirstName;
                         userEntity.LastName = user.LastName;
                         userEntity.Email = user.Email;
-                        userEntity.PhoneNumber = user.PhoneNumber;  
+                        userEntity.PhoneNumber = user.PhoneNumber;
                         userEntity.UserName = user.UserName;
                         var updateRes = await _userManager.UpdateAsync(userEntity);
 
                         if (updateRes.Succeeded)
                         {
-                            res.SuccessMessage = $"{userEntity.FirstName} {userEntity.LastName} bilgileri başarıla güncellenmiştir.";
+                            res.successMessage = $"{userEntity.FirstName} {userEntity.LastName} bilgileri başarıla güncellenmiştir.";
                         }
                         else
                         {
-                            res.IsSuccess = false;
-                            res.ErrorMessage = "Kullanıcı Güncellerken HATA ALINMIŞTIR.";
-                        }                        
+                            res.isSuccess = false;
+                            res.errorMessage = "Kullanıcı Güncellerken HATA ALINMIŞTIR.";
+                        }
                     }
                     else
                     {
-                        res.IsSuccess = false;
-                        res.ErrorMessage = "Kullanıcı bulunamadı.";
+                        res.isSuccess = false;
+                        res.errorMessage = "Kullanıcı bulunamadı.";
                     }
                 }
 
@@ -218,8 +247,8 @@ namespace UI.Controllers
             catch (Exception ex)
             {
                 _logger.Log(LogLevel.Error, ex.Message);
-                res.IsSuccess = false;
-                res.ErrorMessage = "İşlem sırasında HATA ALINMIŞTIR. Lütfen tekrar deneyiniz. Hata almaya devam ederseniz; Lütfen sistem yöneticinizle iletişime geçiniz.";
+                res.isSuccess = false;
+                res.errorMessage = "İşlem sırasında HATA ALINMIŞTIR. Lütfen tekrar deneyiniz. Hata almaya devam ederseniz; Lütfen sistem yöneticinizle iletişime geçiniz.";
             }
 
             return new JsonResult(res);
