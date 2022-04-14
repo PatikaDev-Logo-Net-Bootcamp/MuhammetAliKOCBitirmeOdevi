@@ -148,8 +148,10 @@ namespace UI.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Add([FromBody]UserAddDTO user)
+        public async Task<JsonResult> Add(UserAddDTO user)
         {
+
+            
             var res = new ReturnObject();
 
             try
@@ -254,15 +256,7 @@ namespace UI.Controllers
             return new JsonResult(res);
         }
 
-        [HttpPost]
-        public IActionResult Add()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Update()
-        {
-            return View();
-        }
+ 
+ 
     }
 }

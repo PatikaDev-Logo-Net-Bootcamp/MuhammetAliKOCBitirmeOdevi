@@ -107,12 +107,16 @@
                         @*@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })*@
                     </div>
                 </form>
+
+                <div style="min-height:40px">
+                     <p id="pAddMesajiModal"></p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
                 <button type="button" class="btn btn-info" id="btnAddSubmit">Ekle</button>
-
-                <p id="pAddMesajiModal"></p>
+         
+         
 
             </div>
         </div>
@@ -136,7 +140,7 @@
                     @Html.AntiForgeryToken()
                     @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
 
-                    <input name="Id" id="Id" type="hidden" value="">
+                    <input name="Id" id="IdForUpdate" type="hidden" value="">
 
                     <div class="form-group">
                         <label>Ad</label>
@@ -164,12 +168,15 @@
                         @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
                     </div>
                 </form>
+                <div style="min-height:40px">
+                     <p id="pUpdateMesajiModal"></p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
                 <button type="button" class="btn btn-primary" id="btnUpdateSubmit">Güncelle</button>
 
-                <p id="pUpdateMesajiModal"></p>
+             
 
             </div>
         </div>
@@ -250,36 +257,39 @@
                                     $('#modalUpdate').modal();
                                 }else{
 
-                                     $("#pUpdateMesajiModal").val(result.errorMessage);
+                                     $("#pUpdateMesajiModal").text(result.errorMessage);
                                      $("#pUpdateMesajiModal").css("color", "red");
                                 }
                             },
                             error: function (xhr, ajaxOptions, thrownError) {
                                  alert(xhr.status );
                                  alert(thrownError);
-                                 $("#pUpdateMesajiModal").val("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                 $("#pUpdateMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
                                  $("#pUpdateMesajiModal").css("color", "red");
                             }
                         })
             }
 
             function addUser() {
-                    $("#pAddMesajiModal").val("");
+                    $("#pAddMesajiModal").text("");
                     var data = $("#UserAddForm").serialize();
                     console.log(data);
                     $.ajax({
                             type: 'POST',
                             url: '/User/Add',
-                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            dataType: 'json',
+                            //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                             data: data,
                             success: function (result) {
                                      if(result.isSuccess)
                                     {
-                                          $("#pAddMesajiModal").val(result.successMessage);
+                                        console.log(result.successMessage);
+                                          $("#pAddMesajiModal").text(result.successMessage);
                                           $("#pAddMesajiModal").css("color", "green");
-                                          setTimeout(function(){ $('#modalAdd').modal('hide')}, second);
+                                          setTimeout(function(){ $('#modalAdd').modal('hide'); $("#pAddMesajiModal").text("");  }, 2500);
                                     }else{
-                                         $("#pAddMesajiModal").val(result.errorMessage);
+                                        console.log(result.errorMessage);
+                                         $("#pAddMesajiModal").text(result.errorMessage);
                                          $("#pAddMesajiModal").css("color", "red");
                                     }
                             },
@@ -290,40 +300,41 @@
                              error: function (xhr, ajaxOptions, thrownError) {
                                  alert(xhr.status );
                                  alert(thrownError);
-                                 $("#pAddMesajiModal").val("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                 $("#pAddMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
                                  $("#pAddMesajiModal").css("color", "red");
                             }
                         })
             }
 
             function updateUser() {
-                    $("#pUpdateMesajiModal").val("");
+                    $("#pUpdateMesajiModal").text("");
                     var data = $("#UserUpdateForm").serialize();
                     $.ajax({
                             type: 'POST',
                             url: '/User/Update',
-                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            dataType: 'json',
+                            //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                             data: data,
                             success: function (result) {
                                     if(result.isSuccess)
                                     {
-                                          $("#pUpdateMesajiModal").val(result.successMessage);
+                                          $("#pUpdateMesajiModal").text(result.successMessage);
                                           $("#pUpdateMesajiModal").css("color", "green");
-                                          setTimeout(function(){ $('#modalUpdate').modal('hide')}, second);
+                                          setTimeout(function(){ $('#modalUpdate').modal('hide'), $("#pUpdateMesajiModal").text("");}, 2500);
                                     }else{
-                                         $("#pUpdateMesajiModal").val(result.errorMessage);
+                                         $("#pUpdateMesajiModal").text(result.errorMessage);
                                          $("#pUpdateMesajiModal").css("color", "red");
                                     }
                             },
                             error: function () {
-                                   $("#pUpdateMesajiModal").val("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                   $("#pUpdateMesajiModal").text("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
                                    $("#pUpdateMesajiModal").css("color", "red");
                             }
                         })
             }
 
             function deleteUser(deleteButton, userid) {
-                    $("#pDeleteMesaji").val("");
+                    $("#pDeleteMesaji").text("");
                     $.ajax({
                             type: 'POST',
                             url: '/User/Delete',
@@ -332,16 +343,16 @@
                             success: function (result) {
                                 if(result.isSuccess)
                                 {
-                                    $("#pPageMesaj").val(result.successMessage);
+                                    $("#pPageMesaj").text(result.successMessage);
                                     $("#pPageMesaj").css("color", "green");
                                     deleteButton.parent().parent().remove();//satırı sil
                                 }else{
-                                    $("#pPageMesaj").val(result.errorMessage);
+                                    $("#pPageMesaj").text(result.errorMessage);
                                     $("#pPageMesaj").css("color", "red");
                                 }
                             },
                             error: function () {
-                                $("#pPageMesaj").val("Silme işlemi sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                $("#pPageMesaj").text("Silme işlemi sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
                                 $("#pPageMesaj").css("color", "red");
                             }
                         })
