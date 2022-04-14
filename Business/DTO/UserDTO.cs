@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,10 @@ namespace Business.DTO
 {
     public class UserDTO
     {
+        public UserDTO()
+        {
+            Roles=new List<RoleDTO>();
+        }
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -27,6 +32,9 @@ namespace Business.DTO
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        public List<RoleDTO> Roles { get; set; }
+
+        //public User UserEntity { get; set; }
 
     }
 }

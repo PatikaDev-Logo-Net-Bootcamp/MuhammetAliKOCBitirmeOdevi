@@ -4,6 +4,7 @@ using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -18,13 +19,15 @@ namespace UI.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        //private readonly RoleManager<User> _roleManager;
 
 
-        public UserController(ILogger<UserController> logger, UserManager<User> userManager, SignInManager<User> signInManager)
+        public UserController(ILogger<UserController> logger, UserManager<User> userManager, SignInManager<User> signInManager/* , RoleManager<User> roleManager*/)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            /*_roleManager = roleManager;*/
         }
 
         [AllowAnonymous]
@@ -56,7 +59,8 @@ namespace UI.Controllers
 
         public IActionResult List()
         {
-            var model = _userManager.Users.Select(x => new UserDTO()
+            var model = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+                .Select(x => new UserDTO()
             {
                 Id = x.Id,
                 UserName = x.UserName,
@@ -75,7 +79,17 @@ namespace UI.Controllers
                 PictureUrl = x.PictureUrl,
                 TwoFactorEnabled = x.TwoFactorEnabled,
                 SecurityStamp = x.SecurityStamp,
+                Roles = x.UserRoles.Select(y => new RoleDTO() {Id = y.RoleId, Name=y.Role.Name }).ToList()
+                //UserEntity = x
+                
             }).ToList();
+
+                //foreach (var usr in model)
+                //{
+                //    usr.Roles = _userManager.GetRolesAsync(usr.UserEntity).Result.ToList();
+                //    usr.UserEntity = null;
+                //}
+
             return View(model);
         }
 
@@ -180,6 +194,7 @@ namespace UI.Controllers
                     if (createRes.Succeeded)
                     {
                         res.successMessage = $"{userEntity.FirstName} {userEntity.LastName} başarıyla eklenmiştir.";
+                        res.data = userEntity.Id;
                     }
                     else
                     {

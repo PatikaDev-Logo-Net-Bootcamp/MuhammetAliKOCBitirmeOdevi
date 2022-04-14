@@ -32,7 +32,7 @@ namespace UI
             services.AddControllersWithViews();
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, Role>()
                .AddEntityFrameworkStores<AppDbContext>()
                //.AddDefaultUI()
                .AddDefaultTokenProviders();

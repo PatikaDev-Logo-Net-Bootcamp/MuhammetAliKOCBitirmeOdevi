@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EntityFramework.Context
 {
-    public class AppDbContext : IdentityDbContext<User>
+    public class AppDbContext : IdentityDbContext<User, Role, string, IdentityUserClaim<string>, UserRole, IdentityUserLogin<string>,
+IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -22,14 +23,14 @@ namespace EntityFramework.Context
             {
                 entity.ToTable("User");
             });
-            builder.Entity<IdentityRole>(entity =>
+            builder.Entity<Role>(entity =>
             {
                 entity.ToTable("Role");
             });
-            builder.Entity<IdentityUserRole<string>>(entity =>
-            {
-                entity.ToTable("UserRoles");
-            });
+            //builder.Entity<IdentityUserRole<string>>(entity =>
+            //{
+            //    entity.ToTable("UserRoles");
+            //});
             builder.Entity<IdentityUserClaim<string>>(entity =>
             {
                 entity.ToTable("UserClaims");
@@ -46,6 +47,22 @@ namespace EntityFramework.Context
             {
                 entity.ToTable("UserTokens");
             });
+
+            builder.Entity<UserRole>(userRole =>
+            {
+                userRole.ToTable("UserRoles");
+
+                userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
+
+                userRole.HasOne(ur => ur.Role)
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.RoleId);
+
+                userRole.HasOne(ur => ur.User)
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.UserId);
+            });
+
 
             //modelBuilder.ApplyConfiguration(new CompanyConfiguration());
         }

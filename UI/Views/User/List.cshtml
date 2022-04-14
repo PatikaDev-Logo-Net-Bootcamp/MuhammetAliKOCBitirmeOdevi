@@ -27,6 +27,7 @@
             <th scope="col">Kullanıcı Adı</th>
             <th scope="col">EPosta</th>
             <th scope="col">Telefon</th>
+            <th scope="col">Rol</th>
             <th scope="col"></th>
 
         </tr>
@@ -36,11 +37,12 @@
         @foreach (var user in Model)
         {
             <tr>
-                <td>@user.FirstName</td>
-                <td>@user.LastName</td>
-                <td>@user.UserName</td>
-                <td>@user.Email</td>
-                <td>@user.PhoneNumber</td>
+                <td class="FirstName">@user.FirstName</td>
+                <td class="LastName">@user.LastName</td>
+                <td class="UserName">@user.UserName</td>
+                <td class="Email">@user.Email</td>
+                <td class="PhoneNumber">@user.PhoneNumber</td>
+                <td class="Roles">@String.Join(",",user.Roles.Select(x=>x.Name).ToList())</td>
                 <td>
                     <button type="button" class="btn btn-primary btnUpdate" data-userid="@user.Id">Güncelle</button>
                     <button type="button" class="btn btn-danger btnDelete" data-userid="@user.Id">Sil</button>
@@ -100,10 +102,7 @@
                     <div id="divPassword" class="form-group">
                         <label>Şifre</label>
 
-                        <input name="Password" id="PasswordForAdd" type="text" class="form-control" placeholder="Kullanıcı Şifresi" value="Sifre%5">
-                    
-
-
+                        <input name="Password" id="PasswordForAdd" type="text" class="form-control" placeholder="Kullanıcı Şifresi" value="Sifre%5">           
                         @*@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })*@
                     </div>
                 </form>
@@ -188,10 +187,12 @@
 <script src="~/lib/DataTable/datatables.min.js"></script>
 
 <script type="text/javascript">
+    var table;
+    var clickedRow;
     $(document).ready( function () {
 
         //Data Table initilation
-        $('#UserListTable').DataTable({
+       table = $('#UserListTable').DataTable({
              "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tümü"]],
               //"language": {"url": "/lib/DataTable/Turkish.json"}
               "language": {"url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Turkish.json"}
@@ -203,18 +204,34 @@
               $('#modalAdd').modal();
         });
 
-        $( ".btnUpdate").on( "click", function() {
-             let userid = $(this).data("userid");
+        //$( ".btnUpdate").on( "click", function() {
+        //     let userid = $(this).data("userid");
+        //     getUserForUpdate(userid);
+        //});
+
+        $(document).on('click','.btnUpdate', function(){
+            clickedRow = $(this).parent();
+                let userid = $(this).data("userid");
              getUserForUpdate(userid);
         });
 
-        $( ".btnDelete").on( "click", function() {
 
+        /*$( ".btnDelete").on( "click", function() {
             if (confirm('Kullanici Silmek İstediğinizden Emin Misiniz?')) {
                let userid = $(this).data("userid");
                deleteUser($(this),userid);
             }
+        });*/
+
+        $(document).on('click','.btnDelete', function(){
+          if (confirm('Kullanici Silmek İstediğinizden Emin Misiniz?')) {
+              clickedRow = $(this).parent();
+               let userid = $(this).data("userid");
+               deleteUser($(this),userid);
+            }
         });
+
+
 
         $( "#btnAddSubmit").on( "click", function() {
              addUser();
@@ -226,12 +243,13 @@
         });
     });
             function modalEmpty(){
-                $("#IdForAdd").val();
-                $("#FirstNameForAdd").val();
-                $("#LastNameForAdd").val();
-                $("#UserNameForAdd").val();
-                $("#EmailForAdd").val();
-                $("#PhoneNumberForAdd").val();
+                console.log("modalEmpty() çalıştı.");
+                $("#IdForAdd").val("");
+                $("#FirstNameForAdd").val("");
+                $("#LastNameForAdd").val("");
+                $("#UserNameForAdd").val("");
+                $("#EmailForAdd").val("");
+                $("#PhoneNumberForAdd").val("");
                 $("#PasswordForAdd").val("Sirfe%5");
 
             }
@@ -270,10 +288,11 @@
                         })
             }
 
+            var addSetTimeOutId;
             function addUser() {
                     $("#pAddMesajiModal").text("");
                     var data = $("#UserAddForm").serialize();
-                    console.log(data);
+                    //console.log(data);
                     $.ajax({
                             type: 'POST',
                             url: '/User/Add',
@@ -283,20 +302,60 @@
                             success: function (result) {
                                      if(result.isSuccess)
                                     {
-                                        console.log(result.successMessage);
+                                        console.log(result);
                                           $("#pAddMesajiModal").text(result.successMessage);
                                           $("#pAddMesajiModal").css("color", "green");
-                                          setTimeout(function(){ $('#modalAdd').modal('hide'); $("#pAddMesajiModal").text("");  }, 2500);
+
+                                            $("#IdForAdd").val("");
+           
+                                         /* var newRow =  "<tr>" +
+                                                        "<td>" +
+                                                        $("#FirstNameForAdd").val() +
+                                                        "</td>"+
+                                                        "<td>" +
+                                                        $("#LastNameForAdd").val()+
+                                                        "</td>"+
+                                                        "<td>" +
+                                                        $("#UserNameForAdd").val()+
+                                                        "</td>"+
+                                                        "<td>" +
+                                                        $("#EmailForAdd").val()+
+                                                        "</td>"+
+                                                        "<td>" +
+                                                        $("#PhoneNumberForAdd").val()+
+                                                        "</td>"+
+                                                        "<td>" +
+                                                         "<button type='button' class='btn btn-primary btnUpdate' data-userid='"+result.data+"'>Güncelle</button>"+
+                                                         "<button type='button' class='btn btn-danger btnDelete data-userid='"+result.data+"'>Sil</button>"+
+                                                        "</td>"+
+                                                        "</tr>";
+
+                                        $("tbody").append(newRow);
+                                        */
+ 
+
+                                        table.row.add( [
+                                             $("#FirstNameForAdd").val(),
+                                             $("#LastNameForAdd").val(),
+                                             $("#UserNameForAdd").val(),
+                                             $("#EmailForAdd").val(),
+                                             $("#PhoneNumberForAdd").val(),
+                                             "<button type='button' class='btn btn-primary btnUpdate' data-userid='"+result.data+"'>Güncelle</button>"+
+                                             "<button type='button' class='btn btn-danger btnDelete' data-userid='"+result.data+"'>Sil</button>"
+                                        ] ).draw();
+
+
+
+                                         addSetTimeOutId =  setTimeout(function(){                                                                                               
+                                                                        $('#modalAdd').modal('hide'); 
+                                                                        $("#pAddMesajiModal").text("");                                               
+                                                                    }, 2500);
                                     }else{
                                         console.log(result.errorMessage);
                                          $("#pAddMesajiModal").text(result.errorMessage);
                                          $("#pAddMesajiModal").css("color", "red");
                                     }
                             },
-                            //error: function () {
-                            //        $("#pAddMesajiModal").val("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
-                            //        $("#pAddMesajiModal").css("color", "red");
-                            //}
                              error: function (xhr, ajaxOptions, thrownError) {
                                  alert(xhr.status );
                                  alert(thrownError);
@@ -306,6 +365,13 @@
                         })
             }
 
+            //Add model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+            $('#modalAdd').on('hide.bs.modal', function () {
+                $("#pAddMesajiModal").text("");
+                clearTimeout(addSetTimeOutId);
+            });
+
+            var updateSetTimeOutId ;
             function updateUser() {
                     $("#pUpdateMesajiModal").text("");
                     var data = $("#UserUpdateForm").serialize();
@@ -320,7 +386,26 @@
                                     {
                                           $("#pUpdateMesajiModal").text(result.successMessage);
                                           $("#pUpdateMesajiModal").css("color", "green");
-                                          setTimeout(function(){ $('#modalUpdate').modal('hide'), $("#pUpdateMesajiModal").text("");}, 2500);
+
+                                          //var tableRow = table.row(clickedButton.parent());
+                                          var rData = [
+                                             $("#FirstNameForUpdate").val(),
+                                             $("#LastNameForUpdate").val(),
+                                             $("#UserNameForUpdate").val(),
+                                             $("#EmailForUpdate").val(),
+                                             $("#PhoneNumberForUpdate").val(),
+                                             "<button type='button' class='btn btn-primary btnUpdate' data-userid='"+$("#IdForUpdate").val()+"'>Güncelle</button>"+
+                                             "<button type='button' class='btn btn-danger btnDelete' data-userid='"+$("#IdForUpdate").val()+"'>Sil</button>"
+                                                    ];
+
+                                                    console.log(rData);
+                                                    console.log(clickedRow);
+                                        table.row(clickedRow)
+                                            .data(rData)
+                                            .draw();
+                                      
+
+                                          updateSetTimeOutId = setTimeout(function(){ $('#modalUpdate').modal('hide'), $("#pUpdateMesajiModal").text("");}, 2500);
                                     }else{
                                          $("#pUpdateMesajiModal").text(result.errorMessage);
                                          $("#pUpdateMesajiModal").css("color", "red");
@@ -332,9 +417,17 @@
                             }
                         })
             }
+            //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+            $('#modalUpdate').on('hide.bs.modal', function () {      
+                //console.log("update modal kapandı. updateSetTimeOutId="+ updateSetTimeOutId);
+                $("#pUpdateMesajiModal").text("");
+                clearTimeout(updateSetTimeOutId);
+            });
+
 
             function deleteUser(deleteButton, userid) {
-                    $("#pDeleteMesaji").text("");
+                    $("#pPageMesaj").text("");
+                    console.log(userid);
                     $.ajax({
                             type: 'POST',
                             url: '/User/Delete',
@@ -345,7 +438,11 @@
                                 {
                                     $("#pPageMesaj").text(result.successMessage);
                                     $("#pPageMesaj").css("color", "green");
-                                    deleteButton.parent().parent().remove();//satırı sil
+                                    //deleteButton.parent().parent().remove();//satırı sil
+                                    table.row(clickedRow)
+                                            .remove()
+                                            .draw();
+                                    setTimeout(function(){ $("#pPageMesaj").text("");}, 3000);
                                 }else{
                                     $("#pPageMesaj").text(result.errorMessage);
                                     $("#pPageMesaj").css("color", "red");
