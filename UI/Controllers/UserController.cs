@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UI.Models;
@@ -18,16 +19,16 @@ namespace UI.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        //private readonly RoleManager<User> _roleManager;
+        private readonly SignInManager<User> _signInManager;   
+        private readonly RoleManager<Role> _roleManager;
 
 
-        public UserController(ILogger<UserController> logger, UserManager<User> userManager, SignInManager<User> signInManager/* , RoleManager<User> roleManager*/)
+        public UserController(ILogger<UserController> logger, UserManager<User> userManager, SignInManager<User> signInManager , RoleManager<Role> roleManager)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
-            /*_roleManager = roleManager;*/
+            _roleManager = roleManager;
         }
 
         [AllowAnonymous]
@@ -85,14 +86,16 @@ namespace UI.Controllers
                 
             }).ToList();
 
-            model.Users = users;    
+            model.Users = users;
 
-                //foreach (var usr in model)
-                //{
-                //    usr.Roles = _userManager.GetRolesAsync(usr.UserEntity).Result.ToList();
-                //    usr.UserEntity = null;
-                //}
-
+            //foreach (var usr in model)
+            //{
+            //    usr.Roles = _userManager.GetRolesAsync(usr.UserEntity).Result.ToList();
+            //    usr.UserEntity = null;
+            //}
+            var allRoles= _roleManager.Roles./*Where(x=>x.Name=="Manager" || x.Name=="User").*/Select(x=>new RoleDTO() { Id = x.Id, Name = x.Name}).ToList();
+            ViewBag.AllRoles = allRoles;            
+            ViewBag.RoleUserId = allRoles.Where(x => x.Name == "User").FirstOrDefault()?.Id;
             return View(model);
         }
 
@@ -101,9 +104,9 @@ namespace UI.Controllers
         {
             var res = new ReturnObject();
 
-            var model = _userManager.Users.Where(x => x.Id == UserId).Select(x => new UserDTO()
+            var model = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).Where(x => x.Id == UserId).Select(x => new UserDTO()
             {
-                Id=x.Id,
+                Id = x.Id,
                 UserName = x.UserName,
                 AccessFailedCount = x.AccessFailedCount,
                 ConcurrencyStamp = x.ConcurrencyStamp,
@@ -120,6 +123,8 @@ namespace UI.Controllers
                 PictureUrl = x.PictureUrl,
                 TwoFactorEnabled = x.TwoFactorEnabled,
                 SecurityStamp = x.SecurityStamp,
+                Roles = x.UserRoles.Select(y => new RoleDTO() { Id =  y.Role.Id, Name = y.Role.Name}).ToList()
+                
             }).FirstOrDefault();
 
             if (model == null)
@@ -197,7 +202,14 @@ namespace UI.Controllers
                         LockoutEnabled = false,
                         AccessFailedCount = 0
                     };
+                
+
+
+                    var userRoleEntity = _roleManager.Roles.Where(x=>x.Id == user.RoleSelected).Select(x=>new UserRole() {User = userEntity, Role =x }).ToList();                         
+                    userEntity.UserRoles = userRoleEntity;
+
                     var createRes = await _userManager.CreateAsync(userEntity,user.Password);
+
                     if (createRes.Succeeded)
                     {
                         res.successMessage = $"{userEntity.FirstName} {userEntity.LastName} başarıyla eklenmiştir.";
@@ -248,7 +260,7 @@ namespace UI.Controllers
                 }
                 else//update işlemi
                 {
-                    var userEntity = _userManager.Users.Where(x => x.Id == user.Id).FirstOrDefault();
+                    var userEntity = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).Where(x => x.Id == user.Id).FirstOrDefault();
                     if (userEntity != null)
                     {
                         userEntity.FirstName = user.FirstName;
@@ -256,7 +268,13 @@ namespace UI.Controllers
                         userEntity.Email = user.Email;
                         userEntity.PhoneNumber = user.PhoneNumber;
                         userEntity.UserName = user.UserName;
-                        var updateRes = await _userManager.UpdateAsync(userEntity);
+                        
+                       var userRoleEntity = _roleManager.Roles.Where(x => x.Id == user.RoleSelected).Select(x => new UserRole() { User = userEntity, Role = x }).ToList();
+                       
+                       userEntity.UserRoles = userRoleEntity;
+
+
+                            var updateRes = await _userManager.UpdateAsync(userEntity);
 
                         if (updateRes.Succeeded)
                         {

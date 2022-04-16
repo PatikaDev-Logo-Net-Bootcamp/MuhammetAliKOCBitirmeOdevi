@@ -20,7 +20,7 @@ namespace Business.DTO
         [EmailAddress(ErrorMessage = "Email hatalı!")]
         public string Email { get; set; }
  
- 
         public string PhoneNumber { get; set; }
+        public string RoleSelected { get; set; }
     }
 }

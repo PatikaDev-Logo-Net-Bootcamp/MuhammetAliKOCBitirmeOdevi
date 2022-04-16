@@ -26,7 +26,7 @@ namespace UI
                 {
                     var context = services.GetRequiredService<AppDbContext>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var roleManager = services.GetRequiredService<RoleManager<Role>>();
                     await ContextSeed.SeedRoleAsync(userManager, roleManager);
                     await ContextSeed.SeedUserAsync(userManager, roleManager);
                 }

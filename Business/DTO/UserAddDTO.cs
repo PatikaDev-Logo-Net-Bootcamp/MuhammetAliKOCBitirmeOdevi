@@ -23,6 +23,7 @@ namespace Business.DTO
         [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$", ErrorMessage ="Şifre en az 1 küçük harf, 1 büyük harf, 1 rakam ve bir sembolden oluşan en az 6 karakterlik bir ifade olmalıdır!")]
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
+        public string RoleSelected { get; set; }
 
     }
 }

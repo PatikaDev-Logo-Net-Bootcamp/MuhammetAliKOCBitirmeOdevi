@@ -27,8 +27,8 @@ namespace API
                     var context = services.GetRequiredService<AppDbContext>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    await ContextSeed.SeedRoleAsync(userManager, roleManager);
-                    await ContextSeed.SeedUserAsync(userManager, roleManager);
+                   // await ContextSeed.SeedRoleAsync(userManager, roleManager);
+                   // await ContextSeed.SeedUserAsync(userManager, roleManager);
                 }
                 catch (Exception ex)
                 {

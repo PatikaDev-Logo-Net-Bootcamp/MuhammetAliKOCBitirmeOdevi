@@ -29,6 +29,8 @@ namespace UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
             services.AddControllersWithViews();
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
@@ -40,11 +42,22 @@ namespace UI
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+
+
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/user/login";
+                options.LogoutPath = $"/user/logout";
+                options.AccessDeniedPath = $"/user/accessDenied";
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

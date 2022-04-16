@@ -8,8 +8,8 @@ namespace Domain.Enums
 {
     public enum Roles
     {
-        SuperAdmin,
-        Admin,
+        /*SuperAdmin,
+        Admin,*/
         Manager,
         User
     }

@@ -11,18 +11,21 @@ namespace EntityFramework.Context
 {
     public class ContextSeed
     {
-        public static async Task SeedRoleAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedRoleAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            await roleManager.CreateAsync(new IdentityRole(Roles.SuperAdmin.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Roles.Manager.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
+            //await roleManager.CreateAsync(new IdentityRole(Roles.SuperAdmin.ToString()));
+            //await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
+ 
+            await roleManager.CreateAsync(new Role(Roles.Manager.ToString()));
+            await roleManager.CreateAsync(new Role(Roles.User.ToString()));
+ 
+
         }
-        public static async Task SeedUserAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedUserAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             List<User> users = new List<User>();
 
-            User superadmin = new User()
+            /*User superadmin = new User()
             {
                 Id = Guid.NewGuid().ToString(),
                 FirstName = "superadmin",
@@ -32,7 +35,7 @@ namespace EntityFramework.Context
                 PhoneNumber = "",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true
-                //Password = "hKaoJdFbclk=",/*123456*/
+                //Password = "hKaoJdFbclk=", //123456
             };
             users.Add(superadmin);
 
@@ -46,10 +49,10 @@ namespace EntityFramework.Context
                 PhoneNumber = "",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true
-                //Password = "hKaoJdFbclk=",/*123456*/
+                //Password = "hKaoJdFbclk=",//123456
             };
             users.Add(admin);
-
+            */
             User manager = new User()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -60,6 +63,7 @@ namespace EntityFramework.Context
                 PhoneNumber = "",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true
+                
                 //Password = "hKaoJdFbclk=",/*123456*/
             };
             users.Add(manager);
