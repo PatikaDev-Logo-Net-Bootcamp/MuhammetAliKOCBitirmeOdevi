@@ -36,5 +36,7 @@ namespace Business.DTO
 
         //public User UserEntity { get; set; }
 
+        public UserAddDTO UserAddModel { get; set; }
+
     }
 }

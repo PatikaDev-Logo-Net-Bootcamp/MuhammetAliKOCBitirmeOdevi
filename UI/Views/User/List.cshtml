@@ -3,7 +3,7 @@
     ViewData["Title"] = "Kullanıcı İşlemleri";
     Layout = "_Layout";
 }
-@model List<UserDTO>
+@model UserListDTO//List<UserDTO>
 <head>
     <link rel="stylesheet" type="text/css" href="~/lib/DataTable/datatables.min.css" />
 </head>
@@ -34,7 +34,7 @@
     </thead>
     <tbody>
 
-        @foreach (var user in Model)
+        @foreach (var user in Model.Users)
         {
             <tr>
                 <td class="FirstName">@user.FirstName</td>
@@ -57,6 +57,9 @@
 <div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+            <form id="UserAddForm">
+             @Html.AntiForgeryToken()
+        
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Yeni kullanıcı</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -66,46 +69,46 @@
             <div class="modal-body">
 
 
-                <form id="UserAddForm">
+              @*  <form id="UserAddForm">*@
                     @*asp-controller="User" asp-action="Login" method="post"*@
-                    @Html.AntiForgeryToken()
+               @*     @Html.AntiForgeryToken()*@
                     @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
 
-                    <input name="Id" id="IdForAdd" type="hidden" value="">
+                  @*  <input name="Id" id="IdForAdd" type="hidden" value="">*@
 
                     <div class="form-group">
                         <label>Ad</label>
-                        <input name="FirstName" id="FirstNameForAdd" type="text" class="form-control" placeholder="Kullanıcı Ad">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForAdd.FirstName" id="FirstNameForAdd" type="text" class="form-control" placeholder="Kullanıcı Ad">
+                        @Html.ValidationMessageFor(model => model.UserForAdd.FirstName,"", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <label>Soyad</label>
-                        <input name="LastName" id="LastNameForAdd" type="text" class="form-control" placeholder="Kullanıcı Soyadı">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForAdd.LastName"  id="LastNameForAdd" type="text" class="form-control" placeholder="Kullanıcı Soyadı">
+                        @Html.ValidationMessageFor(model => model.UserForAdd.LastName, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <label>Kullanıcı Adı</label>
-                        <input name="UserName" id="UserNameForAdd" type="text" class="form-control" placeholder="Kullanıcıadı">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForAdd.UserName" id="UserNameForAdd" type="text" class="form-control" placeholder="Kullanıcıadı">
+                        @Html.ValidationMessageFor(model => model.UserForAdd.UserName, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <label>EPosta</label>
-                        <input name="Email" id="EmailForAdd" type="text" class="form-control" placeholder="Kullanıcı Eposta">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForAdd.Email" id="EmailForAdd" type="text" class="form-control" placeholder="Kullanıcı Eposta">
+                         @Html.ValidationMessageFor(model => model.UserForAdd.Email, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <label>Telefon Numarası</label>
-                        <input name="PhoneNumber" id="PhoneNumberForAdd" type="text" class="form-control" placeholder="Kullanıcı Telefon">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForAdd.PhoneNumber" id="PhoneNumberForAdd" type="text" class="form-control" placeholder="Kullanıcı Telefon">
+                         @Html.ValidationMessageFor(model => model.UserForAdd.PhoneNumber, "", new { @class = "text-danger" })
                     </div>
 
                     <div id="divPassword" class="form-group">
                         <label>Şifre</label>
 
-                        <input name="Password" id="PasswordForAdd" type="text" class="form-control" placeholder="Kullanıcı Şifresi" value="Sifre%5">           
-                        @*@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForAdd.Password" id="PasswordForAdd" type="text" class="form-control" placeholder="Kullanıcı Şifresi" value="Sifre%5">           
+                         @Html.ValidationMessageFor(model => model.UserForAdd.Password, "", new { @class = "text-danger" })
                     </div>
-                </form>
+              @*  </form>*@
 
                 <div style="min-height:40px">
                      <p id="pAddMesajiModal"></p>
@@ -113,12 +116,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
-                <button type="button" class="btn btn-info" id="btnAddSubmit">Ekle</button>
-         
-         
-
-            </div>
-        </div>
+                <button type="submit" class="btn btn-info" id="btnAddSubmit">Ekle</button>
+             </div>
+          
+            </form>
+        
+        </div>  
     </div>
 </div>
 
@@ -126,6 +129,7 @@
 <div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+            <form id="UserUpdateForm">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Kullanıcı Güncelle</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -134,50 +138,50 @@
             </div>
             <div class="modal-body">
 
-                <form id="UserUpdateForm">
+             
                     @*asp-controller="User" asp-action="Login" method="post"*@
                     @Html.AntiForgeryToken()
                     @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
 
-                    <input name="Id" id="IdForUpdate" type="hidden" value="">
+                    <input asp-for="@Model.UserForUpdate.Id" id="IdForUpdate" type="hidden" value="">
 
                     <div class="form-group">
                         <label>Ad</label>
-                        <input name="FirstName" id="FirstNameForUpdate" type="text" class="form-control" placeholder="Kullanıcı Ad">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForUpdate.FirstName" id="FirstNameForUpdate" type="text" class="form-control" placeholder="Kullanıcı Ad">
+                        @Html.ValidationMessageFor(model => model.UserForUpdate.FirstName, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <label>Soyad</label>
-                        <input name="LastName" id="LastNameForUpdate" type="text" class="form-control" placeholder="Kullanıcı Soyadı">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForUpdate.LastName"  id="LastNameForUpdate" type="text" class="form-control" placeholder="Kullanıcı Soyadı">
+                        @Html.ValidationMessageFor(model => model.UserForUpdate.LastName, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <label>Kullanıcı Adı</label>
-                        <input name="UserName" id="UserNameForUpdate" type="text" class="form-control" placeholder="Kullanıcıadı">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForUpdate.UserName"  id="UserNameForUpdate" type="text" class="form-control" placeholder="Kullanıcıadı">
+                       @Html.ValidationMessageFor(model => model.UserForUpdate.UserName, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <label>EPosta</label>
-                        <input name="Email" id="EmailForUpdate" type="text" class="form-control" placeholder="Kullanıcı Eposta">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForUpdate.Email"  id="EmailForUpdate" type="text" class="form-control" placeholder="Kullanıcı Eposta">
+                       @Html.ValidationMessageFor(model => model.UserForUpdate.Email, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <label>Telefon Numarası</label>
-                        <input name="PhoneNumber" id="PhoneNumberForUpdate" type="text" class="form-control" placeholder="Kullanıcı Telefon">
-                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                        <input asp-for="@Model.UserForUpdate.PhoneNumber"  id="PhoneNumberForUpdate" type="text" class="form-control" placeholder="Kullanıcı Telefon">
+                       @Html.ValidationMessageFor(model => model.UserForUpdate.PhoneNumber, "", new { @class = "text-danger" })
                     </div>
-                </form>
+
+
+
                 <div style="min-height:40px">
                      <p id="pUpdateMesajiModal"></p>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
-                <button type="button" class="btn btn-primary" id="btnUpdateSubmit">Güncelle</button>
-
-             
-
+                <button type="submit" class="btn btn-primary" id="btnUpdateSubmit">Güncelle</button>             
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -200,7 +204,7 @@
 
 
         $( ".btnAdd").on( "click", function() {
-             modalEmpty();
+             modalEmptyForAdd();
               $('#modalAdd').modal();
         });
 
@@ -212,6 +216,7 @@
         $(document).on('click','.btnUpdate', function(){
             clickedRow = $(this).parent();
                 let userid = $(this).data("userid");
+                 modalEmptyForUpdate();
              getUserForUpdate(userid);
         });
 
@@ -233,18 +238,43 @@
 
 
 
-        $( "#btnAddSubmit").on( "click", function() {
-             addUser();
+        $( "#btnAddSubmit").on( "click", function(e) {
+             e.preventDefault();
+
+            $('#UserAddForm').validate();
+            
+            if ($('#UserAddForm').valid()) {
+               addUser();
+            }
+            //else {
+            //            alert("invalid");
+            //}
+
+           
+            // addUser();
+             //return false;
         });
 
 
-       $( "#btnUpdateSubmit").on( "click", function() {
-             updateUser();
+       $( "#btnUpdateSubmit").on( "click", function(e) {
+
+            e.preventDefault();
+
+            $('#UserUpdateForm').validate();
+            
+            if ($('#UserUpdateForm').valid()) {
+               updateUser();
+            }
+
+
+           //e.preventDefault();
+            // updateUser();
+                 //return false;
         });
     });
-            function modalEmpty(){
-                console.log("modalEmpty() çalıştı.");
-                $("#IdForAdd").val("");
+            function modalEmptyForAdd(){
+                $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz. 
+
                 $("#FirstNameForAdd").val("");
                 $("#LastNameForAdd").val("");
                 $("#UserNameForAdd").val("");
@@ -252,6 +282,9 @@
                 $("#PhoneNumberForAdd").val("");
                 $("#PasswordForAdd").val("Sirfe%5");
 
+            }
+             function modalEmptyForUpdate(){
+                 $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz. 
             }
 
 
@@ -292,7 +325,7 @@
             function addUser() {
                     $("#pAddMesajiModal").text("");
                     var data = $("#UserAddForm").serialize();
-                    //console.log(data);
+                    console.log(data);
                     $.ajax({
                             type: 'POST',
                             url: '/User/Add',
@@ -306,7 +339,7 @@
                                           $("#pAddMesajiModal").text(result.successMessage);
                                           $("#pAddMesajiModal").css("color", "green");
 
-                                            $("#IdForAdd").val("");
+                                            //$("#IdForAdd").val("");
            
                                          /* var newRow =  "<tr>" +
                                                         "<td>" +
@@ -340,6 +373,7 @@
                                              $("#UserNameForAdd").val(),
                                              $("#EmailForAdd").val(),
                                              $("#PhoneNumberForAdd").val(),
+                                             "Rol alanı",
                                              "<button type='button' class='btn btn-primary btnUpdate' data-userid='"+result.data+"'>Güncelle</button>"+
                                              "<button type='button' class='btn btn-danger btnDelete' data-userid='"+result.data+"'>Sil</button>"
                                         ] ).draw();
@@ -394,6 +428,7 @@
                                              $("#UserNameForUpdate").val(),
                                              $("#EmailForUpdate").val(),
                                              $("#PhoneNumberForUpdate").val(),
+                                             "Rol Alanı",
                                              "<button type='button' class='btn btn-primary btnUpdate' data-userid='"+$("#IdForUpdate").val()+"'>Güncelle</button>"+
                                              "<button type='button' class='btn btn-danger btnDelete' data-userid='"+$("#IdForUpdate").val()+"'>Sil</button>"
                                                     ];
@@ -416,6 +451,8 @@
                                    $("#pUpdateMesajiModal").css("color", "red");
                             }
                         })
+
+                 
             }
             //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
             $('#modalUpdate').on('hide.bs.modal', function () {      

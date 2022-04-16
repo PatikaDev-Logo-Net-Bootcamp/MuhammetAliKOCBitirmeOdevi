@@ -59,7 +59,8 @@ namespace UI.Controllers
 
         public IActionResult List()
         {
-            var model = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+             var model = new UserListDTO();
+            var users = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
                 .Select(x => new UserDTO()
             {
                 Id = x.Id,
@@ -83,6 +84,8 @@ namespace UI.Controllers
                 //UserEntity = x
                 
             }).ToList();
+
+            model.Users = users;    
 
                 //foreach (var usr in model)
                 //{
@@ -162,11 +165,15 @@ namespace UI.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Add(UserAddDTO user)
+        public async Task<JsonResult> Add(UserListDTO userList)
         {
 
-            
+            UserAddDTO user = userList.UserForAdd;
             var res = new ReturnObject();
+
+            if (ModelState.IsValid)
+            {
+
 
             try
             {
@@ -216,15 +223,23 @@ namespace UI.Controllers
                 res.errorMessage = "İşlem sırasında HATA ALINMIŞTIR. Lütfen tekrar deneyiniz. Hata almaya devam ederseniz; Lütfen sistem yöneticinizle iletişime geçiniz.";
             }
 
+            }
+            else
+            {
+                res.isSuccess=false;
+                res.errorMessage = "";
+            }
             return new JsonResult(res);
         }
 
         [HttpPost]
-        public async Task<JsonResult> Update(UserDTO user)
+        public async Task<JsonResult> Update(UserListDTO userList)
         {
+            UserUpdateDTO user = userList.UserForUpdate;
             var res = new ReturnObject();
-
-            try
+            if (ModelState.IsValid)
+            {
+                try
             {
                 if (string.IsNullOrEmpty(user.Id))//Güncellenen kaydın id alanı boş olamaz!
                 {
@@ -268,6 +283,12 @@ namespace UI.Controllers
                 res.errorMessage = "İşlem sırasında HATA ALINMIŞTIR. Lütfen tekrar deneyiniz. Hata almaya devam ederseniz; Lütfen sistem yöneticinizle iletişime geçiniz.";
             }
 
+            }
+            else
+            {
+                res.isSuccess = false;
+                res.errorMessage = "";
+            }
             return new JsonResult(res);
         }
 
