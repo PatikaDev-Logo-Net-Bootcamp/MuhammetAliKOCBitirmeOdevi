@@ -14,7 +14,7 @@ using UI.Models;
 
 namespace UI.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Admin,Manager")]
+    [Authorize(Roles = "Manager,User")]
     public class UserController : Controller
     {
         private readonly ILogger<UserController> _logger;
@@ -58,6 +58,7 @@ namespace UI.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Manager")]
         public IActionResult List()
         {
              var model = new UserListDTO();
@@ -99,6 +100,7 @@ namespace UI.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public JsonResult Get(string UserId)
         {
@@ -140,6 +142,7 @@ namespace UI.Controllers
             return new JsonResult(res);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<JsonResult> Delete(string UserId)
         {
@@ -169,6 +172,7 @@ namespace UI.Controllers
             return new JsonResult(res);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<JsonResult> Add(UserListDTO userList)
         {
@@ -244,6 +248,7 @@ namespace UI.Controllers
             return new JsonResult(res);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<JsonResult> Update(UserListDTO userList)
         {
@@ -310,7 +315,20 @@ namespace UI.Controllers
             return new JsonResult(res);
         }
 
- 
- 
+        public async Task<ActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("login","user");
+        }
+
+     
+        public ActionResult AccessDenied()
+        {
+            return View();
+        }
+        
+
+
+
     }
 }

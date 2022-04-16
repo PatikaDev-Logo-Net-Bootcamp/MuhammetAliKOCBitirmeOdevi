@@ -49,7 +49,7 @@ namespace UI
             {
                 options.LoginPath = $"/user/login";
                 options.LogoutPath = $"/user/logout";
-                options.AccessDeniedPath = $"/user/accessDenied";
+                options.AccessDeniedPath = $"/user/AccessDenied";
             });
 
         }
