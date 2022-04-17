@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Business.DTO
 {
-    public class UserListDTO
+    public class UserIdentitiyRoleDTO
     {
-        public UserListDTO()
+        public UserIdentitiyRoleDTO()
         {
             Users = new List<UserDTO>();
         }
         public List<UserDTO> Users { get; set; }
-
         public UserAddDTO UserForAdd { get; set; }
         public UserUpdateDTO UserForUpdate { get; set; }
 
+   
     }
 }

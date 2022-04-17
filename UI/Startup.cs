@@ -1,3 +1,5 @@
+using Business.Abstract;
+using Business.Concretes;
 using Domain.Entities;
 using EntityFramework.Context;
 using EntityFramework.Repository.Abstracts;
@@ -42,7 +44,7 @@ namespace UI
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-
+            services.AddTransient<ICarService, CarService>();
 
 
             services.ConfigureApplicationCookie(options =>

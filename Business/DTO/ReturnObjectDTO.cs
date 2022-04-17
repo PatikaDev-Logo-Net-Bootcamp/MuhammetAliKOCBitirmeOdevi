@@ -1,8 +1,14 @@
-﻿namespace UI.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Business.DTO
 {
-    public class ReturnObject
+    public class ReturnObjectDTO
     {
-        public ReturnObject()
+        public ReturnObjectDTO()
         {
             isSuccess = true;
             errorMessage = "";

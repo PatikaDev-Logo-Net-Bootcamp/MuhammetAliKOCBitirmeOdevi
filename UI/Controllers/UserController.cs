@@ -1,4 +1,6 @@
-﻿using Business.DTO;
+﻿using Business.Abstract;
+using Business.Concretes;
+using Business.DTO;
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -22,24 +24,23 @@ namespace UI.Controllers
         private readonly UserManager<User> _userManager;
         //private readonly SignInManager<User> _signInManager;   
         private readonly RoleManager<Role> _roleManager;
+        private readonly ICarService _carService;
 
 
-        public UserController(ILogger<UserController> logger, UserManager<User> userManager,/* SignInManager<User> signInManager ,*/ RoleManager<Role> roleManager)
+        public UserController(ILogger<UserController> logger, UserManager<User> userManager,/* SignInManager<User> signInManager ,*/ RoleManager<Role> roleManager, ICarService carService)
         {
             _logger = logger;
             _userManager = userManager;
             //_signInManager = signInManager;
             _roleManager = roleManager;
+            _carService = carService;
         }
 
 
-
-
-
  
-        public IActionResult IdentityRole()
+        public IActionResult IdentityRoleList()
         {
-             var model = new UserListDTO();
+             var model = new UserIdentitiyRoleDTO();
             var users = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
                 .Select(x => new UserDTO()
             {
@@ -82,7 +83,7 @@ namespace UI.Controllers
         [HttpPost]
         public JsonResult Get(string UserId)
         {
-            var res = new ReturnObject();
+            var res = new ReturnObjectDTO();
 
             var model = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).Where(x => x.Id == UserId).Select(x => new UserDTO()
             {
@@ -124,7 +125,7 @@ namespace UI.Controllers
         [HttpPost]
         public async Task<JsonResult> Delete(string UserId)
         {
-            var res = new ReturnObject();
+            var res = new ReturnObjectDTO();
 
             try
             {
@@ -152,11 +153,11 @@ namespace UI.Controllers
 
  
         [HttpPost]
-        public async Task<JsonResult> Add(UserListDTO userList)
+        public async Task<JsonResult> Add(UserIdentitiyRoleDTO userList)
         {
 
             UserAddDTO user = userList.UserForAdd;
-            var res = new ReturnObject();
+            var res = new ReturnObjectDTO();
 
             if (ModelState.IsValid)
             {
@@ -251,10 +252,10 @@ namespace UI.Controllers
 
  
         [HttpPost]
-        public async Task<JsonResult> Update(UserListDTO userList)
+        public async Task<JsonResult> Update(UserIdentitiyRoleDTO userList)
         {
             UserUpdateDTO user = userList.UserForUpdate;
-            var res = new ReturnObject();
+            var res = new ReturnObjectDTO();
             if (ModelState.IsValid)
             {
                 try
@@ -317,9 +318,92 @@ namespace UI.Controllers
         }
 
 
-        
 
 
+
+        public IActionResult UserCarList()
+        {
+            var model = new UserCarDTO();
+            var users = _userManager.Users.Include(u => u.UserCars)
+                .Select(x => new UserDTO()
+                {
+                    Id = x.Id,
+                    Email = x.Email,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    PhoneNumber = x.PhoneNumber,
+                    Cars = x.UserCars.Select(y => new CarDTO() { Id = y.Id, Aciklama = y.Aciklama, Plaka = y.Plaka }).ToList()
+
+                }).ToList();
+
+            model.Users = users;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult AddCar(UserCarDTO userList)
+        {
+           /* var errors = ModelState
+    .Where(x => x.Value.Errors.Count > 0)
+    .Select(x => new { x.Key, x.Value.Errors })
+    .ToArray();
+           */
+
+            CarDTO car = userList.CarForAddUpdate;
+            var res = new ReturnObjectDTO();
+
+            if (ModelState.IsValid)
+            {
+                res = _carService.AddCar(car);
+            }
+            else
+            {
+                res.isSuccess = false;
+                res.errorMessage = "";
+            }
+            return new JsonResult(res);
+        }
+
+        [HttpPost]
+        public JsonResult GetCar(int id)
+        {  
+            var res = _carService.GetCar(id); 
+
+            return new JsonResult(res);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateCar(UserCarDTO userList)
+        {
+            /* var errors = ModelState
+     .Where(x => x.Value.Errors.Count > 0)
+     .Select(x => new { x.Key, x.Value.Errors })
+     .ToArray();
+            */
+
+            CarDTO car = userList.CarForAddUpdate;
+            var res = new ReturnObjectDTO();
+
+            if (ModelState.IsValid)
+            {
+                res = _carService.UpdateCar(car.Id,car);
+            }
+            else
+            {
+                res.isSuccess = false;
+                res.errorMessage = "";
+            }
+            return new JsonResult(res);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteCar(int id)
+        {
+            var res = _carService.DeleteCar(id);
+
+            return new JsonResult(res);
+        }
 
     }
 }
