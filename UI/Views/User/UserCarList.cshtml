@@ -149,7 +149,7 @@
                     let id = $(this).data("id");
                     let userid = $(this).data("userid");
 
-                    console.log(id + " - " + userid);
+                  
                     modalEmpty(id,userid);
                     getCarForUpdate(id);
             });
@@ -184,7 +184,15 @@
                     $("#Aciklama").val("");
                     $("#Plaka").val("");
                     $("#Id").val(id);
-                    $("#UserId").val(userid);        
+                    $("#UserId").val(userid);       
+                    
+                    if(id==0){
+                        $('#btnSubmit').html("Ekle");
+                         $('#btnSubmit').removeClass("btn-primary").addClass("btn-info");
+                    }else{
+                          $('#btnSubmit').html("Güncelle");
+                          $('#btnSubmit').removeClass("btn-info").addClass("btn-primary");
+                    }
                 }
 
 
@@ -197,10 +205,10 @@
                                 data: { id: id },
                                 success: function (result) {
 
-                                    console.log(result);
+                          
                                     if(result.isSuccess){
 
-                                        console.log(result.data);
+                                 
 
                                         $("#UserId").val(result.data.userId);
                                         $("#Id").val(result.data.id);
@@ -234,7 +242,7 @@
                         if(aracId>0){url ='/User/UpdateCar'}
 
                         let data = $("#CarForm").serialize();
-                        console.log(data);
+                      
                         $.ajax({
                                 type: 'POST',
                                 url: url,
@@ -244,27 +252,27 @@
                                 success: function (result) {
                                          if(result.isSuccess)
                                         {
-                                            console.log(result);
+                                         
                                               $("#pMesajModal").text(result.successMessage);
                                               $("#pMesajModal").css("color", "green");
 
 
                                               if(aracId==0)//insert işlemi
                                               {
-                                                  //console.log("Ekleme ifinde " + aracId);
+                                      
                                               let tableAracCell = clickedButton.parent().parent().children( ".Cars" );                             
 
                                               let cell = table.cell(tableAracCell);
 
                                               let newRowOfCar = "<tr>" +                                              
-                                                "<td>" + result.data.aciklama +  "</td>" + 
-                                                "<td>" + result.data.plaka +  "</td>" + 
+                                                "<td class='AracAciklama'>" + result.data.aciklama +  "</td>" + 
+                                                "<td class='AracPlaka'>" + result.data.plaka +  "</td>" + 
                                                 "<td  style='float: right;'>" + 
                                                        "<button type='button' class='btn btn-primary btnUpdate' data-userid='"+result.data.userId+"' data-id='"+result.data.id+"'>Güncelle</button>"+
                                                        "<button type='button' class='btn btn-danger btnDelete' data-userid='" + result.data.userId+ "' data-id='"+result.data.id+"'>Sil</button>"+
                                                 "</td>" + 
                                               "</tr>";
-                                              console.log(result.data);
+                                           
 
 
 
@@ -277,9 +285,7 @@
                                                   let tableAracCell = clickedButton.parent().parent().parent().parent().parent();//.children( ".Cars" );      
                                                                                                 
                                                   let cell = table.cell(tableAracCell);
-                                                  //console.log("update anında!");
-                                                  //console.log(clickedButton.parent().parent());
-
+                                      
                                                   clickedButton.parent().parent().children(".AracAciklama").html(result.data.aciklama);
                                                   clickedButton.parent().parent().children(".AracPlaka").html(result.data.plaka);
 
@@ -292,7 +298,7 @@
                                                                             $("#pMesajModal").text("");
                                                                         }, 2500);
                                         }else{
-                                            console.log(result.errorMessage);
+                                  
                                              $("#pMesajModal").text(result.errorMessage);
                                              $("#pMesajModal").css("color", "red");
                                         }
@@ -315,7 +321,7 @@
                 
                 function deleteCar(id) {
                         $("#pPageMesaj").text("");
-                        //console.log(userid);
+       
                         $.ajax({
                                 type: 'POST',
                                 url: '/User/DeleteCar',
