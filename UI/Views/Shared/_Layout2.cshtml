@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Domain.Entities
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> _signInManager
+@inject UserManager<User> _userManager
+ 
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,7 +15,13 @@
         <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 </head>
 <body>
- 
+  @{
+        //var user = TempData["Student"] as User;
+        //var user = UserManager.FindById(User.Identity.GetUserId());
+        var currentUser = _userManager.GetUserAsync(User).Result;
+        var currentUserRoles = _userManager.GetRolesAsync(currentUser).Result;
+
+    }
 
     <div class="page-wrapper chiller-theme toggled">
   <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
@@ -18,21 +30,28 @@
   <nav id="sidebar" class="sidebar-wrapper">
     <div class="sidebar-content">
       <div class="sidebar-brand">
-        <a href="#">pro sidebar</a>
+        <a href="#" style="text-align:center;">Menü</a>
         <div id="close-sidebar">
           <i class="fas fa-times"></i>
         </div>
       </div>
       <div class="sidebar-header">
         <div class="user-pic">
-          <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
-            alt="User picture">
+            @if(String.IsNullOrEmpty(@currentUser.PictureUrl))
+            {
+                 <img class="img-responsive img-rounded" src="~/images/EmptyUser.png" alt="User picture">
+                        }
+                        else
+                        {
+                             <img class="img-responsive img-rounded" src="@currentUser.PictureUrl"  alt="User picture">
+                        }
+                       
         </div>
         <div class="user-info">
-          <span class="user-name">Jhon
-            <strong>Smith</strong>
+          <span class="user-name"> @currentUser?.FirstName
+            <strong> @currentUser?.LastName</strong>
           </span>
-          <span class="user-role">Administrator</span>
+          <span class="user-role">@String.Join(",",currentUserRoles)</span>
           <span class="user-status">
             <i class="fa fa-circle"></i>
             <span>Online</span>
@@ -40,7 +59,7 @@
         </div>
       </div>
       <!-- sidebar-header  -->
-      <div class="sidebar-search">
+@*      <div class="sidebar-search">
         <div>
           <div class="input-group">
             <input type="text" class="form-control search-menu" placeholder="Search...">
@@ -51,32 +70,33 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>*@
       <!-- sidebar-search  -->
       <div class="sidebar-menu">
         <ul>
           <li class="header-menu">
-            <span>General</span>
+            <span>Genel</span>
           </li>
           <li class="sidebar-dropdown">
             <a href="#">
               <i class="fa fa-tachometer-alt"></i>
-              <span>Dashboard</span>
-              <span class="badge badge-pill badge-warning">New</span>
+              <span>Kullanıcı İşlemleri</span>
+             @* <span class="badge badge-pill badge-warning">New</span>*@
             </a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
-                  <a href="#">Dashboard 1
-                    <span class="badge badge-pill badge-success">Pro</span>
+                  <a href="/User/IdentityRole">Kimlik - Rol
+                @*    <span class="badge badge-pill badge-success">Pro</span>*@
                   </a>
                 </li>
                 <li>
-                  <a href="#">Dashboard 2</a>
+                  <a href="/User/Residence">İkamet</a>
                 </li>
                 <li>
-                  <a href="#">Dashboard 3</a>
+                  <a href="/User/Car">Araç</a>
                 </li>
+          
               </ul>
             </div>
           </li>
@@ -205,7 +225,7 @@
         <i class="fa fa-cog"></i>
         <span class="badge-sonar"></span>
       </a>
-      <a href="#">
+      <a href="/User/Logout">
         <i class="fa fa-power-off"></i>
       </a>
     </div>
@@ -221,8 +241,7 @@
       <footer class="text-center">
         <div class="mb-2">
           <small>
-            © 2020 made with <i class="fa fa-heart" style="color:red"></i> by - <a target="_blank" rel="noopener noreferrer" href="https://azouaoui.netlify.com">
-              Mohamed Azouaoui and Muhammet Ali
+            © 2020 made with <i class="fa fa-heart" style="color:red"></i> by - Muhammet Ali
             </a>
           </small>
         </div>

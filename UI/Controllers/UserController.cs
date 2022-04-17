@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using UI.Models;
 
@@ -50,6 +51,7 @@ namespace UI.Controllers
                     if (result.Succeeded)
                     {
                         _logger.LogInformation($"{model.Email} Maail user logged in.");
+                        //TempData["Student"] = userEntity;
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -59,7 +61,7 @@ namespace UI.Controllers
         }
 
         [Authorize(Roles = "Manager")]
-        public IActionResult List()
+        public IActionResult IdentityRole()
         {
              var model = new UserListDTO();
             var users = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
@@ -211,13 +213,36 @@ namespace UI.Controllers
 
                     var userRoleEntity = _roleManager.Roles.Where(x=>x.Id == user.RoleSelected).Select(x=>new UserRole() {User = userEntity, Role =x }).ToList();                         
                     userEntity.UserRoles = userRoleEntity;
+                        
 
                     var createRes = await _userManager.CreateAsync(userEntity,user.Password);
 
                     if (createRes.Succeeded)
                     {
-                        res.successMessage = $"{userEntity.FirstName} {userEntity.LastName} başarıyla eklenmiştir.";
-                        res.data = userEntity.Id;
+                            /*var claims = new List<Claim>();
+                            claims.Add(new Claim("Id", userEntity.Id));
+                            claims.Add(new Claim(ClaimTypes.Name, userEntity.UserName));
+                            claims.Add(new Claim("Email", userEntity.Email));
+                            claims.Add(new Claim("FirstName", userEntity.FirstName));
+                            claims.Add(new Claim("LastName", userEntity.LastName));
+
+                            var claimAddRes =  await _userManager.AddClaimsAsync(userEntity, claims);
+                            */
+
+                            if (/*createRes.Succeeded*/true)
+                            {
+                                res.successMessage = $"{userEntity.FirstName} {userEntity.LastName} başarıyla eklenmiştir.";
+                                res.data = userEntity.Id;
+                            }
+                            else
+                            {
+                                await _userManager.DeleteAsync(userEntity);   
+                                res.isSuccess = false;
+                                res.errorMessage = "Kullanıcı Oluştururken HATA ALINMIŞTIR.(Claims)";
+                            }
+
+
+                         
                     }
                     else
                     {
