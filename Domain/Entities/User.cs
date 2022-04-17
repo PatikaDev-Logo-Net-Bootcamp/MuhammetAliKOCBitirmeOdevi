@@ -11,5 +11,7 @@ namespace Domain.Entities
 
 
         public ICollection<UserRole> UserRoles { get; set; }
+
+        public ICollection<Car> UserCars { get; set; }
     }
 }

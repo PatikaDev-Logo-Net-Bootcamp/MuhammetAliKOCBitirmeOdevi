@@ -47,9 +47,9 @@ namespace UI
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = $"/user/login";
-                options.LogoutPath = $"/user/logout";
-                options.AccessDeniedPath = $"/user/AccessDenied";
+                options.LoginPath = $"/Authorize/Login";
+                options.LogoutPath = $"/Authorize/Logout";
+                options.AccessDeniedPath = $"/Authorize/AccessDenied";
             });
 
         }

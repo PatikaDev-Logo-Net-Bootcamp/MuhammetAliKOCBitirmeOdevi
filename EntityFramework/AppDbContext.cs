@@ -12,7 +12,7 @@ IdentityRoleClaim<string>, IdentityUserToken<string>>
         {
 
         }
-        //public DbSet<Company> Companies { get; set; }
+        public DbSet<Car> Cars { get; set; }
         //public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
