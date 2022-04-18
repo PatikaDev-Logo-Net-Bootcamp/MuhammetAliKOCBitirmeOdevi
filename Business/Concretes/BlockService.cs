@@ -10,50 +10,48 @@ using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
-    public class CarService:ICarService
+    public class BlockService:IBlockService
     {
-        private readonly IRepository<Car> repository;
+        private readonly IRepository<Block> repository;
         private readonly IUnitOfWork unitOfWork;
-        public CarService(IRepository<Car> repository, IUnitOfWork unitOfWork)
+        public BlockService(IRepository<Block> repository, IUnitOfWork unitOfWork)
         {
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
 
-        public IQueryable<Car> Cars()
+        public IQueryable<Block> Blocks()
         {
             return repository.GetAll();
         }
 
-        public ReturnObjectDTO GetCar(int id)
+        public ReturnObjectDTO GetBlock(int id)
         {
-            var car =  Cars().FirstOrDefault(x => x.Id == id);
-            return new ReturnObjectDTO() { data = car, successMessage = "İşlem Başarılı" };
+            var block =  Blocks().FirstOrDefault(x => x.Id == id);
+            return new ReturnObjectDTO() { data = block, successMessage = "İşlem Başarılı" };
         }
 
-        public ReturnObjectDTO GetAllCars()
+        public ReturnObjectDTO GetAllBlocks()
         {
-            var cars =  repository.GetAll().ToList();
-            return new ReturnObjectDTO() { data = cars };
+            var blocks =  repository.GetAll().ToList();
+            return new ReturnObjectDTO() { data = blocks };
         }
-        public ReturnObjectDTO AddCar(CarDTO car)
+        public ReturnObjectDTO AddBlock(BlockDTO block)
         {
             try
             {
-                var carEntity = new Car()
+                var blockEntity = new Block()
                 {
-                    UserId = car.UserId,
-                    Aciklama = car.Aciklama,
-                    Plaka = car.Plaka,
-                    DateCreated = DateTime.Now,
-                    IsActive = true
+                    Name = block.Name,
+                    IsActive = true,
+                    DateCreated = DateTime.Now
                 };
 
-                repository.Add(carEntity);
+                repository.Add(blockEntity);
                 unitOfWork.Commit();
 
-                car.Id = carEntity.Id;
-                return new ReturnObjectDTO() { data = car, successMessage="İşlem Başarılı" };
+                block.Id = blockEntity.Id;
+                return new ReturnObjectDTO() { data = block, successMessage="İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -62,26 +60,26 @@ namespace Business.Concretes
         }
 
 
-        public ReturnObjectDTO UpdateCar(int id, CarDTO car, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateBlock(int id, BlockDTO block, string updatedBy = "Api Kullanicisi")
         {
-            if (id != car.Id)
+            if (id != block.Id)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı." };
             }
 
-            var entity = repository.GetById(id);// GetCar(id);
+            var entity = repository.GetById(id);// GetBlock(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı.(2)" };
             }
 
-            entity.Aciklama = car.Aciklama;
-            entity.Plaka = car.Plaka;
+            entity.Name = block.Name;
+
             try
             {
                 repository.Update(entity);
                 unitOfWork.Commit();
-                return new ReturnObjectDTO() { data = car, successMessage = "İşlem Başarılı" };
+                return new ReturnObjectDTO() { data = block, successMessage = "İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -90,9 +88,9 @@ namespace Business.Concretes
         }
 
 
-        public ReturnObjectDTO DeleteCar(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteBlock(int id, string updatedBy = "Api Kullanicisi")
         {
-            var entity = repository.GetById(id);//GetCar(id);
+            var entity = repository.GetById(id);//GetBlock(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Silinecek Kayıt Bilgisi Bulunamadı.(2)" };

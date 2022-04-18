@@ -10,50 +10,48 @@ using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
-    public class CarService:ICarService
+    public class UserTypeService:IUserTypeService
     {
-        private readonly IRepository<Car> repository;
+        private readonly IRepository<UserType> repository;
         private readonly IUnitOfWork unitOfWork;
-        public CarService(IRepository<Car> repository, IUnitOfWork unitOfWork)
+        public UserTypeService(IRepository<UserType> repository, IUnitOfWork unitOfWork)
         {
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
 
-        public IQueryable<Car> Cars()
+        public IQueryable<UserType> UserTypes()
         {
             return repository.GetAll();
         }
 
-        public ReturnObjectDTO GetCar(int id)
+        public ReturnObjectDTO GetUserType(int id)
         {
-            var car =  Cars().FirstOrDefault(x => x.Id == id);
-            return new ReturnObjectDTO() { data = car, successMessage = "İşlem Başarılı" };
+            var userType =  UserTypes().FirstOrDefault(x => x.Id == id);
+            return new ReturnObjectDTO() { data = userType, successMessage = "İşlem Başarılı" };
         }
 
-        public ReturnObjectDTO GetAllCars()
+        public ReturnObjectDTO GetAllUserTypes()
         {
-            var cars =  repository.GetAll().ToList();
-            return new ReturnObjectDTO() { data = cars };
+            var userTypes =  repository.GetAll().ToList();
+            return new ReturnObjectDTO() { data = userTypes };
         }
-        public ReturnObjectDTO AddCar(CarDTO car)
+        public ReturnObjectDTO AddUserType(UserTypeDTO userType)
         {
             try
             {
-                var carEntity = new Car()
+                var userTypeEntity = new UserType()
                 {
-                    UserId = car.UserId,
-                    Aciklama = car.Aciklama,
-                    Plaka = car.Plaka,
-                    DateCreated = DateTime.Now,
-                    IsActive = true
+                    Name = userType.Name,
+                    IsActive = true,
+                    DateCreated = DateTime.Now
                 };
 
-                repository.Add(carEntity);
+                repository.Add(userTypeEntity);
                 unitOfWork.Commit();
 
-                car.Id = carEntity.Id;
-                return new ReturnObjectDTO() { data = car, successMessage="İşlem Başarılı" };
+                userType.Id = userTypeEntity.Id;
+                return new ReturnObjectDTO() { data = userType, successMessage="İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -62,26 +60,26 @@ namespace Business.Concretes
         }
 
 
-        public ReturnObjectDTO UpdateCar(int id, CarDTO car, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateUserType(int id, UserTypeDTO userType, string updatedBy = "Api Kullanicisi")
         {
-            if (id != car.Id)
+            if (id != userType.Id)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı." };
             }
 
-            var entity = repository.GetById(id);// GetCar(id);
+            var entity = repository.GetById(id);// GetUserType(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı.(2)" };
             }
 
-            entity.Aciklama = car.Aciklama;
-            entity.Plaka = car.Plaka;
+            entity.Name = userType.Name;
+
             try
             {
                 repository.Update(entity);
                 unitOfWork.Commit();
-                return new ReturnObjectDTO() { data = car, successMessage = "İşlem Başarılı" };
+                return new ReturnObjectDTO() { data = userType, successMessage = "İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -90,9 +88,9 @@ namespace Business.Concretes
         }
 
 
-        public ReturnObjectDTO DeleteCar(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteUserType(int id, string updatedBy = "Api Kullanicisi")
         {
-            var entity = repository.GetById(id);//GetCar(id);
+            var entity = repository.GetById(id);//GetUserType(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Silinecek Kayıt Bilgisi Bulunamadı.(2)" };

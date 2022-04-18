@@ -10,50 +10,48 @@ using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
-    public class CarService:ICarService
+    public class FlatTypeService:IFlatTypeService
     {
-        private readonly IRepository<Car> repository;
+        private readonly IRepository<FlatType> repository;
         private readonly IUnitOfWork unitOfWork;
-        public CarService(IRepository<Car> repository, IUnitOfWork unitOfWork)
+        public FlatTypeService(IRepository<FlatType> repository, IUnitOfWork unitOfWork)
         {
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
 
-        public IQueryable<Car> Cars()
+        public IQueryable<FlatType> FlatTypes()
         {
             return repository.GetAll();
         }
 
-        public ReturnObjectDTO GetCar(int id)
+        public ReturnObjectDTO GetFlatType(int id)
         {
-            var car =  Cars().FirstOrDefault(x => x.Id == id);
-            return new ReturnObjectDTO() { data = car, successMessage = "İşlem Başarılı" };
+            var flatType =  FlatTypes().FirstOrDefault(x => x.Id == id);
+            return new ReturnObjectDTO() { data = flatType, successMessage = "İşlem Başarılı" };
         }
 
-        public ReturnObjectDTO GetAllCars()
+        public ReturnObjectDTO GetAllFlatTypes()
         {
-            var cars =  repository.GetAll().ToList();
-            return new ReturnObjectDTO() { data = cars };
+            var flatTypes =  repository.GetAll().ToList();
+            return new ReturnObjectDTO() { data = flatTypes };
         }
-        public ReturnObjectDTO AddCar(CarDTO car)
+        public ReturnObjectDTO AddFlatType(FlatTypeDTO flatType)
         {
             try
             {
-                var carEntity = new Car()
+                var flatTypeEntity = new FlatType()
                 {
-                    UserId = car.UserId,
-                    Aciklama = car.Aciklama,
-                    Plaka = car.Plaka,
-                    DateCreated = DateTime.Now,
-                    IsActive = true
+                    Name = flatType.Name,
+                    IsActive = true,
+                    DateCreated = DateTime.Now
                 };
 
-                repository.Add(carEntity);
+                repository.Add(flatTypeEntity);
                 unitOfWork.Commit();
 
-                car.Id = carEntity.Id;
-                return new ReturnObjectDTO() { data = car, successMessage="İşlem Başarılı" };
+                flatType.Id = flatTypeEntity.Id;
+                return new ReturnObjectDTO() { data = flatType, successMessage="İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -62,26 +60,26 @@ namespace Business.Concretes
         }
 
 
-        public ReturnObjectDTO UpdateCar(int id, CarDTO car, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateFlatType(int id, FlatTypeDTO flatType, string updatedBy = "Api Kullanicisi")
         {
-            if (id != car.Id)
+            if (id != flatType.Id)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı." };
             }
 
-            var entity = repository.GetById(id);// GetCar(id);
+            var entity = repository.GetById(id);// GetFlatType(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı.(2)" };
             }
 
-            entity.Aciklama = car.Aciklama;
-            entity.Plaka = car.Plaka;
+            entity.Name = flatType.Name;
+
             try
             {
                 repository.Update(entity);
                 unitOfWork.Commit();
-                return new ReturnObjectDTO() { data = car, successMessage = "İşlem Başarılı" };
+                return new ReturnObjectDTO() { data = flatType, successMessage = "İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -90,9 +88,9 @@ namespace Business.Concretes
         }
 
 
-        public ReturnObjectDTO DeleteCar(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteFlatType(int id, string updatedBy = "Api Kullanicisi")
         {
-            var entity = repository.GetById(id);//GetCar(id);
+            var entity = repository.GetById(id);//GetFlatType(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Silinecek Kayıt Bilgisi Bulunamadı.(2)" };

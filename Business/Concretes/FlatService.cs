@@ -10,50 +10,54 @@ using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
-    public class CarService:ICarService
+    public class FlatService:IFlatService
     {
-        private readonly IRepository<Car> repository;
+        private readonly IRepository<Flat> repository;
         private readonly IUnitOfWork unitOfWork;
-        public CarService(IRepository<Car> repository, IUnitOfWork unitOfWork)
+        public FlatService(IRepository<Flat> repository, IUnitOfWork unitOfWork)
         {
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
 
-        public IQueryable<Car> Cars()
+        public IQueryable<Flat> Flats()
         {
             return repository.GetAll();
         }
 
-        public ReturnObjectDTO GetCar(int id)
+        public ReturnObjectDTO GetFlat(int id)
         {
-            var car =  Cars().FirstOrDefault(x => x.Id == id);
-            return new ReturnObjectDTO() { data = car, successMessage = "İşlem Başarılı" };
+            var flat =  Flats().FirstOrDefault(x => x.Id == id);
+            return new ReturnObjectDTO() { data = flat, successMessage = "İşlem Başarılı" };
         }
 
-        public ReturnObjectDTO GetAllCars()
+        public ReturnObjectDTO GetAllFlats()
         {
-            var cars =  repository.GetAll().ToList();
-            return new ReturnObjectDTO() { data = cars };
+            var flats =  repository.GetAll().ToList();
+            return new ReturnObjectDTO() { data = flats };
         }
-        public ReturnObjectDTO AddCar(CarDTO car)
+        public ReturnObjectDTO AddFlat(FlatDTO flat)
         {
             try
             {
-                var carEntity = new Car()
-                {
-                    UserId = car.UserId,
-                    Aciklama = car.Aciklama,
-                    Plaka = car.Plaka,
-                    DateCreated = DateTime.Now,
+                var flatEntity = new Flat()
+                {                    
+                    Floor = flat.Floor,
+                    No = flat.No,
+                    Description = flat.Description,
+                    FlatTypeId = flat.FlatTypeId,
+                    BlockId=flat.BlockId,
+                    UserId = flat.UserId,
+                    UserTypeId = flat.UserTypeId,
+                    DateCreated = DateTime.Now, 
                     IsActive = true
                 };
 
-                repository.Add(carEntity);
+                repository.Add(flatEntity);
                 unitOfWork.Commit();
 
-                car.Id = carEntity.Id;
-                return new ReturnObjectDTO() { data = car, successMessage="İşlem Başarılı" };
+                flat.Id = flatEntity.Id;
+                return new ReturnObjectDTO() { data = flat, successMessage="İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -62,26 +66,31 @@ namespace Business.Concretes
         }
 
 
-        public ReturnObjectDTO UpdateCar(int id, CarDTO car, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateFlat(int id, FlatDTO flat, string updatedBy = "Api Kullanicisi")
         {
-            if (id != car.Id)
+            if (id != flat.Id)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı." };
             }
 
-            var entity = repository.GetById(id);// GetCar(id);
+            var entity = repository.GetById(id);// GetFlat(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı.(2)" };
             }
 
-            entity.Aciklama = car.Aciklama;
-            entity.Plaka = car.Plaka;
+                    entity.Floor = flat.Floor;
+                    entity.No = flat.No;
+                    entity.Description = flat.Description;
+                    entity.FlatTypeId = flat.FlatTypeId;
+                    entity.BlockId = flat.BlockId;
+                    entity.UserId = flat.UserId;
+                    entity.UserTypeId = flat.UserTypeId;
             try
             {
                 repository.Update(entity);
                 unitOfWork.Commit();
-                return new ReturnObjectDTO() { data = car, successMessage = "İşlem Başarılı" };
+                return new ReturnObjectDTO() { data = flat, successMessage = "İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -90,9 +99,9 @@ namespace Business.Concretes
         }
 
 
-        public ReturnObjectDTO DeleteCar(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteFlat(int id, string updatedBy = "Api Kullanicisi")
         {
-            var entity = repository.GetById(id);//GetCar(id);
+            var entity = repository.GetById(id);//GetFlat(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Silinecek Kayıt Bilgisi Bulunamadı.(2)" };
