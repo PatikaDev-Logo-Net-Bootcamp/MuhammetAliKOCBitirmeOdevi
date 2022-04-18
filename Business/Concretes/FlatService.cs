@@ -2,6 +2,7 @@
 using Business.DTO;
 using Domain.Entities;
 using EntityFramework.Repository.Abstracts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,10 +32,27 @@ namespace Business.Concretes
             return new ReturnObjectDTO() { data = flat, successMessage = "İşlem Başarılı" };
         }
 
-        public ReturnObjectDTO GetAllFlats()
+        public List<FlatDTO> GetAllFlats()
         {
-            var flats =  repository.GetAll().ToList();
-            return new ReturnObjectDTO() { data = flats };
+            var flats =  repository.GetAllEntities().Include(b=>b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr=>usr.User)
+                
+                .Select(x=>new FlatDTO() { Id = x.Id
+                                          , BlockId = x.BlockId
+                                          , BlockName = x.Block.Name
+                                          , Description = x.Description
+                                          , No = x.No
+                                          , FlatTypeId = x.FlatTypeId
+                                          , FlatTypeName = x.FlatType.Name
+                                          , Floor = x.Floor
+                                          , UserId = x.UserId
+                                          , UserEmail = x.User.Email
+                                          , UserFirstName = x.User.FirstName
+                                          , UserLastName = x.User.LastName
+                                          , UserPhoneNumber = x.User.PhoneNumber                                          
+                                          , UserTypeId = x.UserTypeId
+                                          , UserTypeName = x.UserType.Name
+                                        }).ToList();
+            return flats;
         }
         public ReturnObjectDTO AddFlat(FlatDTO flat)
         {

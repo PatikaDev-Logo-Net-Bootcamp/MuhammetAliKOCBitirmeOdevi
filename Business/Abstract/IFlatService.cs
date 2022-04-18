@@ -13,7 +13,7 @@ namespace Business.Abstract
         IQueryable<Flat> Flats();
 
         ReturnObjectDTO GetFlat(int id);
-        ReturnObjectDTO GetAllFlats();
+        List<FlatDTO> GetAllFlats();
         ReturnObjectDTO AddFlat(FlatDTO flat);
 
         ReturnObjectDTO UpdateFlat(int id, FlatDTO flat, string updatedBy = "Api Kullanicisi");

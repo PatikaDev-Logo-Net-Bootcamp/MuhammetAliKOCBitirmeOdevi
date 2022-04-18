@@ -31,10 +31,10 @@ namespace Business.Concretes
             return new ReturnObjectDTO() { data = userType, successMessage = "İşlem Başarılı" };
         }
 
-        public ReturnObjectDTO GetAllUserTypes()
+        public List<UserTypeDTO> GetAllUserTypes()
         {
-            var userTypes =  repository.GetAll().ToList();
-            return new ReturnObjectDTO() { data = userTypes };
+            var userTypes =  repository.GetAll().Select(x=>new UserTypeDTO() { Id = x.Id, Name = x.Name}).ToList();
+            return userTypes;
         }
         public ReturnObjectDTO AddUserType(UserTypeDTO userType)
         {

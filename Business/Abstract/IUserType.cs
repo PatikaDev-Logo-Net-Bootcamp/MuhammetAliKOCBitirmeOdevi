@@ -13,7 +13,7 @@ namespace Business.Abstract
         IQueryable<UserType> UserTypes();
 
         ReturnObjectDTO GetUserType(int id);
-        ReturnObjectDTO GetAllUserTypes();
+        List<UserTypeDTO> GetAllUserTypes();
         ReturnObjectDTO AddUserType(UserTypeDTO userType);
 
         ReturnObjectDTO UpdateUserType(int id, UserTypeDTO userType, string updatedBy = "Api Kullanicisi");

@@ -31,10 +31,10 @@ namespace Business.Concretes
             return new ReturnObjectDTO() { data = flatType, successMessage = "İşlem Başarılı" };
         }
 
-        public ReturnObjectDTO GetAllFlatTypes()
+        public List<FlatTypeDTO> GetAllFlatTypes()
         {
-            var flatTypes =  repository.GetAll().ToList();
-            return new ReturnObjectDTO() { data = flatTypes };
+            var flatTypes =  repository.GetAll().Select(x=>new FlatTypeDTO() { Id = x.Id, Name = x.Name}).ToList();
+            return flatTypes;
         }
         public ReturnObjectDTO AddFlatType(FlatTypeDTO flatType)
         {

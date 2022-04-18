@@ -22,6 +22,11 @@ namespace EntityFramework.Repository.Concretes
             return unitOfWork.Context.Set<T>().AsQueryable();
         }
 
+        public DbSet<T> GetAllEntities()
+        {
+            return unitOfWork.Context.Set<T>();
+        }
+
         public T GetById(int Id)
         {
             return GetAll().Where(x => x.Id == Id).FirstOrDefault();

@@ -3,7 +3,7 @@
     ViewData["Title"] = "Blok İşlemleri";
     Layout = "_Layout2";
 }
-@model BlockListDTO
+@model FlatListDTO
     <head>
         <link rel="stylesheet" type="text/css" href="~/lib/DataTable/datatables.min.css" />
     </head>
@@ -13,7 +13,7 @@
             <p id="pPageMesaj"></p>
         </div>
         <div class="col-md-2">
-            <button type="button" class="btn btn-info btnAdd"> + Yeni Blok</button>
+            <button type="button" class="btn btn-info btnAdd"> + Yeni Daire</button>
         </div>
     </div>
 
@@ -31,11 +31,13 @@
         </thead>
         <tbody>
 
-        @foreach (var item in Model.Blocks)
+        @foreach (var item in Model.Flats)
         {
-                <tr>
-                    <td class="Name">@item.Name</td>
-                    <td class="Address">@item.Address</td>
+            <tr>
+                    <td class="Flat">@(item.BlockName + " .Blok " + @item.Floor + " .Kat No:" + @item.No )</td>
+                    <td class="FlatType">@item.FlatTypeName</td>
+                    <td class="User">@(item.UserFirstName +  " " + item.UserLastName + " (Tel:" + item.UserPhoneNumber+")")</td>
+                    <td class="UserType">@item.UserTypeName</td>
                     <td class="Description">@item.Description</td>                    
                     <td>
                         <button type="button" class="btn btn-primary btnUpdate" data-id="@item.Id">Güncelle</button>
@@ -51,11 +53,11 @@
     <div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form id="BlockAddForm">
+                <form id="FlatAddForm">
                 @Html.AntiForgeryToken()
 
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Yeni Blok</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Yeni Daire</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -63,19 +65,73 @@
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label>Ad</label>
-                            <input asp-for="@Model.Block.Name" id="NameForAdd" type="text" class="form-control" placeholder="Blok adı">
-                        @Html.ValidationMessageFor(model => model.Block.Name,"", new { @class = "text-danger" })
+                            <label>Rol</label>
+                        @Html.DropDownListFor(x => x.Flat.BlockId,new SelectList(@ViewBag.Blocks, "Id", "Name"), new { @id="BlokIdForAdd", @class = "form-control" })
+
+                          @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
+                            @foreach(RoleDTO item in @ViewBag.AllRoles)
+                            {
+                                 <option value="@item.Id">@item.Name</option>
+                            }                   
+                            </select>*@   
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Kat</label>
+                            <input asp-for="@Model.Flat.Floor" id="FloorForAdd" type="text" class="form-control" placeholder="Kat">
+                        @Html.ValidationMessageFor(model => model.Flat.Floor,"", new { @class = "text-danger" })
                         </div>
                         <div class="form-group">
-                            <label>Adres</label>
-                            <input asp-for="@Model.Block.Address" id="AddressForAdd" type="text" class="form-control" placeholder="Adres">
-                        @Html.ValidationMessageFor(model => model.Block.Address, "", new { @class = "text-danger" })
+                            <label>No</label>
+                            <input asp-for="@Model.Flat.No" id="NoForAdd" type="text" class="form-control" placeholder="No">
+                        @Html.ValidationMessageFor(model => model.Flat.No, "", new { @class = "text-danger" })
                         </div>
+
+                        <div class="form-group">
+                            <label>Tip</label>
+                        @Html.DropDownListFor(x => x.Flat.FlatTypeId,new SelectList(@ViewBag.FlatTypes, "Id", "Name"), new { @id="FlatTypeIdForAdd", @class = "form-control" })
+
+                          @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
+                            @foreach(RoleDTO item in @ViewBag.AllRoles)
+                            {
+                                 <option value="@item.Id">@item.Name</option>
+                            }                   
+                            </select>*@   
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Kullanıcı</label>
+                        @Html.DropDownListFor(x => x.Flat.UserId,new SelectList(@ViewBag.Users, "Id", "Description"), new { @id="UserIdForAdd", @class = "form-control" })
+
+                          @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
+                            @foreach(RoleDTO item in @ViewBag.AllRoles)
+                            {
+                                 <option value="@item.Id">@item.Name</option>
+                            }                   
+                            </select>*@   
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Kullanıcı Tip</label>
+                        @Html.DropDownListFor(x => x.Flat.UserTypeId,new SelectList(@ViewBag.UserTypes, "Id", "Name"), new { @id="UserTypeIdForAdd", @class = "form-control" })
+
+                          @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
+                            @foreach(RoleDTO item in @ViewBag.AllRoles)
+                            {
+                                 <option value="@item.Id">@item.Name</option>
+                            }                   
+                            </select>*@   
+
+                        </div>
+
+
                         <div class="form-group">
                             <label>Açıklama</label>
-                            <input asp-for="@Model.Block.Description" id="DescriptionForAdd" type="text" class="form-control" placeholder="Açıklama">
-                        @Html.ValidationMessageFor(model => model.Block.Description, "", new { @class = "text-danger" })
+                            <input asp-for="@Model.Flat.Description" id="DescriptionForAdd" type="text" class="form-control" placeholder="Açıklama">
+                        @Html.ValidationMessageFor(model => model.Flat.Description, "", new { @class = "text-danger" })
                         </div>   
 
                         <div style="min-height:40px">
@@ -93,55 +149,6 @@
         </div>
     </div>
 
-
-    <!-- Modal Update -->
-    <div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form id="BlockUpdateForm">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Blok Güncelle</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-
-
- 
-                    @Html.AntiForgeryToken()
-                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
-
-                        <input asp-for="@Model.Block.Id" id="IdForUpdate" type="hidden" value="">
-
-                        <div class="form-group">
-                            <label>Ad</label>
-                            <input asp-for="@Model.Block.Name" id="NameForUpdate" type="text" class="form-control" placeholder="Blok adı">
-                        @Html.ValidationMessageFor(model => model.Block.Name, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="form-group">
-                            <label>Adres</label>
-                            <input asp-for="@Model.Block.Address" id="AddressForUpdate" type="text" class="form-control" placeholder="Adres">
-                        @Html.ValidationMessageFor(model => model.Block.Address, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="form-group">
-                            <label>Açıklama</label>
-                            <input asp-for="@Model.Block.Description" id="DescriptionForUpdate" type="text" class="form-control" placeholder="Açıklama">
-                        @Html.ValidationMessageFor(model => model.Block.Description, "", new { @class = "text-danger" })
-                        </div>
-
-                        <div style="min-height:40px">
-                            <p id="pUpdateMesajiModal"></p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
-                        <button type="submit" class="btn btn-primary" id="btnUpdateSubmit">Güncelle</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
 
 @section Scripts {
@@ -169,14 +176,14 @@
                 clickedRow = $(this).parent();
                     let id = $(this).data("id");
                      modalEmptyForUpdate();
-                 getBlockForUpdate(id);
+                 getFlatForUpdate(id);
             }); 
 
             $(document).on('click','.btnDelete', function(){
               if (confirm('Blok Silmek İstediğinizden Emin Misiniz?')) {
                   clickedRow = $(this).parent();
                    let id = $(this).data("id");
-                   deleteBlock($(this),id);
+                   deleteFlat($(this),id);
                 }
             });
 
@@ -184,10 +191,10 @@
             $( "#btnAddSubmit").on( "click", function(e) {
                  e.preventDefault();
 
-                $('#BlockAddForm').validate();
+                $('#FlatAddForm').validate();
 
-                if ($('#BlockAddForm').valid()) {
-                   addBlock();
+                if ($('#FlatAddForm').valid()) {
+                   addFlat();
                 }
             });
 
@@ -195,18 +202,18 @@
            $( "#btnUpdateSubmit").on( "click", function(e) {
                 e.preventDefault();
 
-                $('#BlockUpdateForm').validate();
+                $('#FlatUpdateForm').validate();
 
-                if ($('#BlockUpdateForm').valid()) {
-                   updateBlock();
+                if ($('#FlatUpdateForm').valid()) {
+                   updateFlat();
                 }
             });
         });
                 function modalEmptyForAdd(){
                     $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
 
-                    $("#NameForAdd").val("");
-                    $("#AddressForAdd").val("");
+                    $("#FloorForAdd").val("");
+                    $("#NoForAdd").val("");
                     $("#DescriptionForAdd").val("");                  
 
                 }
@@ -215,10 +222,10 @@
                 }
 
 
-                function getBlockForUpdate(id) {
+                function getFlatForUpdate(id) {
                         $.ajax({
                                 type: 'POST',
-                                url: '/Residence/GetBlock',
+                                url: '/Residence/GetFlat',
                                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                                 data: { id: id },
                                 success: function (result) {
@@ -247,13 +254,13 @@
                 }
 
                 var addSetTimeOutId;
-                function addBlock() {
+                function addFlat() {
                         $("#pAddMesajiModal").text("");
-                        var data = $("#BlockAddForm").serialize();
+                        var data = $("#FlatAddForm").serialize();
                         console.log(data);
                         $.ajax({
                                 type: 'POST',
-                                url: '/Residence/AddBlock',
+                                url: '/Residence/AddFlat',
                                 dataType: 'json',
                                 //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                                 data: data,
@@ -265,8 +272,8 @@
                                               $("#pAddMesajiModal").css("color", "green");
 
                                             table.row.add( [
-                                                 $("#NameForAdd").val(),
-                                                 $("#AddressForAdd").val(),
+                                                 $("#FloorForAdd").val(),
+                                                 $("#NoForAdd").val(),
                                                  $("#DescriptionForAdd").val(),                                               
                                                  "<button type='button' class='btn btn-primary btnUpdate' data-id='"+result.data.id+"'>Güncelle</button>"+
                                                  "<button type='button' class='btn btn-danger btnDelete' data-id='"+result.data.id+"'>Sil</button>"
@@ -300,12 +307,12 @@
                 });
 
                 var updateSetTimeOutId ;
-                function updateBlock() {
+                function updateFlat() {
                         $("#pUpdateMesajiModal").text("");
-                        var data = $("#BlockUpdateForm").serialize();
+                        var data = $("#FlatUpdateForm").serialize();
                         $.ajax({
                                 type: 'POST',
-                                url: '/Residence/UpdateBlock',
+                                url: '/Residence/UpdateFlat',
                                 dataType: 'json',
                                 //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                                 data: data,
@@ -350,11 +357,11 @@
                 });
 
 
-                function deleteBlock(deleteButton, id) {
+                function deleteFlat(deleteButton, id) {
                         $("#pPageMesaj").text("");
                         $.ajax({
                                 type: 'POST',
-                                url: '/Residence/DeleteBlock',
+                                url: '/Residence/DeleteFlat',
                                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                                 data: { id: id },
                                 success: function (result) {

@@ -1,4 +1,5 @@
 ﻿using Domain.Base;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace EntityFramework.Repository.Abstracts
     public interface IRepository<T> where T : BaseEntity
     {
         IQueryable<T> GetAll();
+        DbSet<T> GetAllEntities();
         T GetById(int Id);
         void Add(T entity);
         void Update(T entity);
