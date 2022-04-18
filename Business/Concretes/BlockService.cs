@@ -31,10 +31,10 @@ namespace Business.Concretes
             return new ReturnObjectDTO() { data = block, successMessage = "İşlem Başarılı" };
         }
 
-        public ReturnObjectDTO GetAllBlocks()
+        public List<BlockDTO> GetAllBlocks()
         {
-            var blocks =  repository.GetAll().ToList();
-            return new ReturnObjectDTO() { data = blocks };
+            var blocks =  repository.GetAll().Select(x=>new BlockDTO() {Id=x.Id, Address = x.Address, Description = x.Description, Name = x.Name }).ToList();
+            return   blocks ;
         }
         public ReturnObjectDTO AddBlock(BlockDTO block)
         {
@@ -43,6 +43,8 @@ namespace Business.Concretes
                 var blockEntity = new Block()
                 {
                     Name = block.Name,
+                    Address = block.Address,
+                    Description = block.Description,
                     IsActive = true,
                     DateCreated = DateTime.Now
                 };
@@ -74,6 +76,8 @@ namespace Business.Concretes
             }
 
             entity.Name = block.Name;
+            entity.Address = block.Address; 
+            entity.Description = block.Description; 
 
             try
             {

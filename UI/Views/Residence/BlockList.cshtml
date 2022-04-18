@@ -1,0 +1,385 @@
+﻿@using Business.DTO
+@{
+    ViewData["Title"] = "Blok İşlemleri";
+    Layout = "_Layout2";
+}
+@model BlockListDTO
+    <head>
+        <link rel="stylesheet" type="text/css" href="~/lib/DataTable/datatables.min.css" />
+    </head>
+
+    <div class="row" style="margin-top:50px; margin-bottom:50px;">
+        <div class="col-md-10">
+            <p id="pPageMesaj"></p>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-info btnAdd"> + Yeni Blok</button>
+        </div>
+    </div>
+
+
+
+    <table id="ListTable" class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Blok</th>
+                <th scope="col">Adres</th>
+                <th scope="col">Açıklama</th> 
+                <th scope="col"></th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+        @foreach (var item in Model.Blocks)
+        {
+                <tr>
+                    <td class="Name">@item.Name</td>
+                    <td class="Address">@item.Address</td>
+                    <td class="Description">@item.Description</td>                    
+                    <td>
+                        <button type="button" class="btn btn-primary btnUpdate" data-id="@item.Id">Güncelle</button>
+                        <button type="button" class="btn btn-danger btnDelete" data-id="@item.Id">Sil</button>
+                    </td>
+                </tr>
+
+        }
+        </tbody>
+    </table>
+
+    <!-- Modal Add -->
+    <div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form id="BlockAddForm">
+                @Html.AntiForgeryToken()
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Yeni kullanıcı</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label>Ad</label>
+                            <input asp-for="@Model.Block.Name" id="NameForAdd" type="text" class="form-control" placeholder="Blok adı">
+                        @Html.ValidationMessageFor(model => model.Block.Name,"", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label>Adres</label>
+                            <input asp-for="@Model.Block.Address" id="AddressForAdd" type="text" class="form-control" placeholder="Adres">
+                        @Html.ValidationMessageFor(model => model.Block.Address, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label>Açıklama</label>
+                            <input asp-for="@Model.Block.Description" id="DescriptionForAdd" type="text" class="form-control" placeholder="Açıklama">
+                        @Html.ValidationMessageFor(model => model.Block.Description, "", new { @class = "text-danger" })
+                        </div>   
+
+                        <div style="min-height:40px">
+                            <p id="pAddMesajiModal"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                        <button type="submit" class="btn btn-info" id="btnAddSubmit">Ekle</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal Update -->
+    <div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form id="BlockUpdateForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Kullanıcı Güncelle</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+
+ 
+                    @Html.AntiForgeryToken()
+                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+
+                        <input asp-for="@Model.Block.Id" id="IdForUpdate" type="hidden" value="">
+
+                        <div class="form-group">
+                            <label>Ad</label>
+                            <input asp-for="@Model.Block.Name" id="NameForUpdate" type="text" class="form-control" placeholder="Blok adı">
+                        @Html.ValidationMessageFor(model => model.Block.Name, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label>Adres</label>
+                            <input asp-for="@Model.Block.Address" id="AddressForUpdate" type="text" class="form-control" placeholder="Adres">
+                        @Html.ValidationMessageFor(model => model.Block.Address, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label>Açıklama</label>
+                            <input asp-for="@Model.Block.Description" id="DescriptionForUpdate" type="text" class="form-control" placeholder="Açıklama">
+                        @Html.ValidationMessageFor(model => model.Block.Description, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div style="min-height:40px">
+                            <p id="pUpdateMesajiModal"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                        <button type="submit" class="btn btn-primary" id="btnUpdateSubmit">Güncelle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts {
+    <script src="~/lib/DataTable/datatables.min.js"></script>
+
+    <script type="text/javascript">
+        var table;
+        var clickedRow;
+        $(document).ready( function () {
+
+            //Data Table initilation
+           table = $('#ListTable').DataTable({
+                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tümü"]],
+                  //"language": {"url": "/lib/DataTable/Turkish.json"}
+                  "language": {"url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Turkish.json"}
+               });
+
+
+            $( ".btnAdd").on( "click", function() {
+                 modalEmptyForAdd();
+                  $('#modalAdd').modal();
+            }); 
+
+            $(document).on('click','.btnUpdate', function(){
+                clickedRow = $(this).parent();
+                    let id = $(this).data("id");
+                     modalEmptyForUpdate();
+                 getBlockForUpdate(id);
+            }); 
+
+            $(document).on('click','.btnDelete', function(){
+              if (confirm('Blok Silmek İstediğinizden Emin Misiniz?')) {
+                  clickedRow = $(this).parent();
+                   let id = $(this).data("id");
+                   deleteBlock($(this),id);
+                }
+            });
+
+
+            $( "#btnAddSubmit").on( "click", function(e) {
+                 e.preventDefault();
+
+                $('#BlockAddForm').validate();
+
+                if ($('#BlockAddForm').valid()) {
+                   addBlock();
+                }
+            });
+
+
+           $( "#btnUpdateSubmit").on( "click", function(e) {
+                e.preventDefault();
+
+                $('#BlockUpdateForm').validate();
+
+                if ($('#BlockUpdateForm').valid()) {
+                   updateBlock();
+                }
+            });
+        });
+                function modalEmptyForAdd(){
+                    $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
+
+                    $("#NameForAdd").val("");
+                    $("#AddressForAdd").val("");
+                    $("#DescriptionForAdd").val("");                  
+
+                }
+                 function modalEmptyForUpdate(){
+                     $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
+                }
+
+
+                function getBlockForUpdate(id) {
+                        $.ajax({
+                                type: 'POST',
+                                url: '/Residence/GetBlock',
+                                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                                data: { id: id },
+                                success: function (result) {
+
+                                    console.log(result);
+                                    if(result.isSuccess){
+                                        $("#IdForUpdate").val(result.data.id);
+                                        $("#NameForUpdate").val(result.data.name);
+                                        $("#AddressForUpdate").val(result.data.address);
+                                        $("#DescriptionForUpdate").val(result.data.description);
+                                       
+                                        $('#modalUpdate').modal();
+                                    }else{
+
+                                         $("#pUpdateMesajiModal").text(result.errorMessage);
+                                         $("#pUpdateMesajiModal").css("color", "red");
+                                    }
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                     alert(xhr.status );
+                                     alert(thrownError);
+                                     $("#pUpdateMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                     $("#pUpdateMesajiModal").css("color", "red");
+                                }
+                            })
+                }
+
+                var addSetTimeOutId;
+                function addBlock() {
+                        $("#pAddMesajiModal").text("");
+                        var data = $("#BlockAddForm").serialize();
+                        console.log(data);
+                        $.ajax({
+                                type: 'POST',
+                                url: '/Residence/AddBlock',
+                                dataType: 'json',
+                                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                                data: data,
+                                success: function (result) {
+                                         if(result.isSuccess)
+                                        {
+                                            console.log(result);
+                                              $("#pAddMesajiModal").text(result.successMessage);
+                                              $("#pAddMesajiModal").css("color", "green");
+
+                                            table.row.add( [
+                                                 $("#NameForAdd").val(),
+                                                 $("#AddressForAdd").val(),
+                                                 $("#DescriptionForAdd").val(),                                               
+                                                 "<button type='button' class='btn btn-primary btnUpdate' data-id='"+result.data.id+"'>Güncelle</button>"+
+                                                 "<button type='button' class='btn btn-danger btnDelete' data-id='"+result.data.id+"'>Sil</button>"
+                                            ] ).draw();
+
+
+
+                                             addSetTimeOutId =  setTimeout(function(){
+                                                                            $('#modalAdd').modal('hide');
+                                                                            $("#pAddMesajiModal").text("");
+                                                                        }, 2500);
+                                        }else{
+                                            console.log(result.errorMessage);
+                                             $("#pAddMesajiModal").text(result.errorMessage);
+                                             $("#pAddMesajiModal").css("color", "red");
+                                        }
+                                },
+                                 error: function (xhr, ajaxOptions, thrownError) {
+                                     alert(xhr.status );
+                                     alert(thrownError);
+                                     $("#pAddMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                     $("#pAddMesajiModal").css("color", "red");
+                                }
+                            })
+                }
+
+                //Add model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+                $('#modalAdd').on('hide.bs.modal', function () {
+                    $("#pAddMesajiModal").text("");
+                    clearTimeout(addSetTimeOutId);
+                });
+
+                var updateSetTimeOutId ;
+                function updateBlock() {
+                        $("#pUpdateMesajiModal").text("");
+                        var data = $("#BlockUpdateForm").serialize();
+                        $.ajax({
+                                type: 'POST',
+                                url: '/Residence/UpdateBlock',
+                                dataType: 'json',
+                                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                                data: data,
+                                success: function (result) {
+                                        if(result.isSuccess)
+                                        {
+                                              $("#pUpdateMesajiModal").text(result.successMessage);
+                                              $("#pUpdateMesajiModal").css("color", "green");
+
+                                              //var tableRow = table.row(clickedButton.parent());
+                                              var rData = [
+                                                 $("#NameForUpdate").val(),
+                                                 $("#AddressForUpdate").val(),
+                                                 $("#DescriptionForUpdate").val(),
+                                                 "<button type='button' class='btn btn-primary btnUpdate' data-id='"+$("#IdForUpdate").val()+"'>Güncelle</button>"+
+                                                 "<button type='button' class='btn btn-danger btnDelete' data-id='"+$("#IdForUpdate").val()+"'>Sil</button>"
+                                                        ];
+
+                                            table.row(clickedRow)
+                                                .data(rData)
+                                                .draw();
+
+
+                                              updateSetTimeOutId = setTimeout(function(){ $('#modalUpdate').modal('hide'), $("#pUpdateMesajiModal").text("");}, 2500);
+                                        }else{
+                                             $("#pUpdateMesajiModal").text(result.errorMessage);
+                                             $("#pUpdateMesajiModal").css("color", "red");
+                                        }
+                                },
+                                error: function () {
+                                       $("#pUpdateMesajiModal").text("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                       $("#pUpdateMesajiModal").css("color", "red");
+                                }
+                            })
+
+
+                }
+                //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+                $('#modalUpdate').on('hide.bs.modal', function () {
+                    $("#pUpdateMesajiModal").text("");
+                    clearTimeout(updateSetTimeOutId);
+                });
+
+
+                function deleteBlock(deleteButton, id) {
+                        $("#pPageMesaj").text("");
+                        $.ajax({
+                                type: 'POST',
+                                url: '/Residence/DeleteBlock',
+                                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                                data: { id: id },
+                                success: function (result) {
+                                    if(result.isSuccess)
+                                    {
+                                        $("#pPageMesaj").text(result.successMessage);
+                                        $("#pPageMesaj").css("color", "green");
+                                        table.row(clickedRow)
+                                                .remove()
+                                                .draw();
+                                        setTimeout(function(){ $("#pPageMesaj").text("");}, 3000);
+                                    }else{
+                                        $("#pPageMesaj").text(result.errorMessage);
+                                        $("#pPageMesaj").css("color", "red");
+                                    }
+                                },
+                                error: function () {
+                                    $("#pPageMesaj").text("Silme işlemi sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                    $("#pPageMesaj").css("color", "red");
+                                }
+                            })
+                }
+
+    </script>
+
+    }
+
+

@@ -45,6 +45,11 @@ namespace UI
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<ICarService, CarService>();
+            services.AddTransient<IBlockService, BlockService>();
+            services.AddTransient<IFlatService, FlatService>();
+            services.AddTransient<IFlatTypeService, FlatTypeService>();
+            services.AddTransient<IUserTypeService, UserTypeService>();
+
 
 
             services.ConfigureApplicationCookie(options =>

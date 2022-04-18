@@ -13,7 +13,7 @@ namespace Business.Abstract
         IQueryable<Block> Blocks();
 
         ReturnObjectDTO GetBlock(int id);
-        ReturnObjectDTO GetAllBlocks();
+        List<BlockDTO> GetAllBlocks();
         ReturnObjectDTO AddBlock(BlockDTO block);
 
         ReturnObjectDTO UpdateBlock(int id, BlockDTO block, string updatedBy = "Api Kullanicisi");
