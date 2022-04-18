@@ -61,6 +61,7 @@ namespace UI.Controllers
                 PictureUrl = x.PictureUrl,
                 TwoFactorEnabled = x.TwoFactorEnabled,
                 SecurityStamp = x.SecurityStamp,
+                TC = x.TC,
                 Roles = x.UserRoles.Select(y => new RoleDTO() {Id = y.RoleId, Name=y.Role.Name }).ToList()
                 //UserEntity = x
                 
@@ -104,6 +105,7 @@ namespace UI.Controllers
                 PictureUrl = x.PictureUrl,
                 TwoFactorEnabled = x.TwoFactorEnabled,
                 SecurityStamp = x.SecurityStamp,
+                TC = x.TC,
                 Roles = x.UserRoles.Select(y => new RoleDTO() { Id =  y.Role.Id, Name = y.Role.Name}).ToList()
                 
             }).FirstOrDefault();
@@ -183,7 +185,8 @@ namespace UI.Controllers
                         PhoneNumberConfirmed = false,
                         TwoFactorEnabled = false,
                         LockoutEnabled = false,
-                        AccessFailedCount = 0
+                        AccessFailedCount = 0,
+                        TC = user.TC
                     };
                 
 
@@ -275,6 +278,7 @@ namespace UI.Controllers
                         userEntity.Email = user.Email;
                         userEntity.PhoneNumber = user.PhoneNumber;
                         userEntity.UserName = user.UserName;
+                        userEntity.TC = user.TC;
                         
                        var userRoleEntity = _roleManager.Roles.Where(x => x.Id == user.RoleSelected).Select(x => new UserRole() { User = userEntity, Role = x }).ToList();
                        

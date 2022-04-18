@@ -9,6 +9,8 @@ namespace Domain.Entities
         public string LastName { get; set; }
         public string PictureUrl { get; set; }
 
+        public string TC { get; set; }
+
 
         public ICollection<UserRole> UserRoles { get; set; }
 

@@ -32,6 +32,7 @@ namespace Business.DTO
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        public string TC { get; set; }
 
         public string Description { get; set; }
         public List<RoleDTO> Roles { get; set; }

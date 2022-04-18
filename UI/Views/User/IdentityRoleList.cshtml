@@ -24,6 +24,7 @@
             <tr>
                 <th scope="col">Adı</th>
                 <th scope="col">Soyadı</th>
+                 <th scope="col">T.C. Kimlik No</th>
                 <th scope="col">Kullanıcı Adı</th>
                 <th scope="col">EPosta</th>
                 <th scope="col">Telefon</th>
@@ -39,6 +40,7 @@
                 <tr>
                     <td class="FirstName">@user.FirstName</td>
                     <td class="LastName">@user.LastName</td>
+                     <td class="TC">@user.TC</td>
                     <td class="UserName">@user.UserName</td>
                     <td class="Email">@user.Email</td>
                     <td class="PhoneNumber">@user.PhoneNumber</td>
@@ -85,6 +87,11 @@
                             <label>Soyad</label>
                             <input asp-for="@Model.UserForAdd.LastName" id="LastNameForAdd" type="text" class="form-control" placeholder="Kullanıcı Soyadı">
                         @Html.ValidationMessageFor(model => model.UserForAdd.LastName, "", new { @class = "text-danger" })
+                        </div>
+                           <div class="form-group">
+                            <label>T.C. Kimlik Numarası</label>
+                            <input asp-for="@Model.UserForAdd.TC" id="TCForAdd" type="text" class="form-control" placeholder="T.C. Kimlik No">
+                        @Html.ValidationMessageFor(model => model.UserForAdd.TC, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group">
                             <label>Kullanıcı Adı</label>
@@ -175,6 +182,12 @@
                             <input asp-for="@Model.UserForUpdate.LastName" id="LastNameForUpdate" type="text" class="form-control" placeholder="Kullanıcı Soyadı">
                         @Html.ValidationMessageFor(model => model.UserForUpdate.LastName, "", new { @class = "text-danger" })
                         </div>
+                        <div class="form-group">
+                            <label>T.C. Kimlik Numarası</label>
+                            <input asp-for="@Model.UserForUpdate.TC" id="TCForUpdate" type="text" class="form-control" placeholder="T.C. Kimlik No">
+                        @Html.ValidationMessageFor(model => model.UserForUpdate.TC, "", new { @class = "text-danger" })
+                        </div>
+
                         <div class="form-group">
                             <label>Kullanıcı Adı</label>
                             <input asp-for="@Model.UserForUpdate.UserName" id="UserNameForUpdate" type="text" class="form-control" placeholder="Kullanıcıadı">
@@ -313,6 +326,7 @@
 
                     $("#FirstNameForAdd").val("");
                     $("#LastNameForAdd").val("");
+                     $("#TCForAdd").val("");
                     $("#UserNameForAdd").val("");
                     $("#EmailForAdd").val("");
                     $("#PhoneNumberForAdd").val("");
@@ -334,17 +348,18 @@
                                 data: { UserId: userid },
                                 success: function (result) {
 
-                                    console.log(result);
+                                  
                                     if(result.isSuccess){
                                         $("#IdForUpdate").val(result.data.id);
                                         $("#FirstNameForUpdate").val(result.data.firstName);
                                         $("#LastNameForUpdate").val(result.data.lastName);
+                                         $("#TCForUpdate").val(result.data.tc);
                                         $("#UserNameForUpdate").val(result.data.userName);
                                         $("#EmailForUpdate").val(result.data.email);
                                         $("#PhoneNumberForUpdate").val(result.data.phoneNumber);
                                         //$("#RoleSelectedForUpdate").prop('selectedVale',result.data.roles[0].id);
                                         $("#RoleSelectedForUpdate").val(result.data.roles[0].id);
-                                        //console.log(result.data.roles[0].id);  console.log(result.data.roles[0].name);
+                                         
 
 
                                         $('#modalUpdate').modal();
@@ -367,7 +382,7 @@
                 function addUser() {
                         $("#pAddMesajiModal").text("");
                         var data = $("#UserAddForm").serialize();
-                        console.log(data);
+                     
                         $.ajax({
                                 type: 'POST',
                                 url: '/User/Add',
@@ -377,7 +392,7 @@
                                 success: function (result) {
                                          if(result.isSuccess)
                                         {
-                                            console.log(result);
+                                     
                                               $("#pAddMesajiModal").text(result.successMessage);
                                               $("#pAddMesajiModal").css("color", "green");
 
@@ -412,6 +427,7 @@
                                             table.row.add( [
                                                  $("#FirstNameForAdd").val(),
                                                  $("#LastNameForAdd").val(),
+                                                  $("#TCForAdd").val(),
                                                  $("#UserNameForAdd").val(),
                                                  $("#EmailForAdd").val(),
                                                  $("#PhoneNumberForAdd").val(),
@@ -427,7 +443,7 @@
                                                                             $("#pAddMesajiModal").text("");
                                                                         }, 2500);
                                         }else{
-                                            console.log(result.errorMessage);
+                                   
                                              $("#pAddMesajiModal").text(result.errorMessage);
                                              $("#pAddMesajiModal").css("color", "red");
                                         }
@@ -467,6 +483,7 @@
                                               var rData = [
                                                  $("#FirstNameForUpdate").val(),
                                                  $("#LastNameForUpdate").val(),
+                                                 $("#TCForUpdate").val(),
                                                  $("#UserNameForUpdate").val(),
                                                  $("#EmailForUpdate").val(),
                                                  $("#PhoneNumberForUpdate").val(),
@@ -475,8 +492,7 @@
                                                  "<button type='button' class='btn btn-danger btnDelete' data-userid='"+$("#IdForUpdate").val()+"'>Sil</button>"
                                                         ];
 
-                                                        console.log(rData);
-                                                        console.log(clickedRow);
+                                     
                                             table.row(clickedRow)
                                                 .data(rData)
                                                 .draw();
@@ -498,7 +514,7 @@
                 }
                 //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
                 $('#modalUpdate').on('hide.bs.modal', function () {
-                    //console.log("update modal kapandı. updateSetTimeOutId="+ updateSetTimeOutId);
+             
                     $("#pUpdateMesajiModal").text("");
                     clearTimeout(updateSetTimeOutId);
                 });
@@ -506,7 +522,7 @@
 
                 function deleteUser(deleteButton, userid) {
                         $("#pPageMesaj").text("");
-                        console.log(userid);
+                
                         $.ajax({
                                 type: 'POST',
                                 url: '/User/Delete',

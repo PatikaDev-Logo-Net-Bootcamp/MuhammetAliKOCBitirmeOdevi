@@ -24,6 +24,7 @@ namespace Business.DTO
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public string RoleSelected { get; set; }
+        public string TC { get; set; }
 
     }
 }

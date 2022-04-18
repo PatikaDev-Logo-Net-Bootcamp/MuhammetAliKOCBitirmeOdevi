@@ -34,7 +34,8 @@ namespace EntityFramework.Context
                 Email = "Tanimsiz@Tanimsiz.com",
                 PhoneNumber = "Tanimsiz",
                 EmailConfirmed = false,
-                PhoneNumberConfirmed = false
+                PhoneNumberConfirmed = false,
+                TC =""
 
                 //Password = "hKaoJdFbclk=",/*123456*/
             };
@@ -79,7 +80,8 @@ namespace EntityFramework.Context
                 Email = "manager@manager.com",
                 PhoneNumber = "",
                 EmailConfirmed = true,
-                PhoneNumberConfirmed = true
+                PhoneNumberConfirmed = true,
+                TC ="-1"
                 
                 //Password = "hKaoJdFbclk=",/*123456*/
             };
@@ -94,7 +96,8 @@ namespace EntityFramework.Context
                 Email = "user@user.com",
                 PhoneNumber = "",
                 EmailConfirmed = true,
-                PhoneNumberConfirmed = true
+                PhoneNumberConfirmed = true,
+                TC = "-1"
                 //Password = "hKaoJdFbclk=",/*123456*/
             };
             users.Add(user);
