@@ -25,6 +25,22 @@ namespace EntityFramework.Context
         {
             List<User> users = new List<User>();
 
+            User tanimsiz = new User()
+            {
+                Id = Guid.NewGuid().ToString(),
+                FirstName = "Tanımsız",
+                LastName = "",
+                UserName = "Tanimsiz",
+                Email = "Tanimsiz@Tanimsiz.com",
+                PhoneNumber = "Tanimsiz",
+                EmailConfirmed = false,
+                PhoneNumberConfirmed = false
+
+                //Password = "hKaoJdFbclk=",/*123456*/
+            };
+            users.Add(tanimsiz);
+
+
             /*User superadmin = new User()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -53,6 +69,7 @@ namespace EntityFramework.Context
             };
             users.Add(admin);
             */
+
             User manager = new User()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -88,7 +105,7 @@ namespace EntityFramework.Context
                     if (userEntity == null)
                     {
                        var result = await userManager.CreateAsync(usr, "Sifre%5");
-                           if (result.Succeeded)
+                           if (result.Succeeded && usr.UserName != "Tanimsiz")
                            {
                                await userManager.AddToRoleAsync(usr, usr.UserName);
                                /*await userManager.AddToRoleAsync(usr, Roles.Manager.ToString());

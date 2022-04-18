@@ -24,7 +24,7 @@ namespace EntityFramework.Context.Configurations
             UserType e1 = new UserType()
             {
                 Id = 1,
-                Name = "Daire Sahibi",
+                Name = "Tanımsız",
                 DateCreated = System.DateTime.Now,
                 IsActive = true
             };
@@ -33,7 +33,7 @@ namespace EntityFramework.Context.Configurations
             UserType e2 = new UserType()
             {
                 Id = 2,
-                Name = "Kiracı",
+                Name = "Daire Sahibi",
                 DateCreated = System.DateTime.Now,
                 IsActive = true
             };
@@ -42,12 +42,20 @@ namespace EntityFramework.Context.Configurations
             UserType e3 = new UserType()
             {
                 Id = 3,
-                Name = "Apartman Görevlisi",
+                Name = "Kiracı",
                 DateCreated = System.DateTime.Now,
                 IsActive = true
             };
             list.Add(e3);
 
+            UserType e4 = new UserType()
+            {
+                Id = 4,
+                Name = "Apartman Görevlisi",
+                DateCreated = System.DateTime.Now,
+                IsActive = true
+            };
+            list.Add(e4);
 
             return list;
 

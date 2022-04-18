@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
-    public class FlatService:IFlatService
+    public class FlatService : IFlatService
     {
         private readonly IRepository<Flat> repository;
         private readonly IUnitOfWork unitOfWork;
@@ -28,30 +28,64 @@ namespace Business.Concretes
 
         public ReturnObjectDTO GetFlat(int id)
         {
-            var flat =  Flats().FirstOrDefault(x => x.Id == id);
+            var flat = Flats().Include(b => b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr => usr.User)
+                .Select(x => new FlatDTO()
+                {
+                    Id = x.Id,
+                    BlockId = x.BlockId,
+                    BlockName = x.Block.Name,
+                    Description = x.Description,
+                    No = x.No,
+                    FlatTypeId = x.FlatTypeId,
+                    FlatTypeName = x.FlatType.Name,
+                    Floor = x.Floor,
+                    UserId = x.UserId,
+                    UserEmail = x.User.Email,
+                    UserFirstName = x.User.FirstName,
+                    UserLastName = x.User.LastName,
+                    UserPhoneNumber = x.User.PhoneNumber,
+                    UserTypeId = x.UserTypeId,
+                    UserTypeName = x.UserType.Name
+                }).FirstOrDefault(x => x.Id == id);
             return new ReturnObjectDTO() { data = flat, successMessage = "İşlem Başarılı" };
         }
 
         public List<FlatDTO> GetAllFlats()
         {
-            var flats =  repository.GetAllEntities().Include(b=>b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr=>usr.User)
-                
-                .Select(x=>new FlatDTO() { Id = x.Id
-                                          , BlockId = x.BlockId
-                                          , BlockName = x.Block.Name
-                                          , Description = x.Description
-                                          , No = x.No
-                                          , FlatTypeId = x.FlatTypeId
-                                          , FlatTypeName = x.FlatType.Name
-                                          , Floor = x.Floor
-                                          , UserId = x.UserId
-                                          , UserEmail = x.User.Email
-                                          , UserFirstName = x.User.FirstName
-                                          , UserLastName = x.User.LastName
-                                          , UserPhoneNumber = x.User.PhoneNumber                                          
-                                          , UserTypeId = x.UserTypeId
-                                          , UserTypeName = x.UserType.Name
-                                        }).ToList();
+            var flats = repository.GetAllEntities().Include(b => b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr => usr.User)
+
+                .Select(x => new FlatDTO()
+                {
+                    Id = x.Id
+                                          ,
+                    BlockId = x.BlockId
+                                          ,
+                    BlockName = x.Block.Name
+                                          ,
+                    Description = x.Description
+                                          ,
+                    No = x.No
+                                          ,
+                    FlatTypeId = x.FlatTypeId
+                                          ,
+                    FlatTypeName = x.FlatType.Name
+                                          ,
+                    Floor = x.Floor
+                                          ,
+                    UserId = x.UserId
+                                          ,
+                    UserEmail = x.User.Email
+                                          ,
+                    UserFirstName = x.User.FirstName
+                                          ,
+                    UserLastName = x.User.LastName
+                                          ,
+                    UserPhoneNumber = x.User.PhoneNumber
+                                          ,
+                    UserTypeId = x.UserTypeId
+                                          ,
+                    UserTypeName = x.UserType.Name
+                }).ToList();
             return flats;
         }
         public ReturnObjectDTO AddFlat(FlatDTO flat)
@@ -59,27 +93,29 @@ namespace Business.Concretes
             try
             {
                 var flatEntity = new Flat()
-                {                    
+                {
                     Floor = flat.Floor,
                     No = flat.No,
                     Description = flat.Description,
                     FlatTypeId = flat.FlatTypeId,
-                    BlockId=flat.BlockId,
+                    BlockId = flat.BlockId,
                     UserId = flat.UserId,
                     UserTypeId = flat.UserTypeId,
-                    DateCreated = DateTime.Now, 
+                    DateCreated = DateTime.Now,
                     IsActive = true
                 };
 
                 repository.Add(flatEntity);
                 unitOfWork.Commit();
 
-                flat.Id = flatEntity.Id;
-                return new ReturnObjectDTO() { data = flat, successMessage="İşlem Başarılı" };
+                //flat.Id = flatEntity.Id;
+
+                var resData = GetFlat(flatEntity.Id).data;
+                return new ReturnObjectDTO() { data = resData, successMessage = "İşlem Başarılı" };
             }
             catch (Exception)
             {
-                return new ReturnObjectDTO() { isSuccess= false, errorMessage = "İşlem BAŞARISIZ." };
+                return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
 
@@ -97,18 +133,19 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı.(2)" };
             }
 
-                    entity.Floor = flat.Floor;
-                    entity.No = flat.No;
-                    entity.Description = flat.Description;
-                    entity.FlatTypeId = flat.FlatTypeId;
-                    entity.BlockId = flat.BlockId;
-                    entity.UserId = flat.UserId;
-                    entity.UserTypeId = flat.UserTypeId;
+            entity.Floor = flat.Floor;
+            entity.No = flat.No;
+            entity.Description = flat.Description;
+            entity.FlatTypeId = flat.FlatTypeId;
+            entity.BlockId = flat.BlockId;
+            entity.UserId = flat.UserId;
+            entity.UserTypeId = flat.UserTypeId;
             try
             {
                 repository.Update(entity);
                 unitOfWork.Commit();
-                return new ReturnObjectDTO() { data = flat, successMessage = "İşlem Başarılı" };
+                var resData = GetFlat(flat.Id).data;
+                return new ReturnObjectDTO() { data = resData, successMessage = "İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -134,9 +171,9 @@ namespace Business.Concretes
             catch (Exception)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
-            } 
+            }
 
         }
-     
+
     }
 }

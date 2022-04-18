@@ -23,7 +23,9 @@
         <thead>
             <tr>
                 <th scope="col">Blok</th>
-                <th scope="col">Adres</th>
+                <th scope="col">Tip</th>
+                <th scope="col">Kullanıcı</th> 
+                <th scope="col">Kullanıcı Tür</th> 
                 <th scope="col">Açıklama</th> 
                 <th scope="col"></th>
 
@@ -64,6 +66,8 @@
                     </div>
                     <div class="modal-body">
 
+                        @Html.HiddenFor(x=>x.Flat.Id, new {@id="IdForAdd"})
+
                         <div class="form-group">
                             <label>Rol</label>
                         @Html.DropDownListFor(x => x.Flat.BlockId,new SelectList(@ViewBag.Blocks, "Id", "Name"), new { @id="BlokIdForAdd", @class = "form-control" })
@@ -100,6 +104,8 @@
                             </select>*@   
 
                         </div>
+
+                        <input type="hidden" id="Tanimsiz_User_Id" value="@(((List<UserDTO>)ViewBag.Users).FirstOrDefault(x=>x.UserName=="Tanimsiz").Id)"/>
 
                         <div class="form-group">
                             <label>Kullanıcı</label>
@@ -175,7 +181,7 @@
             $(document).on('click','.btnUpdate', function(){
                 clickedRow = $(this).parent();
                     let id = $(this).data("id");
-                     modalEmptyForUpdate();
+                     modalEmptyForAdd();
                  getFlatForUpdate(id);
             }); 
 
@@ -194,32 +200,48 @@
                 $('#FlatAddForm').validate();
 
                 if ($('#FlatAddForm').valid()) {
-                   addFlat();
+                    if($('#IdForAdd').val()==0){
+                        addFlat();
+                    }else{
+                          updateFlat();
+                    }
+                 
                 }
             });
 
 
-           $( "#btnUpdateSubmit").on( "click", function(e) {
-                e.preventDefault();
+           //$( "#btnUpdateSubmit").on( "click", function(e) {
+           //     e.preventDefault();
 
-                $('#FlatUpdateForm').validate();
+           //     $('#FlatAddForm').validate();
 
-                if ($('#FlatUpdateForm').valid()) {
-                   updateFlat();
-                }
-            });
+           //     if ($('#FlatAddForm').valid()) {
+           //        updateFlat();
+           //     }
+           // });
         });
                 function modalEmptyForAdd(){
-                    $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
+                    $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.                    
+
+                    $("#IdForAdd").val(0);
 
                     $("#FloorForAdd").val("");
                     $("#NoForAdd").val("");
-                    $("#DescriptionForAdd").val("");                  
+                    $("#DescriptionForAdd").val("");         
+                    
+                    $("#BlokIdForAdd").val(1);
+                    $("#FlatTypeIdForAdd").val(1);
+                    $("#UserIdForAdd").val($("#Tanimsiz_User_Id").val());
 
+                    $("#UserTypeIdForAdd").val(1);
+
+
+                    console.log($("#Tanimsiz_User_Id").val());
+                    console.log($("#UserIdForAdd").val());
                 }
-                 function modalEmptyForUpdate(){
-                     $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
-                }
+                // function modalEmptyForUpdate(){
+                //     $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
+                //}
 
 
                 function getFlatForUpdate(id) {
@@ -230,25 +252,29 @@
                                 data: { id: id },
                                 success: function (result) {
 
-                                    console.log(result);
+                                    //console.log(result);
                                     if(result.isSuccess){
-                                        $("#IdForUpdate").val(result.data.id);
-                                        $("#NameForUpdate").val(result.data.name);
-                                        $("#AddressForUpdate").val(result.data.address);
-                                        $("#DescriptionForUpdate").val(result.data.description);
+                                        $("#IdForAdd").val(result.data.id);
+                                        $("#BlokIdForAdd").val(result.data.blockId);
+                                        $("#FloorForAdd").val(result.data.floor);
+                                        $("#NoForAdd").val(result.data.no);
+                                        $("#DescriptionForAdd").val(result.data.description);
+                                        $("#FlatTypeIdForAdd").val(result.data.flatTypeId);
+                                        $("#UserIdForAdd").val(result.data.userId);
+                                        $("#UserTypeIdForAdd").val(result.data.userTypeId);
                                        
-                                        $('#modalUpdate').modal();
+                                        $('#modalAdd').modal();
                                     }else{
 
-                                         $("#pUpdateMesajiModal").text(result.errorMessage);
-                                         $("#pUpdateMesajiModal").css("color", "red");
+                                         $("#pAddMesajiModal").text(result.errorMessage);
+                                         $("#pAddMesajiModal").css("color", "red");
                                     }
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
                                      alert(xhr.status );
                                      alert(thrownError);
-                                     $("#pUpdateMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
-                                     $("#pUpdateMesajiModal").css("color", "red");
+                                     $("#pAddMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                     $("#pAddMesajiModal").css("color", "red");
                                 }
                             })
                 }
@@ -267,20 +293,30 @@
                                 success: function (result) {
                                          if(result.isSuccess)
                                         {
-                                            console.log(result);
+                                            //console.log(result);
                                               $("#pAddMesajiModal").text(result.successMessage);
                                               $("#pAddMesajiModal").css("color", "green");
 
+                                              //console.log(result.data);
+                                              //console.log(result.data.id);
+
+                                              //console.log(result.data.blockName + " .Blok " + result.data.floor + " .Kat No:" + result.data.no);
+                                              //console.log(result.data.flatTypeName);
+                                              // console.log(result.data.userFirstName +  " " + result.data.userLastName + " (Tel:" + result.data.userPhoneNumber+")");
+                                              //  console.log(result.data.userTypeName);
+                                              //  console.log(result.data.description);
+
                                             table.row.add( [
-                                                 $("#FloorForAdd").val(),
-                                                 $("#NoForAdd").val(),
-                                                 $("#DescriptionForAdd").val(),                                               
+                                                 result.data.blockName + " .Blok " + result.data.floor + " .Kat No:" + result.data.no ,
+                                                 result.data.flatTypeName,
+                                                 result.data.userFirstName +  " " + result.data.userLastName + " (Tel:" + result.data.userPhoneNumber+")",
+                                                 result.data.userTypeName,
+                                                 result.data.description,
                                                  "<button type='button' class='btn btn-primary btnUpdate' data-id='"+result.data.id+"'>Güncelle</button>"+
                                                  "<button type='button' class='btn btn-danger btnDelete' data-id='"+result.data.id+"'>Sil</button>"
-                                            ] ).draw();
-
-
-
+                                            ] ).draw();  
+                                      
+                  
                                              addSetTimeOutId =  setTimeout(function(){
                                                                             $('#modalAdd').modal('hide');
                                                                             $("#pAddMesajiModal").text("");
@@ -306,10 +342,10 @@
                     clearTimeout(addSetTimeOutId);
                 });
 
-                var updateSetTimeOutId ;
+           
                 function updateFlat() {
-                        $("#pUpdateMesajiModal").text("");
-                        var data = $("#FlatUpdateForm").serialize();
+                        $("#pAddMesajiModal").text("");
+                        var data = $("#FlatAddForm").serialize();
                         $.ajax({
                                 type: 'POST',
                                 url: '/Residence/UpdateFlat',
@@ -319,16 +355,18 @@
                                 success: function (result) {
                                         if(result.isSuccess)
                                         {
-                                              $("#pUpdateMesajiModal").text(result.successMessage);
-                                              $("#pUpdateMesajiModal").css("color", "green");
+                                              $("#pAddMesajiModal").text(result.successMessage);
+                                              $("#pAddMesajiModal").css("color", "green");
 
                                               //var tableRow = table.row(clickedButton.parent());
                                               var rData = [
-                                                 $("#NameForUpdate").val(),
-                                                 $("#AddressForUpdate").val(),
-                                                 $("#DescriptionForUpdate").val(),
-                                                 "<button type='button' class='btn btn-primary btnUpdate' data-id='"+$("#IdForUpdate").val()+"'>Güncelle</button>"+
-                                                 "<button type='button' class='btn btn-danger btnDelete' data-id='"+$("#IdForUpdate").val()+"'>Sil</button>"
+                                                result.data.blockName + " .Blok " + result.data.floor + " .Kat No:" + result.data.no ,
+                                                 result.data.flatTypeName,
+                                                 result.data.userFirstName +  " " + result.data.userLastName + " (Tel:" + result.data.userPhoneNumber+")",
+                                                 result.data.userTypeName,
+                                                 result.data.description,
+                                                 "<button type='button' class='btn btn-primary btnUpdate' data-id='"+result.data.id+"'>Güncelle</button>"+
+                                                 "<button type='button' class='btn btn-danger btnDelete' data-id='"+result.data.id+"'>Sil</button>"
                                                         ];
 
                                             table.row(clickedRow)
@@ -336,15 +374,15 @@
                                                 .draw();
 
 
-                                              updateSetTimeOutId = setTimeout(function(){ $('#modalUpdate').modal('hide'), $("#pUpdateMesajiModal").text("");}, 2500);
+                                              addSetTimeOutId = setTimeout(function(){ $('#modalUpdate').modal('hide'), $("#pAddMesajiModal").text("");}, 2500);
                                         }else{
-                                             $("#pUpdateMesajiModal").text(result.errorMessage);
-                                             $("#pUpdateMesajiModal").css("color", "red");
+                                             $("#pAddMesajiModal").text(result.errorMessage);
+                                             $("#pAddMesajiModal").css("color", "red");
                                         }
                                 },
                                 error: function () {
-                                       $("#pUpdateMesajiModal").text("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
-                                       $("#pUpdateMesajiModal").css("color", "red");
+                                       $("#pAddMesajiModal").text("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                       $("#pAddMesajiModal").css("color", "red");
                                 }
                             })
 
@@ -352,8 +390,8 @@
                 }
                 //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
                 $('#modalUpdate').on('hide.bs.modal', function () {
-                    $("#pUpdateMesajiModal").text("");
-                    clearTimeout(updateSetTimeOutId);
+                    $("#pAddMesajiModal").text("");
+                    clearTimeout(addSetTimeOutId);
                 });
 
 

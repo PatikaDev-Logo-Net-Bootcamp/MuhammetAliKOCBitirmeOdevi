@@ -23,7 +23,7 @@ namespace Domain.Entities
 
         public Block Block { get; set; }
 
-        public string? UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
 
         public int? UserTypeId { get; set; }
