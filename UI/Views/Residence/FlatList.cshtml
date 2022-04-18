@@ -174,14 +174,14 @@
 
 
             $( ".btnAdd").on( "click", function() {
-                 modalEmptyForAdd();
+                 modalEmptyForAdd(0);
                   $('#modalAdd').modal();
             }); 
 
             $(document).on('click','.btnUpdate', function(){
                 clickedRow = $(this).parent();
                     let id = $(this).data("id");
-                     modalEmptyForAdd();
+                     modalEmptyForAdd(id);
                  getFlatForUpdate(id);
             }); 
 
@@ -220,7 +220,7 @@
            //     }
            // });
         });
-                function modalEmptyForAdd(){
+                function modalEmptyForAdd(id){
                     $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.                    
 
                     $("#IdForAdd").val(0);
@@ -234,6 +234,15 @@
                     $("#UserIdForAdd").val($("#Tanimsiz_User_Id").val());
 
                     $("#UserTypeIdForAdd").val(1);
+
+
+                     if(id==0){
+                        $('#btnAddSubmit').html("Ekle");
+                         $('#btnAddSubmit').removeClass("btn-primary").addClass("btn-info");
+                    }else{
+                          $('#btnAddSubmit').html("Güncelle");
+                          $('#btnAddSubmit').removeClass("btn-info").addClass("btn-primary");
+                    }
 
 
                     console.log($("#Tanimsiz_User_Id").val());

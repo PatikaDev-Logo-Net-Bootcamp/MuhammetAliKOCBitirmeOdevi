@@ -49,7 +49,9 @@ namespace UI
             services.AddTransient<IFlatService, FlatService>();
             services.AddTransient<IFlatTypeService, FlatTypeService>();
             services.AddTransient<IUserTypeService, UserTypeService>();
-
+            services.AddTransient<IBillService, BillService>();
+            services.AddTransient<IBillFlatService, BillFlatService>();
+            services.AddTransient<IBillTypeService, BillTypeService>();
 
 
             services.ConfigureApplicationCookie(options =>

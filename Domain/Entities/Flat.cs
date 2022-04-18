@@ -29,5 +29,7 @@ namespace Domain.Entities
         public int? UserTypeId { get; set; }
         public UserType UserType { get; set; }
 
+        public ICollection<BillFlat> BillFlats { get; set; }
+
     }
 }
