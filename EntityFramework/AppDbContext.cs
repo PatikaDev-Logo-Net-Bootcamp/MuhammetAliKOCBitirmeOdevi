@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using EntityFramework.Context.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,21 @@ IdentityRoleClaim<string>, IdentityUserToken<string>>
 
         }
         public DbSet<Car> Cars { get; set; }
-        //public DbSet<User> Users { get; set; }
+        public DbSet<Block> Blocks { get; set; }
+        public DbSet<Flat> Flats { get; set; }
+        public DbSet<FlatType> FlatTypes { get; set; }
+        public DbSet<UserType> UserTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.ApplyConfiguration(new CarConfiguration());
+            builder.ApplyConfiguration(new BlockConfiguration());
+            builder.ApplyConfiguration(new FlatConfiguration());
+            builder.ApplyConfiguration(new UserTypeConfiguration());
+            builder.ApplyConfiguration(new FlatTypeConfiguration());
+
             builder.HasDefaultSchema("Identity");
             builder.Entity<User>(entity =>
             {
