@@ -71,7 +71,7 @@
                 </td>
                 <td>
                     <button type="button" class="btn btn-primary btnUpdate" data-id="@item.Id">Güncelle</button>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">Dağıt</a>
+                    <a asp-action="BillFlat" asp-route-id="@item.Id" class="btn btn-warning">Dağıt</a>
                     <button type="button" class="btn btn-danger btnDelete" data-id="@item.Id">Sil</button>
                 </td>
             </tr>
@@ -291,8 +291,7 @@
                                             "<td class='Description'>" + result.data.description +  "</td>" +
                                             "<td>" +
                                                    "<button type='button' class='btn btn-primary btnUpdate' data-id='"+result.data.id+"'>Güncelle</button>"+
-                                                   "<a class='btn btn-warning' href='/Bill/Details/'" + result.data.id + ">Dağıt</a>" +
-                                                   //"<a asp-action='Details' asp-route-id='"+ result.data.id +"'>Detay</a> |"+
+                                                   "<a class='btn btn-warning' href='/Bill/BillFlat/'" + result.data.id + ">Dağıt</a>" +
                                                    "<button type='button' class='btn btn-danger btnDelete' data-id='"+result.data.id+"'>Sil</button>"+
                                             "</td>" +
                                           "</tr>";

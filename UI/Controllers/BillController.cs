@@ -163,6 +163,12 @@ namespace UI.Controllers
 
 
 
+        public ActionResult BillFlat()
+        {
+            return null;
+        }
+
+
 
     }
 }
