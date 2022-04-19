@@ -1,0 +1,413 @@
+﻿@using Business.DTO
+@using UI.Helpers
+@{
+    ViewData["Title"] = "Faturalar";
+    Layout = "_Layout2";
+}
+
+@model PaginatedList<BillDTO>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Fatura Genel Liste</h2>
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+    </p>*@
+
+<button style="float:right;" type="button" class="btn btn-info btnAdd"> + Yeni Fatura</button>
+
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+      
+        <div class=row>
+            <div class="col-md-3" style="padding-left:0px; padding-right:0px;">
+                        <input  type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" />
+            </div>
+            <div class="col-md-3" style="padding-left:0px; padding-right:0px;">
+                  <input type="submit" value="Ara" class="btn btn-success" style="float:left"/>          
+            </div>
+        </div>
+    
+          
+    
+    </div>
+
+</form>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["YearSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Yıl</a>
+            </th>
+            <th scope="col">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["MountSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Ay</a>
+            </th>
+            <th scope="col">
+                Fatura Tip
+            </th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="Year">
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td class="Mount">
+                    @Html.DisplayFor(modelItem => item.Mount)
+                </td>
+                <td class="BillTypeName">
+                    @Html.DisplayFor(modelItem => item.BillTypeName)
+                </td>
+                <td class="Description">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary btnUpdate" data-id="@item.Id">Güncelle</button>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">Dağıt</a>
+                    <button type="button" class="btn btn-danger btnDelete" data-id="@item.Id">Sil</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Önceki
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Sonraki
+</a>
+@*
+<p>Toplam  <span id="Count">@Model.Count()</span> kayıt bulunmuştur.</p>*@
+
+
+<!-- Modal Add -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="FlatAddForm">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Yeni Daire</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    @Html.HiddenFor(x=>x.FirstOrDefault().Id, new {@id="Id"})
+
+                    <div class="form-group">
+                        <label>Yıl</label>
+                        @Html.DropDownListFor(x => x.FirstOrDefault().Year,new SelectList(@ViewBag.Years, "Id", "Name"), new { @id="Year", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.FirstOrDefault().Year, "", new { @class = "text-danger" })
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ay</label>
+                        @Html.DropDownListFor(x => x.FirstOrDefault().Mount,new SelectList(@ViewBag.Mounts, "Id", "Name"), new { @id="Mount", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.FirstOrDefault().Mount, "", new { @class = "text-danger" })
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fatura Tipi</label>
+                        @Html.DropDownListFor(x => x.FirstOrDefault().BillTypeId,new SelectList(@ViewBag.BillTypes, "Id", "Name"), new { @id="BillTypeId", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.FirstOrDefault().BillTypeId, "", new { @class = "text-danger" })
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Açıklama</label>
+                        <input asp-for="@Model.FirstOrDefault().Description" id="Description" type="text" class="form-control" placeholder="Açıklama">
+                        @Html.ValidationMessageFor(model => model.FirstOrDefault().Description, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div style="min-height:40px">
+                        <p id="pMesajModal"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-info" id="btnSubmit">Ekle</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+<script type="text/javascript">
+    var table;
+    var clickedRow;
+    $(document).ready( function () {
+
+
+
+
+        $( ".btnAdd").on( "click", function() {
+             modalEmpty(0);
+              $('#modal').modal();
+        });
+
+        $(document).on('click','.btnUpdate', function(){
+            clickedRow = $(this).parent().parent();
+                let id = $(this).data("id");
+                 modalEmpty(id);
+             getBillForUpdate(id);
+        });
+
+        $(document).on('click','.btnDelete', function(){
+          if (confirm('Blok Silmek İstediğinizden Emin Misiniz?')) {
+              clickedRow = $(this).parent().parent();
+               let id = $(this).data("id");
+               deleteFlat($(this),id);
+            }
+        });
+
+
+        $( "#btnSubmit").on( "click", function(e) {
+             e.preventDefault();
+
+            $('#FlatAddForm').validate();
+
+            if ($('#FlatAddForm').valid()) {
+                if($('#Id').val()==0){
+                    addBill();
+                }else{
+                      updateBill();
+                }
+
+            }
+        });
+
+
+
+    });
+            function modalEmpty(id){
+                $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
+
+                $("#Id").val(0);
+                var d =new Date();
+                $("#Year").val(d.getFullYear());
+                $("#Mount").val(d.getMonth() + 1);
+                $("#BillTypeId").val(1);
+
+                $("#Description").val("");
+
+
+                 if(id==0){
+                    $('#btnSubmit').html("Ekle");
+                     $('#btnSubmit').removeClass("btn-primary").addClass("btn-info");
+                }else{
+                      $('#btnSubmit').html("Güncelle");
+                      $('#btnSubmit').removeClass("btn-info").addClass("btn-primary");
+                }
+            }
+
+
+            function getBillForUpdate(id) {
+                    $.ajax({
+                            type: 'POST',
+                            url: '/Bill/GetBill',
+                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            data: { id: id },
+                            success: function (result) {
+
+                                //console.log(result);
+                                if(result.isSuccess){
+                                    $("#Id").val(result.data.id);
+                                    $("#Year").val(result.data.year);
+                                    $("#Mount").val(result.data.mount);
+                                    $("#BillTypeId").val(result.data.billTypeId);
+                                    $("#Description").val(result.data.description);
+
+                                    $('#modal').modal();
+                                }else{
+
+                                     $("#pMesajModal").text(result.errorMessage);
+                                     $("#pMesajModal").css("color", "red");
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                 alert(xhr.status );
+                                 alert(thrownError);
+                                 $("#pMesajModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                 $("#pMesajModal").css("color", "red");
+                            }
+                        })
+            }
+
+            var SetTimeOutId;
+            function addBill() {
+                    $("#pMesajModal").text("");
+                    var data = $("#FlatAddForm").serialize();
+                    console.log(data);
+                    $.ajax({
+                            type: 'POST',
+                            url: '/Bill/AddBill',
+                            dataType: 'json',
+                            //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            data: data,
+                            success: function (result) {
+                                     if(result.isSuccess)
+                                    {
+                                        //console.log(result);
+                                          $("#pMesajModal").text(result.successMessage);
+                                          $("#pMesajModal").css("color", "green");
+
+                                            let newRowOfBill = "<tr>" +
+                                            "<td class='Year'>" + result.data.year +  "</td>" +
+                                            "<td class='Mount'>" + result.data.mount +  "</td>" +
+                                            "<td class='BillTypeName'>" + result.data.billTypeName +  "</td>" +
+                                            "<td class='Description'>" + result.data.description +  "</td>" +
+                                            "<td>" +
+                                                   "<button type='button' class='btn btn-primary btnUpdate' data-id='"+result.data.id+"'>Güncelle</button>"+
+                                                   "<a class='btn btn-warning' href='/Bill/Details/'" + result.data.id + ">Dağıt</a>" +
+                                                   //"<a asp-action='Details' asp-route-id='"+ result.data.id +"'>Detay</a> |"+
+                                                   "<button type='button' class='btn btn-danger btnDelete' data-id='"+result.data.id+"'>Sil</button>"+
+                                            "</td>" +
+                                          "</tr>";
+                                            $("table").append(newRowOfBill);
+
+                                            //console.log( $("#Count").text());
+                                            //$("#Count").text(parseInt($('#Count').text())+1);
+                                            
+                                            //console.log(result);
+                                            //console.log(result.data);
+                                            //console.log(result.data.billTypeName);
+
+
+                                         SetTimeOutId =  setTimeout(function(){
+                                                                        $('#modal').modal('hide');
+                                                                        $("#pMesajModal").text("");
+                                                                    }, 2500);
+                                    }else{
+                                        console.log(result.errorMessage);
+                                         $("#pMesajModal").text(result.errorMessage);
+                                         $("#pMesajModal").css("color", "red");
+                                    }
+                            },
+                             error: function (xhr, ajaxOptions, thrownError) {
+                                 alert(xhr.status );
+                                 alert(thrownError);
+                                 $("#pMesajModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                 $("#pMesajModal").css("color", "red");
+                            }
+                        })
+            }
+
+            //Add model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+            $('#modal').on('hide.bs.modal', function () {
+                $("#pMesajModal").text("");
+                clearTimeout(SetTimeOutId);
+            });
+
+
+            function updateBill() {
+                    $("#pMesajModal").text("");
+                    var data = $("#FlatAddForm").serialize();
+                    $.ajax({
+                            type: 'POST',
+                            url: '/Bill/UpdateBill',
+                            dataType: 'json',
+                            //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            data: data,
+                            success: function (result) {
+                                    if(result.isSuccess)
+                                    {
+                                          $("#pMesajModal").text(result.successMessage);
+                                          $("#pMesajModal").css("color", "green");
+
+                                          clickedRow.children(".Year").html(result.data.year);
+                                           clickedRow.children(".Mount").html(result.data.mount);
+                                            clickedRow.children(".BillTypeName").html(result.data.billTypeName);
+                                             clickedRow.children(".Description").html(result.data.description);
+
+
+
+
+
+                                          SetTimeOutId = setTimeout(function(){ $('#modal').modal('hide'), $("#pMesajModal").text("");}, 2500);
+                                    }else{
+                                         $("#pMesajModal").text(result.errorMessage);
+                                         $("#pMesajModal").css("color", "red");
+                                    }
+                            },
+                            error: function () {
+                                   $("#pMesajModal").text("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                   $("#pMesajModal").css("color", "red");
+                            }
+                        })
+
+
+            }
+            //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+            $('#modal').on('hide.bs.modal', function () {
+                $("#pMesajModal").text("");
+                clearTimeout(SetTimeOutId);
+            });
+
+
+            function deleteFlat(deleteButton, id) {
+                    $("#pPageMesaj").text("");
+                    $.ajax({
+                            type: 'POST',
+                            url: '/Bill/DeleteBill',
+                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                            data: { id: id },
+                            success: function (result) {
+                                if(result.isSuccess)
+                                {
+                                    $("#pPageMesaj").text(result.successMessage);
+                                    $("#pPageMesaj").css("color", "green");
+
+                                    //console.log(clickedRow);
+                                    clickedRow.remove();
+
+                                    setTimeout(function(){ $("#pPageMesaj").text("");}, 3000);
+                                }else{
+                                    $("#pPageMesaj").text(result.errorMessage);
+                                    $("#pPageMesaj").css("color", "red");
+                                }
+                            },
+                            error: function () {
+                                $("#pPageMesaj").text("Silme işlemi sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                $("#pPageMesaj").css("color", "red");
+                            }
+                        })
+            }
+
+</script>
+
+    }
+
+

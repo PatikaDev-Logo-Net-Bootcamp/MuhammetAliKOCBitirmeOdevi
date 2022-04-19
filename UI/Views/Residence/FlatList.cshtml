@@ -69,7 +69,7 @@
                         @Html.HiddenFor(x=>x.Flat.Id, new {@id="IdForAdd"})
 
                         <div class="form-group">
-                            <label>Rol</label>
+                            <label>Blok</label>
                         @Html.DropDownListFor(x => x.Flat.BlockId,new SelectList(@ViewBag.Blocks, "Id", "Name"), new { @id="BlokIdForAdd", @class = "form-control" })
 
                           @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
