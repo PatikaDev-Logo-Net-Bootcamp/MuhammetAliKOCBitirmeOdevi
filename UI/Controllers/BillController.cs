@@ -20,16 +20,19 @@ namespace UI.Controllers
         private readonly IBillService _billService;
         private readonly IBillFlatService _billFlatService;
         private readonly IBillTypeService _billTypeService;
-
-        public BillController(ILogger<BillController> logger, IBillService billService, IBillFlatService billFlatService, IBillTypeService billTypeService)
+        private readonly IBlockService _blockService;
+        private readonly IFlatService _flatService;
+        public BillController(ILogger<BillController> logger, IBillService billService, IBillFlatService billFlatService, IBillTypeService billTypeService, IBlockService blockService, IFlatService flatService)
         {
             _logger = logger;
             _billService = billService;
             _billFlatService = billFlatService;
             _billTypeService = billTypeService;
+            _blockService = blockService;
+            _flatService = flatService;
         }
 
-        public async Task<IActionResult> Index(string sortOrder,
+        public async Task<IActionResult> Index( string sortOrder,
                                                 string currentFilter,
                                                 string searchString,
                                                 int? pageNumber)
@@ -163,9 +166,138 @@ namespace UI.Controllers
 
 
 
-        public ActionResult BillFlat()
+        public async Task<IActionResult> BillFlatList(int billId,
+                                                string sortOrder,
+                                                string currentFilter,
+                                                string searchString,
+                                                int? pageNumber)
         {
-            return null;
+            ViewBag.BillId = billId;
+            var bill = _billService.GetBill(billId).data as BillDTO;
+            ViewBag.BillName = bill.Year + " " + bill.Mount + " " + bill.BillTypeName + " Faturası";
+
+
+            var flats = _flatService.FlatDTOsByBillId(billId);
+
+            ViewData["BlockSortParm"] = String.IsNullOrEmpty(sortOrder) ? "block_desc" : "";
+            //ViewData["MountSortParm"] = sortOrder == "mount" ? "mount_desc" : "mount";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                flats = flats.Where(s => s.BlockName.Contains(searchString)
+                                       || s.FlatTypeName.Contains(searchString)
+                                       || s.No.Contains(searchString));
+            }
+
+
+            switch (sortOrder)
+            {
+                case "block_desc":
+                    flats = flats.OrderByDescending(s => s.BlockName);
+                    break;
+                //case "mount":
+                //    billFlats = billFlats.OrderBy(s => s.Mount);
+                //    break;
+                //case "mount_desc":
+                //    billFlats = billFlats.OrderByDescending(s => s.Mount);
+                //    break;
+                default:
+                    flats = flats.OrderBy(s => s.BlockName);
+                    break;
+            }
+
+            //flats = flats.ToList();
+            //var billFlatDTOs = billFlats.Include(x => x.BillFlatType).Select(x => new BillFlatDTO()
+            //{
+            //    Id = x.Id,
+            //    Year = x.Year,
+            //    Mount = x.Mount,
+            //    Description = x.Description,
+            //    BillFlatTypeId = x.BillFlatTypeId,
+            //    BillFlatTypeName = x.BillFlatType.Name
+
+            //});
+
+            int pageSize = 10;
+
+            //BillFlatListDTO model = new BillFlatListDTO();
+            //model.BillFlats = billFlatDTOs.ToList();
+            //return View(await PaginatedList<BillFlatListDTO>.CreateAsync(billFlatDTOs.AsQueryable().AsNoTracking(), pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<FlatDTO>.CreateAsync(flats.AsNoTracking(), pageNumber ?? 1, pageSize));
+        }
+
+
+        [HttpPost]
+        public JsonResult AddBillFlat(BillFlatDTO BillFlatDTO)
+        {
+            /* var errors = ModelState
+     .Where(x => x.Value.Errors.Count > 0)
+     .Select(x => new { x.Key, x.Value.Errors })
+     .ToArray();
+            */
+
+            //BillFlatDTO billFlat = billFlatList.BillFlat;
+            var res = new ReturnObjectDTO();
+
+            if (ModelState.IsValid)
+            {
+                res = _billFlatService.AddBillFlat(BillFlatDTO);
+            }
+            else
+            {
+                res.isSuccess = false;
+                res.errorMessage = "";
+            }
+            return new JsonResult(res);
+        }
+
+        [HttpPost]
+        public JsonResult GetBillFlat(int id)
+        {
+            var res = _billFlatService.GetBillFlat(id);
+
+            return new JsonResult(res);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateBillFlat(BillFlatDTO BillFlatDTO)
+        {
+            /* var errors = ModelState
+     .Where(x => x.Value.Errors.Count > 0)
+     .Select(x => new { x.Key, x.Value.Errors })
+     .ToArray();
+            */
+
+            //BillFlatDTO billFlat = billFlatList.BillFlat;
+            var res = new ReturnObjectDTO();
+
+            if (ModelState.IsValid)
+            {
+                res = _billFlatService.UpdateBillFlat(BillFlatDTO.Id, BillFlatDTO);
+            }
+            else
+            {
+                res.isSuccess = false;
+                res.errorMessage = "";
+            }
+            return new JsonResult(res);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteBillFlat(int id)
+        {
+            var res = _billFlatService.DeleteBillFlat(id);
+
+            return new JsonResult(res);
         }
 
 

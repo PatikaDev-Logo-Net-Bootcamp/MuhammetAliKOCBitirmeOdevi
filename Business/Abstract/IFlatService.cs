@@ -12,6 +12,10 @@ namespace Business.Abstract
     {
         IQueryable<Flat> Flats();
 
+        IQueryable<FlatDTO> FlatDTOs();
+        IQueryable<FlatDTO> FlatDTOsByBillId(int billId);
+
+
         ReturnObjectDTO GetFlat(int id);
         List<FlatDTO> GetAllFlats();
         ReturnObjectDTO AddFlat(FlatDTO flat);

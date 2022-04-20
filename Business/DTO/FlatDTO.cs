@@ -9,6 +9,10 @@ namespace Business.DTO
 {
     public class FlatDTO
     {
+        public FlatDTO()
+        {
+            BillFlatDTOs = new List<BillFlatDTO>();
+        }
         public int Id { get; set; }
         [Required(ErrorMessage = "Kat girilmesi zorunlu!")]
         public int Floor { get; set; }
@@ -40,5 +44,8 @@ namespace Business.DTO
         public int? UserTypeId { get; set; }
         public string UserTypeName { get; set; }
         //public UserType UserType { get; set; }
+
+        public BillFlatDTO BillFlatDTO { get; set; }
+        public List<BillFlatDTO> BillFlatDTOs { get; set; }
     }
 }

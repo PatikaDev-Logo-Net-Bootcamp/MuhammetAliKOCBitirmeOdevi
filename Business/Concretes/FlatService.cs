@@ -26,6 +26,56 @@ namespace Business.Concretes
             return repository.GetAll();
         }
 
+        public IQueryable<FlatDTO> FlatDTOs()
+        {
+            return repository.GetAll().Include(b => b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr => usr.User).Include(x => x.BillFlats)
+                .Select(x => new FlatDTO()
+                {
+                    Id = x.Id,
+                    BlockId = x.BlockId,
+                    BlockName = x.Block.Name,
+                    Description = x.Description,
+                    No = x.No,
+                    FlatTypeId = x.FlatTypeId,
+                    FlatTypeName = x.FlatType.Name,
+                    Floor = x.Floor,
+                    UserId = x.UserId,
+                    UserEmail = x.User.Email,
+                    UserFirstName = x.User.FirstName,
+                    UserLastName = x.User.LastName,
+                    UserPhoneNumber = x.User.PhoneNumber,
+                    UserTypeId = x.UserTypeId,
+                    UserTypeName = x.UserType.Name,
+                    BillFlatDTOs = x.BillFlats.Select(y => new BillFlatDTO() { Id = y.Id, BillId = y.BillId, FlatId = y.FlatId, Amount = y.Amount}).ToList()    
+
+                }) ;
+        }
+
+        public IQueryable<FlatDTO> FlatDTOsByBillId(int billId)
+        {
+            return repository.GetAll().Include(b => b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr => usr.User).Include(x => x.BillFlats)
+                .Select(x => new FlatDTO()
+                {
+                    Id = x.Id,
+                    BlockId = x.BlockId,
+                    BlockName = x.Block.Name,
+                    Description = x.Description,
+                    No = x.No,
+                    FlatTypeId = x.FlatTypeId,
+                    FlatTypeName = x.FlatType.Name,
+                    Floor = x.Floor,
+                    UserId = x.UserId,
+                    UserEmail = x.User.Email,
+                    UserFirstName = x.User.FirstName,
+                    UserLastName = x.User.LastName,
+                    UserPhoneNumber = x.User.PhoneNumber,
+                    UserTypeId = x.UserTypeId,
+                    UserTypeName = x.UserType.Name,
+                    BillFlatDTO = x.BillFlats.Where(y=>y.BillId == billId).Select(y => new BillFlatDTO() { Id = y.Id, BillId = y.BillId, FlatId = y.FlatId, Amount = y.Amount , Description = y.Description, BillDTO= new BillDTO() { Id = y.Bill.Id, Year=y.Bill.Year, Mount=y.Bill.Mount, Description = y.Bill.Description, BillTypeId = y.Bill.BillTypeId,BillTypeName = y.Bill.BillType.Name } }).FirstOrDefault()
+
+                });
+        }
+
         public ReturnObjectDTO GetFlat(int id)
         {
             var flat = Flats().Include(b => b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr => usr.User)

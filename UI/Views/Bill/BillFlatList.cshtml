@@ -5,25 +5,39 @@
     Layout = "_Layout2";
 }
 
-@model PaginatedList<BillDTO>
+@model PaginatedList<FlatDTO>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Fatura Genel Liste</h2>
+<h2>@ViewBag.BillName Genel Liste</h2>
 
 @*<p>
     <a asp-action="Create">Create New</a>
     </p>*@
 
-<button style="float:right;" type="button" class="btn btn-info btnAdd"> + Yeni Fatura</button>
+ 
+
+<button style="float:right;" type="button" class="btn btn-info btnAdd"> Toplu Fatura Girişi</button>
 
 
-<form asp-action="Index" method="get">
+<form asp-action="BillFlatList" method="get">
     <div class="form-actions no-color">
       
         <div class=row>
+@*            <div class="col-md-3" style="padding-left:0px; padding-right:0px;">
+
+                  <select name="SearchBlok"  class = "form-control">
+                            @foreach(BlockDTO blok in @ViewBag.Blocks)
+                            {
+                                 <option value="@blok.Id">@blok.Name</option>
+                            }                   
+                  </select>
+            </div>*@
+            <input type="hidden" value="@ViewBag.BillId" id="BillIdinSearch" name="billId"/>
+
+
             <div class="col-md-3" style="padding-left:0px; padding-right:0px;">
                         <input  type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" />
             </div>
@@ -42,13 +56,16 @@
     <thead>
         <tr>
             <th scope="col">
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["YearSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Yıl</a>
-            </th>
-            <th scope="col">
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["MountSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Ay</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["BlockSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Daire</a>
             </th>
             <th scope="col">
                 Fatura Tip
+            </th>
+            <th scope="col">
+                Fatura Tutar
+            </th>
+            <th scope="col">
+                Açıklama
             </th>
             <th scope="col"></th>
         </tr>
@@ -57,22 +74,29 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td class="Year">
-                    @Html.DisplayFor(modelItem => item.Year)
-                </td>
-                <td class="Mount">
-                    @Html.DisplayFor(modelItem => item.Mount)
+ 
+                <td class="Flat">
+                   @(item.BlockName + " .Blok " + @item.Floor + " .Kat No:" + @item.No )
                 </td>
                 <td class="BillTypeName">
-                    @Html.DisplayFor(modelItem => item.BillTypeName)
+                    @item.BillFlatDTO?.BillDTO.BillTypeName
                 </td>
-                <td class="Description">
-                    @Html.DisplayFor(modelItem => item.Description)
+                <td class="Amount">
+                    @item.BillFlatDTO?.Amount
+                </td>
+                 <td class="Description">
+                    @item.BillFlatDTO?.Description
                 </td>
                 <td>
-                    <button type="button" class="btn btn-primary btnUpdate" data-id="@item.Id">Güncelle</button>
-                    <a asp-action="BillFlatList" asp-route-billId="@item.Id" class="btn btn-warning">Dairelere Dağıt</a>
-                    <button type="button" class="btn btn-danger btnDelete" data-id="@item.Id">Sil</button>
+                    @if(item.BillFlatDTO != null)
+                    {
+                          <button type="button" class="btn btn-primary btnUpdate" data-flatid = "@item.Id" data-billid ="@ViewBag.BillId" data-id="@item.BillFlatDTO.Id">Güncelle</button>
+                          <button type="button" class="btn btn-danger btnDelete" data-flatid = "@item.Id" data-billid ="@ViewBag.BillId"  data-id="@item.BillFlatDTO.Id">Sil</button>
+                        
+                    }else{
+                            <button type="button" class="btn btn-info btnAdd" data-flatid="@item.Id"  data-billid ="@ViewBag.BillId" data-id="0">Ekle</button>
+                    }
+
                 </td>
             </tr>
         }
@@ -84,14 +108,16 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a asp-action="Index"
+<a asp-action="BillFlatList"
+    asp-route-billId="@ViewData["BillId"]"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-default @prevDisabled">
     Önceki
 </a>
-<a asp-action="Index"
+<a asp-action="BillFlatList"
+    asp-route-billId="@ViewData["BillId"]"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
@@ -110,41 +136,41 @@
                 @Html.AntiForgeryToken()
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Yeni Daire</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Fatura</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
+                    @Html.HiddenFor(x=>x.FirstOrDefault().BillFlatDTO.Id, new { @id="Id"})
+                    @Html.HiddenFor(x=>x.FirstOrDefault().BillFlatDTO.BillId, new { @id="BillId"})
+                    @Html.HiddenFor(x=>x.FirstOrDefault().BillFlatDTO.FlatId, new { @id="FlatId"})
 
-                    @Html.HiddenFor(x=>x.FirstOrDefault().Id, new {@id="Id"})
-
-                    <div class="form-group">
-                        <label>Yıl</label>
-                        @Html.DropDownListFor(x => x.FirstOrDefault().Year,new SelectList(@ViewBag.Years, "Id", "Name"), new { @id="Year", @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.FirstOrDefault().Year, "", new { @class = "text-danger" })
-
-                    </div>
+@*                      <input type="hidden" value="@ViewBag.BillId" name="billId"/>
+                      <input type="hidden" value="0" id="FlatId" name="flatId" />*@
 
                     <div class="form-group">
-                        <label>Ay</label>
-                        @Html.DropDownListFor(x => x.FirstOrDefault().Mount,new SelectList(@ViewBag.Mounts, "Id", "Name"), new { @id="Mount", @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.FirstOrDefault().Mount, "", new { @class = "text-danger" })
-
+                        <p>@ViewBag.BillName</p>
                     </div>
+
+@*                    <div class="form-group">
+                        <label>Fatura Miktarı</label>
+                        
+                        <input  type="text" name="amount" value="0" class="form-control" />
+
+                    </div>   *@
 
                     <div class="form-group">
-                        <label>Fatura Tipi</label>
-                        @Html.DropDownListFor(x => x.FirstOrDefault().BillTypeId,new SelectList(@ViewBag.BillTypes, "Id", "Name"), new { @id="BillTypeId", @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.FirstOrDefault().BillTypeId, "", new { @class = "text-danger" })
-
+                        <label>Fatura Miktarı</label>
+                        <input asp-for="@Model.FirstOrDefault().BillFlatDTO.Amount" id="Amount" type="text" class="form-control" placeholder="">
+                        @Html.ValidationMessageFor(model => model.FirstOrDefault().BillFlatDTO.Amount, "", new { @class = "text-danger" })
                     </div>
-
+                    
                     <div class="form-group">
                         <label>Açıklama</label>
-                        <input asp-for="@Model.FirstOrDefault().Description" id="Description" type="text" class="form-control" placeholder="Açıklama">
-                        @Html.ValidationMessageFor(model => model.FirstOrDefault().Description, "", new { @class = "text-danger" })
-                    </div>
+                        <input asp-for="@Model.FirstOrDefault().BillFlatDTO.Description" id="Description" type="text" class="form-control" placeholder="Açıklama">
+                        @Html.ValidationMessageFor(model => model.FirstOrDefault().BillFlatDTO.Description, "", new { @class = "text-danger" })
+                    </div>                    
 
                     <div style="min-height:40px">
                         <p id="pMesajModal"></p>
@@ -167,26 +193,39 @@
 
 <script type="text/javascript">
     var table;
+    var clickedBottom;
     var clickedRow;
     $(document).ready( function () {
 
+        $("#Amount").rules("remove", "number");
 
 
+        //$( ".btnAdd").on( "click", function() {
+               $(document).on('click','.btnAdd', function(){
+            clickedBottom = $(this);
+            clickedRow = $(this).parent().parent();
 
-        $( ".btnAdd").on( "click", function() {
-             modalEmpty(0);
+            let flatid = $(this).data("flatid");
+            let billId = $(this).data("billid");
+
+             modalEmpty(0,flatid,billId);
               $('#modal').modal();
         });
 
         $(document).on('click','.btnUpdate', function(){
+            clickedBottom = $(this);
             clickedRow = $(this).parent().parent();
                 let id = $(this).data("id");
-                 modalEmpty(id);
+                let flatid = $(this).data("flatid");
+                let billId = $(this).data("billid");
+
+                modalEmpty(id,flatid,billId);
              getBillForUpdate(id);
         });
 
         $(document).on('click','.btnDelete', function(){
-          if (confirm('Blok Silmek İstediğinizden Emin Misiniz?')) {
+          if (confirm('Dairenin Fatura Bilgisini Silmek İstediğinizden Emin Misiniz?')) {
+              clickedBottom = $(this);
               clickedRow = $(this).parent().parent();
                let id = $(this).data("id");
                deleteFlat($(this),id);
@@ -212,15 +251,16 @@
 
 
     });
-            function modalEmpty(id){
+            function modalEmpty(id, flatid, billId){
                 $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
 
-                $("#Id").val(0);
-                var d =new Date();
-                $("#Year").val(d.getFullYear());
-                $("#Mount").val(d.getMonth() + 1);
-                $("#BillTypeId").val(1);
+                $("#Id").val(id);
+                $("#FlatId").val(flatid);
+                 $("#BillId").val(billId);
 
+                console.log(id +  " - " + flatid);
+                
+                $("#Amount").val(0);
                 $("#Description").val("");
 
 
@@ -237,17 +277,16 @@
             function getBillForUpdate(id) {
                     $.ajax({
                             type: 'POST',
-                            url: '/Bill/GetBill',
+                            url: '/Bill/GetBillFlat',
                             contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                             data: { id: id },
                             success: function (result) {
 
                                 //console.log(result);
                                 if(result.isSuccess){
-                                    $("#Id").val(result.data.id);
-                                    $("#Year").val(result.data.year);
-                                    $("#Mount").val(result.data.mount);
-                                    $("#BillTypeId").val(result.data.billTypeId);
+                                    //$("#Id").val(result.data.id);
+                                    //$("#FlatId").val(result.data.flatId);
+                                    $("#Amount").val(result.data.amount);
                                     $("#Description").val(result.data.description);
 
                                     $('#modal').modal();
@@ -273,7 +312,7 @@
                     console.log(data);
                     $.ajax({
                             type: 'POST',
-                            url: '/Bill/AddBill',
+                            url: '/Bill/AddBillFlat',
                             dataType: 'json',
                             //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                             data: data,
@@ -284,26 +323,13 @@
                                           $("#pMesajModal").text(result.successMessage);
                                           $("#pMesajModal").css("color", "green");
 
-                                            let newRowOfBill = "<tr>" +
-                                            "<td class='Year'>" + result.data.year +  "</td>" +
-                                            "<td class='Mount'>" + result.data.mount +  "</td>" +
-                                            "<td class='BillTypeName'>" + result.data.billTypeName +  "</td>" +
-                                            "<td class='Description'>" + result.data.description +  "</td>" +
-                                            "<td>" +
-                                                   "<button type='button' class='btn btn-primary btnUpdate' data-id='"+result.data.id+"'>Güncelle</button>"+
-                                                   "<a class='btn btn-warning' href='/Bill/BillFlatList/'" + result.data.id + ">Dairelere Dağıt</a>" +
-                                                   "<button type='button' class='btn btn-danger btnDelete' data-id='"+result.data.id+"'>Sil</button>"+
-                                            "</td>" +
-                                          "</tr>";
-                                            $("table").append(newRowOfBill);
-
-                                            //console.log( $("#Count").text());
-                                            //$("#Count").text(parseInt($('#Count').text())+1);
-                                            
-                                            //console.log(result);
-                                            //console.log(result.data);
-                                            //console.log(result.data.billTypeName);
-
+                                          clickedBottom.parent().html(
+                                          "<button type='button' class='btn btn-primary btnUpdate' data-billid = '"+ result.data.billId + "' data-flatid = '" + result.data.flatId+"' data-id='"+result.data.id+"'>Güncelle</button>" +
+                                          "<button type='button' class='btn btn-danger btnDelete' data-billid = '"+ result.data.billId + "' data-flatid = '" + result.data.flatId +"' data-id='"+result.data.id+"'>Sil</button>"
+                                          );
+                                          clickedRow.children(".Amount").html(result.data.amount);
+                                          clickedRow.children(".Description").html(result.data.description);
+                                          clickedRow.children(".BillTypeName").html(result.data.billDTO.billTypeName);
 
                                          SetTimeOutId =  setTimeout(function(){
                                                                         $('#modal').modal('hide');
@@ -336,7 +362,7 @@
                     var data = $("#FlatAddForm").serialize();
                     $.ajax({
                             type: 'POST',
-                            url: '/Bill/UpdateBill',
+                            url: '/Bill/UpdateBillFlat',
                             dataType: 'json',
                             //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                             data: data,
@@ -346,10 +372,9 @@
                                           $("#pMesajModal").text(result.successMessage);
                                           $("#pMesajModal").css("color", "green");
 
-                                          clickedRow.children(".Year").html(result.data.year);
-                                           clickedRow.children(".Mount").html(result.data.mount);
-                                            clickedRow.children(".BillTypeName").html(result.data.billTypeName);
-                                             clickedRow.children(".Description").html(result.data.description);
+                                          clickedRow.children(".Amount").html(result.data.amount);
+                                          clickedRow.children(".Description").html(result.data.description);
+                                          clickedRow.children(".BillTypeName").html(result.data.billDTO.billTypeName);
 
 
 
@@ -380,7 +405,7 @@
                     $("#pPageMesaj").text("");
                     $.ajax({
                             type: 'POST',
-                            url: '/Bill/DeleteBill',
+                            url: '/Bill/DeleteBillFlat',
                             contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
                             data: { id: id },
                             success: function (result) {
@@ -389,8 +414,15 @@
                                     $("#pPageMesaj").text(result.successMessage);
                                     $("#pPageMesaj").css("color", "green");
 
-                                    //console.log(clickedRow);
-                                    clickedRow.remove();
+                                          clickedRow.children(".Amount").html('');
+                                          clickedRow.children(".Description").html('');
+                                          clickedRow.children(".BillTypeName").html('');
+
+                                          clickedBottom.parent().children(".btnUpdate").removeClass("btn-primary").addClass("btn-info").removeClass("btnUpdate").addClass("btnAdd").html("Ekle");
+                                          clickedBottom.remove();
+                                    
+
+                                    //clickedRow.remove();
 
                                     setTimeout(function(){ $("#pPageMesaj").text("");}, 3000);
                                 }else{
