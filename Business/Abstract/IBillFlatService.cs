@@ -14,6 +14,7 @@ namespace Business.Abstract
 
         ReturnObjectDTO GetBillFlat(int id);
         List<BillFlatDTO> GetAllBillFlats();
+        IQueryable<BillFlatDTO> GetAllBillFlatsAsQueryable(int yearid, int mountid, int billtypeid, int isPaidid);
         ReturnObjectDTO AddBillFlat(BillFlatDTO flatType);
 
         ReturnObjectDTO UpdateBillFlat(int id, BillFlatDTO flatType, string updatedBy = "Api Kullanicisi");

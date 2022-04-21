@@ -23,6 +23,13 @@ namespace Business.DTO
         public decimal Amount { get; set; }
         public string Description { get; set; }
 
+
+        public bool IsPaid { get; set; }
+        public DateTime PayTime { get; set; }
+        public string PayUserId { get; set; }
+
+
+
         public BillDTO BillDTO { get; set; }
         public FlatDTO FlatDTO { get; set; }
     }

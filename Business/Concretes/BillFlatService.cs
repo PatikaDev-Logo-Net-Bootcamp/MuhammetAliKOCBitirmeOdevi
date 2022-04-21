@@ -119,6 +119,54 @@ namespace Business.Concretes
                 }).ToList();
             return billFlats;
         }
+
+        public IQueryable<BillFlatDTO> GetAllBillFlatsAsQueryable(int yearid, int mountid, int billtypeid, int isPaidid)
+        {
+            var isPaidBoll = Convert.ToBoolean(isPaidid);
+            var billFlats = repository.GetAllEntities().Include(u => u.Bill).ThenInclude(u => u.BillType).Include(u => u.Flat).ThenInclude(u => u.Block).Include(u => u.Flat).ThenInclude(u => u.User).Include(u => u.Flat).ThenInclude(u => u.UserType)
+                .Where(x=>x.Bill.Year == yearid && x.Bill.Mount==mountid && x.Bill.BillTypeId == billtypeid && (isPaidid == -1 || x.IsPaid== isPaidBoll))
+                .Select(x => new BillFlatDTO()
+                {
+                    Id = x.Id,
+                    BillId = x.BillId,
+                    FlatId = x.FlatId,
+                    Description = x.Description,
+                    Amount = x.Amount,
+                    BillDTO = new BillDTO()
+                    {
+                        Id = x.Bill.Id
+                                            ,
+                        BillTypeId = x.Bill.BillTypeId
+                                            ,
+                        BillTypeName = x.Bill.BillType.Name
+                                            ,
+                        Description = x.Bill.Description
+                                            ,
+                        Mount = x.Bill.Mount
+                                            ,
+                        Year = x.Bill.Year
+                    },
+                    FlatDTO = new FlatDTO()
+                    {
+                        Id = x.Flat.Id,
+                        BlockId = x.Flat.BlockId,
+                        BlockName = x.Flat.Block.Name,
+                        Description = x.Flat.Description,
+                        FlatTypeId = x.Flat.FlatTypeId,
+                        FlatTypeName = x.Flat.FlatType.Name,
+                        Floor = x.Flat.Floor,
+                        No = x.Flat.No,
+                        UserId = x.Flat.UserId,
+                        UserEmail = x.Flat.User.Email,
+                        UserFirstName = x.Flat.User.FirstName,
+                        UserLastName = x.Flat.User.LastName,
+                        UserPhoneNumber = x.Flat.User.PhoneNumber,
+                        UserTypeId = x.Flat.UserTypeId,
+                        UserTypeName = x.Flat.UserType.Name
+                    }
+                });
+            return billFlats;
+        }
         public ReturnObjectDTO AddBillFlat(BillFlatDTO billFlat)
         {
             try

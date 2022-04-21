@@ -13,11 +13,13 @@ namespace EntityFramework.Context.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.BillId).IsRequired();
             builder.Property(x => x.FlatId).IsRequired();
-            builder.Property(x => x.Amount).IsRequired();   
+            builder.Property(x => x.Amount).IsRequired();
+
+            //builder.Property(x => x.Amount).HasColumnType("decimal").IsRequired();
 
         }
 
- 
+
 
     }
 }

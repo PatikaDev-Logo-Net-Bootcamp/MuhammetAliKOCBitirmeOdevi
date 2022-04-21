@@ -4,14 +4,16 @@ using EntityFramework.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EntityFramework.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220421014553_Odeme-takip-icin-sutunlar-eklendi")]
+    partial class Odemetakipicinsutunlareklendi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,15 +79,6 @@ namespace EntityFramework.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("PayTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PayUserId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BillId");
@@ -120,42 +113,42 @@ namespace EntityFramework.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 197, DateTimeKind.Local).AddTicks(4324),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 217, DateTimeKind.Local).AddTicks(1428),
                             IsActive = true,
                             Name = "Tanımsız"
                         },
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 197, DateTimeKind.Local).AddTicks(4346),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 217, DateTimeKind.Local).AddTicks(1486),
                             IsActive = true,
                             Name = "Aidat"
                         },
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 197, DateTimeKind.Local).AddTicks(4348),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 217, DateTimeKind.Local).AddTicks(1488),
                             IsActive = true,
                             Name = "Elektrik"
                         },
                         new
                         {
                             Id = 4,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 197, DateTimeKind.Local).AddTicks(4350),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 217, DateTimeKind.Local).AddTicks(1490),
                             IsActive = true,
                             Name = "Su"
                         },
                         new
                         {
                             Id = 5,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 197, DateTimeKind.Local).AddTicks(4352),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 217, DateTimeKind.Local).AddTicks(1492),
                             IsActive = true,
                             Name = "Doğal Gaz"
                         },
                         new
                         {
                             Id = 6,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 197, DateTimeKind.Local).AddTicks(4356),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 217, DateTimeKind.Local).AddTicks(1496),
                             IsActive = true,
                             Name = "Diğer"
                         });
@@ -191,7 +184,7 @@ namespace EntityFramework.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 191, DateTimeKind.Local).AddTicks(2377),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 210, DateTimeKind.Local).AddTicks(3753),
                             IsActive = true,
                             Name = "Tanımsız"
                         });
@@ -298,63 +291,63 @@ namespace EntityFramework.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 195, DateTimeKind.Local).AddTicks(105),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 214, DateTimeKind.Local).AddTicks(2942),
                             IsActive = true,
                             Name = "Tanımsız"
                         },
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 195, DateTimeKind.Local).AddTicks(126),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 214, DateTimeKind.Local).AddTicks(2966),
                             IsActive = true,
                             Name = "1+0"
                         },
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 195, DateTimeKind.Local).AddTicks(129),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 214, DateTimeKind.Local).AddTicks(2969),
                             IsActive = true,
                             Name = "1+1"
                         },
                         new
                         {
                             Id = 4,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 195, DateTimeKind.Local).AddTicks(130),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 214, DateTimeKind.Local).AddTicks(2970),
                             IsActive = true,
                             Name = "2+0"
                         },
                         new
                         {
                             Id = 5,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 195, DateTimeKind.Local).AddTicks(132),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 214, DateTimeKind.Local).AddTicks(2971),
                             IsActive = true,
                             Name = "2+1"
                         },
                         new
                         {
                             Id = 6,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 195, DateTimeKind.Local).AddTicks(136),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 214, DateTimeKind.Local).AddTicks(2976),
                             IsActive = true,
                             Name = "3+0"
                         },
                         new
                         {
                             Id = 7,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 195, DateTimeKind.Local).AddTicks(137),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 214, DateTimeKind.Local).AddTicks(2977),
                             IsActive = true,
                             Name = "3+1"
                         },
                         new
                         {
                             Id = 8,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 195, DateTimeKind.Local).AddTicks(138),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 214, DateTimeKind.Local).AddTicks(2979),
                             IsActive = true,
                             Name = "4+0"
                         },
                         new
                         {
                             Id = 9,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 195, DateTimeKind.Local).AddTicks(140),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 214, DateTimeKind.Local).AddTicks(2980),
                             IsActive = true,
                             Name = "4+1"
                         });
@@ -504,28 +497,28 @@ namespace EntityFramework.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 194, DateTimeKind.Local).AddTicks(1224),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 213, DateTimeKind.Local).AddTicks(4255),
                             IsActive = true,
                             Name = "Tanımsız"
                         },
                         new
                         {
                             Id = 2,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 194, DateTimeKind.Local).AddTicks(1261),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 213, DateTimeKind.Local).AddTicks(4299),
                             IsActive = true,
                             Name = "Daire Sahibi"
                         },
                         new
                         {
                             Id = 3,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 194, DateTimeKind.Local).AddTicks(1264),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 213, DateTimeKind.Local).AddTicks(4302),
                             IsActive = true,
                             Name = "Kiracı"
                         },
                         new
                         {
                             Id = 4,
-                            DateCreated = new DateTime(2022, 4, 21, 6, 44, 18, 194, DateTimeKind.Local).AddTicks(1265),
+                            DateCreated = new DateTime(2022, 4, 21, 4, 45, 53, 213, DateTimeKind.Local).AddTicks(4304),
                             IsActive = true,
                             Name = "Apartman Görevlisi"
                         });

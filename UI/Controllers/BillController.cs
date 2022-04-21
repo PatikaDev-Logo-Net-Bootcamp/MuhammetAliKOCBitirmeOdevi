@@ -90,7 +90,7 @@ namespace UI.Controllers
 
             });
 
-            int pageSize = 10;
+            int pageSize = 25;
 
             //BillListDTO model = new BillListDTO();
             //model.Bills = billDTOs.ToList();
@@ -227,7 +227,7 @@ namespace UI.Controllers
 
             //});
 
-            int pageSize = 10;
+            int pageSize = 25;
 
             //BillFlatListDTO model = new BillFlatListDTO();
             //model.BillFlats = billFlatDTOs.ToList();
@@ -312,20 +312,85 @@ namespace UI.Controllers
 
 
 
-        //public void PassThings([FromBody] List<Thing> things)
-        //{
-        //    var t = things;
-        //}
+
+        public async Task<IActionResult> BillList(int Yearid, int Mountid, int BillTypeid, int isPaidid,
+                                                string sortOrder,
+                                                string currentFilter,
+                                                string searchString,
+                                                int? pageNumber)
+        {
+
+            ViewBag.Years = Year.Years;
+            ViewBag.Mounts = Mount.Mounts;
+            ViewBag.BillTypes = _billTypeService.GetAllBillTypes();
+            ViewBag.isPaid = new List<KodDTO>() { new KodDTO(-1, "Seçiniz"), new KodDTO(0, "ÖDENMEDİ"), new KodDTO(1, "Ödendi") };
+
+            ViewData["CurrentFilterYearid"] = Yearid;
+            ViewData["CurrentFilterMountid"] = Mountid;
+            ViewData["CurrentFilterBillTypeid"] = BillTypeid;
+            ViewData["CurrentFilterisPaidid"] = isPaidid;
+
+            //ViewBag.BillId = billId;
+            //var bill = _billService.GetBill(billId).data as BillDTO;
+            //ViewBag.BillName = bill.Year + " " + bill.Mount + " " + bill.BillTypeName + " Faturası";
+
+
+            var flats = _billFlatService.GetAllBillFlatsAsQueryable(Yearid, Mountid, BillTypeid, isPaidid);
+
+            ViewData["BlockSortParm"] = String.IsNullOrEmpty(sortOrder) ? "block_desc" : "";
+            //ViewData["MountSortParm"] = sortOrder == "mount" ? "mount_desc" : "mount";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                flats = flats.Where(s => s.FlatDTO.BlockName.Contains(searchString)
+                                       || s.FlatDTO.FlatTypeName.Contains(searchString)
+                                       || s.FlatDTO.No.Contains(searchString)
+                                       || s.Description.Contains(searchString)) ;
+            }
+
+
+            switch (sortOrder)
+            {
+                case "block_desc":
+                    flats = flats.OrderByDescending(s => s.FlatDTO.BlockName);
+                    break;
+ 
+                default:
+                    flats = flats.OrderBy(s => s.FlatDTO.BlockName);
+                    break;
+            }
+
+ 
+
+            int pageSize = 25;
+
+ 
+            return View(await PaginatedList<BillFlatDTO>.CreateAsync(flats.AsNoTracking(), pageNumber ?? 1, pageSize));
+        }
+
+
+
 
     }
 
 
 
-    public class Thing
-    {
-        public int Id { get; set; }
-        public string Color { get; set; }
-    }
+ 
+
+
+
+
+
+
 
 
 }

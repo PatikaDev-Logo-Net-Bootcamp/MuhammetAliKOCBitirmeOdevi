@@ -4,12 +4,7 @@
     ViewData["Title"] = "Faturalar";
     Layout = "_Layout2";
 }
-
 @model PaginatedList<FlatDTO>
-
-@{
-    ViewData["Title"] = "Index";
-}
 
 <h2>@ViewBag.BillName Genel Liste</h2>
 
@@ -64,7 +59,7 @@
                 </div>
             </th>
             <th scope="col">
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["BlockSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Daire</a>
+                <a asp-action="BillFlatList" asp-route-billId="@ViewBag.BillId" asp-route-sortOrder="@ViewData["BlockSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Daire</a>
             </th>
             <th scope="col">
                 Fatura Tip
