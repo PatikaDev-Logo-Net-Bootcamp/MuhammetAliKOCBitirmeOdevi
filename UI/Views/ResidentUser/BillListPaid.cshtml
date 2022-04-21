@@ -1,0 +1,149 @@
+﻿@using Business.DTO
+@using UI.Helpers
+@{
+    ViewData["Title"] = "Fatura Genel Liste";
+    Layout = "_Layout2";
+}
+@model List<BillFlatDTO>
+
+<h2>Ödenmemiş Faturalar</h2>
+
+
+
+
+<form asp-action="BillListPaid" method="get">
+    <div class="form-actions no-color">
+
+        <div class=row>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Yıl</label>
+
+                    <input type="hidden" id="Yearidhidden" value="@ViewData["CurrentFilterYearid"]" />
+
+                    <select name="Yearid" id="Yearid" class="form-control">
+                        @foreach (KodDTO item in @ViewBag.Years)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+
+
+
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Ay</label>
+
+                    <input type="hidden" id="Mountidhidden" value="@ViewData["CurrentFilterMountid"]" />
+                    <select name="Mountid" id="Mountid" class="form-control">
+                        @foreach (KodDTO item in @ViewBag.Mounts)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+
+                    </select>
+
+                </div>
+            </div>
+
+    
+            <div class="col-md-2" style="padding-left:0px; padding-right:0px;">
+                <div class="form-group">
+                    <label>&nbsp</label><br />
+                    <input type="submit" value="Ara" class="btn btn-success" style="float:left" />
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+</form>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+
+            <th scope="col">
+                @* <a asp-action="BillList" asp-route-billId="@ViewBag.BillId" asp-route-sortOrder="@ViewData["BlockSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Daire</a>*@
+                Daire
+            </th>
+            <th scope="col">
+                Fatura Tip
+            </th>
+            <th scope="col">
+                Fatura Tutar
+            </th>
+            <th scope="col">
+                Açıklama
+            </th>
+            <th scope="col">
+                Ödeme Durumu
+            </th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td class="Flat">
+                    @(item.FlatDTO.BlockName + " .Blok " + @item.FlatDTO.Floor + " .Kat No:" + @item.FlatDTO.No )
+                </td>
+                <td class="BillTypeName">
+                    @item.BillDTO.BillTypeName
+                </td>
+                <td class="Amount">
+                    @item.Amount
+                </td>
+                <td class="Description">
+                    @item.Description
+                </td>
+                <td class="Paid">
+                    @if (item.IsPaid)
+                    {
+                       <span style='color:green;'>Ödendi</span>
+                    }
+                    else
+                    {
+                      <span style='color:Red;'>Ödenmedi</span>
+                    }
+
+ 
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+ 
+ 
+
+
+
+
+
+@section Scripts {
+
+<script type="text/javascript">
+
+    $(document).ready( function () {
+
+         $("#Yearid").val($("#Yearidhidden").val());
+         $("#Mountid").val($("#Mountidhidden").val());
+ 
+    });
+
+</script>
+
+    }
+
+

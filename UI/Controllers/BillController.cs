@@ -379,7 +379,7 @@ namespace UI.Controllers
 
 
 
-        public async Task<IActionResult> BillSummory(int Yearid, int Mountid, int BillTypeid)
+        public IActionResult BillSummory(int Yearid, int Mountid, int BillTypeid)
         {
 
             ViewBag.Years = Year.Years;

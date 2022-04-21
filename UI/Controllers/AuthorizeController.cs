@@ -53,6 +53,53 @@ namespace UI.Controllers
             return View(model);
         }
 
+
+        public IActionResult ResetPasword()
+        {
+            var model = new ResetPasswordDTO();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPasword(ResetPasswordDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (model.Password != model.RePassword)
+                {
+                    model.IsSuccess = false;
+                    model.Message = "İşlem başarısız. Girilen Şifreler Aynı Değil!";
+                    return View(model);
+                }
+
+
+                var currentUser = _userManager.GetUserAsync(User).Result;
+
+
+                //var res = await _userManager.ResetPasswordAsync(currentUser, model.Password);
+                //if (userEntity != null)
+                //{
+                //    var result = await _signInManager.PasswordSignInAsync(userEntity.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+                //    if (result.Succeeded)
+                //    {
+                //        _logger.LogInformation($"{model.Email} Maail user logged in.");
+                //        //TempData["Student"] = userEntity;
+                //        return RedirectToAction("Index", "Home");
+                //    }
+                //}
+
+
+
+            }
+            return View(model);
+        }
+
+
+
+
+
+
         public async Task<ActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

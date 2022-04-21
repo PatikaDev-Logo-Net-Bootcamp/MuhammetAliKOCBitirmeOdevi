@@ -75,133 +75,145 @@
                 <!-- sidebar-search  -->
                 <div class="sidebar-menu">
                     <ul>
+                        @if (String.Join(",", currentUserRoles).Contains("Manager"))
+                        {
+
+
+
+                            <li class="header-menu">
+                                <span>Yönetici</span>
+                            </li>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-users"></i>
+                                    <span>Kullanıcı İşlemleri</span>
+                                    @* <span class="badge badge-pill badge-warning">New</span>*@
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="/User/IdentityRoleList">
+                                                Kimlik - Rol
+                                                @*    <span class="badge badge-pill badge-success">Pro</span>*@
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="/User/UserCarList">Araç</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-home"></i>
+                                    <span>Konut/Daire İşlemleri</span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="/Residence/BlockList">Blok</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Residence/FlatList">Daire</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-chart-line"></i>
+                                    <span>Fatura işlemleri</span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="/Bill/Index">Fatura Ekle-Dağıt</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Bill/BillList?Yearid=-1&Mountid=-1&BillTypeid=-1&isPaidid=-1">Genel Fatura Durumu</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Bill/BillSummory?Yearid=-1&Mountid=-1&BillTypeid=-1">Borç Alacak Durumu</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </li>
+
+
+                        }
+
+
                         <li class="header-menu">
-                            <span>Genel</span>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="fa fa-tachometer-alt"></i>
-                                <span>Kullanıcı İşlemleri</span>
-                                @* <span class="badge badge-pill badge-warning">New</span>*@
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="/User/IdentityRoleList">
-                                            Kimlik - Rol
-                                            @*    <span class="badge badge-pill badge-success">Pro</span>*@
-                                        </a>
-                                    </li>
-                              
-                                    <li>
-                                        <a href="/User/UserCarList">Araç</a>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </li>
-
-
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="far fa-gem"></i>
-                                <span>Konut/Daire İşlemleri</span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="/Residence/BlockList">Blok</a>
-                                    </li>
-                                    <li>
-                                        <a href="/Residence/FlatList">Daire</a>
-                                    </li>
-                                   
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="fa fa-chart-line"></i>
-                                <span>Fatura işlemleri</span>
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="/Bill/Index">Fatura Ekle-Dağıt</a>
-                                    </li>
-                                    <li>
-                                        <a href="/Bill/BillList?Yearid=-1&Mountid=-1&BillTypeid=-1&isPaidid=-1">Genel Fatura Durumu</a>
-                                    </li>
-                                    <li>
-                                        <a href="/Bill/BillSummory?Yearid=-1&Mountid=-1&BillTypeid=-1">Borç Alacak Durumu</a>
-                                    </li>
-                                    
-                                </ul>
-                            </div>
+                            <span>Kullanıcı</span>
                         </li>
 
                         <li class="sidebar-dropdown">
                             <a href="#">
-                                <i class="fa fa-shopping-cart"></i>
-                                <span>E-commerce</span>
-                                <span class="badge badge-pill badge-danger">3</span>
+                                <i class="fa fa-user"></i>
+                                <span>Hesabım</span>
+                                @*<span class="badge badge-pill badge-danger">3</span>*@
                             </a>
                             <div class="sidebar-submenu">
-                                <ul>
+                                <ul> 
                                     <li>
-                                        <a href="#">
-                                            Products
-
-                                        </a>
+                                        <a href="/ResidentUser/BillListUnPaid">Ödenecek Faturalarım</a>
                                     </li>
                                     <li>
-                                        <a href="#">Orders</a>
+                                        <a href="/ResidentUser/BillListPaid">Ödenmiş Faturalarım</a>
                                     </li>
-                                    <li>
-                                        <a href="#">Credit cart</a>
-                                    </li>
+                                    @*<li>
+                                        <a href="/Authorize/ResetPasword">Şifre Güncelle</a>
+                                    </li>*@
                                 </ul>
                             </div>
                         </li>
 
-                        <li class="sidebar-dropdown">
+                        @*                        <li class="sidebar-dropdown">
                             <a href="#">
-                                <i class="fa fa-globe"></i>
-                                <span>Maps</span>
+                            <i class="fa fa-globe"></i>
+                            <span>Maps</span>
                             </a>
                             <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a href="#">Google maps</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Open street map</a>
-                                    </li>
-                                </ul>
+                            <ul>
+                            <li>
+                            <a href="#">Google maps</a>
+                            </li>
+                            <li>
+                            <a href="#">Open street map</a>
+                            </li>
+                            </ul>
                             </div>
-                        </li>
-                        <li class="header-menu">
+                            </li>*@
+
+
+
+
+                        @*    <li class="header-menu">
                             <span>Extra</span>
-                        </li>
-                        <li>
+                            </li>
+                            <li>
                             <a href="#">
-                                <i class="fa fa-book"></i>
-                                <span>Documentation</span>
-                                <span class="badge badge-pill badge-primary">Beta</span>
+                            <i class="fa fa-book"></i>
+                            <span>Documentation</span>
+                            <span class="badge badge-pill badge-primary">Beta</span>
                             </a>
-                        </li>
-                        <li>
+                            </li>
+                            <li>
                             <a href="#">
-                                <i class="fa fa-calendar"></i>
-                                <span>Calendar</span>
+                            <i class="fa fa-calendar"></i>
+                            <span>Calendar</span>
                             </a>
-                        </li>
-                        <li>
+                            </li>
+                            <li>
                             <a href="#">
-                                <i class="fa fa-folder"></i>
-                                <span>Examples</span>
+                            <i class="fa fa-folder"></i>
+                            <span>Examples</span>
                             </a>
-                        </li>
+                            </li>*@
                     </ul>
                 </div>
                 <!-- sidebar-menu  -->
@@ -216,10 +228,10 @@
                     <i class="fa fa-envelope"></i>
                     <span class="badge badge-pill badge-success notification">7</span>
                 </a>
-                <a href="#">
+                @* <a href="#">
                     <i class="fa fa-cog"></i>
                     <span class="badge-sonar"></span>
-                </a>
+                    </a>*@
                 <a href="/Authorize/Logout">
                     <i class="fa fa-power-off"></i>
                 </a>
