@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
@@ -17,5 +18,12 @@ namespace Domain.Entities
         public ICollection<Car> UserCars { get; set; }
 
         public ICollection<Flat> UserFlats { get; set; }
+
+        //[ForeignKey("SendUserId")]
+        [InverseProperty("SendUser")]
+        public virtual ICollection<Message> SendedMessages { get; set; }
+        //[ForeignKey("ReceiveUserId")]
+        [InverseProperty("ReceiveUser")]
+        public virtual ICollection<Message> ReceivedMessages { get; set; }
     }
 }

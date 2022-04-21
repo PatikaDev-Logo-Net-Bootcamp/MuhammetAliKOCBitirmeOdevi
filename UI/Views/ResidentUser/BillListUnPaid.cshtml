@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-    
+
             <div class="col-md-2" style="padding-left:0px; padding-right:0px;">
                 <div class="form-group">
                     <label>&nbsp</label><br />
@@ -113,17 +113,17 @@
                 <td class="Paid">
                     @if (item.IsPaid)
                     {
-                       <span style='color:green;'>Ödendi</span>
+                        <span style='color:green;'>Ödendi</span>
                     }
                     else
                     {
-                      <span style='color:Red;'>Ödenmedi</span>
+                        <span style='color:Red;'>Ödenmedi</span>
                     }
 
- 
+
                 </td>
                 <td>
-                     <button type="button" class="btn btn-success btnOdeme" data-flatid="@item.Id">Ödeme Yap</button>
+                    <button type="button" class="btn btn-success btnOdeme" data-billflatid="@item.Id">Ödeme Yap</button>
                 </td>
 
 
@@ -132,8 +132,8 @@
     </tbody>
 </table>
 
- 
- 
+
+
 
 
 
@@ -141,17 +141,56 @@
 
 @section Scripts {
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    $(document).ready( function () {
+        $(document).ready(function () {
 
-         $("#Yearid").val($("#Yearidhidden").val());
-         $("#Mountid").val($("#Mountidhidden").val());
- 
-    });
+            $("#Yearid").val($("#Yearidhidden").val());
+            $("#Mountid").val($("#Mountidhidden").val());
 
-</script>
+            
+            $(document).on('click', '.btnOdeme', function () {
+                var clickedbutton = $(this);
+                let id = $(this).data("billflatid");
 
-    }
+                var data = { id: id }
+
+                console.log(id);
+               
+
+                $.ajax({
+                    ContentType: 'application/json; charset=utf-8',
+                    type: 'POST',
+                    url: '/ResidentUser/Pay',
+                    dataType: 'json',
+                    data: data,
+                    success: function (result) {
+                        if (result.isSuccess) {
+
+                            clickedbutton.parent().parent().children(".Paid").html("<span style='color:green;'>Ödendi</span>");
+                            clickedbutton.remove();
+                 
+                        } else {
+
+                            alert(result.errorMessage);
+                         
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                        alert(thrownError);
+                    }
+                })
+
+            });
+
+
+        });
+
+    </script>
+
+}
+
+
 
 

@@ -133,10 +133,10 @@
                                             <a href="/Bill/Index">Fatura Ekle-Dağıt</a>
                                         </li>
                                         <li>
-                                            <a href="/Bill/BillList?Yearid=-1&Mountid=-1&BillTypeid=-1&isPaidid=-1">Genel Fatura Durumu</a>
+                                            <a href="/Bill/BillList?Yearid=-1&Mountid=-1&BillTypeid=0&isPaidid=-1">Genel Fatura Durumu</a>
                                         </li>
                                         <li>
-                                            <a href="/Bill/BillSummory?Yearid=-1&Mountid=-1&BillTypeid=-1">Borç Alacak Durumu</a>
+                                            <a href="/Bill/BillSummory?Yearid=-1&Mountid=0&BillTypeid=-1">Borç Alacak Durumu</a>
                                         </li>
 
                                     </ul>
@@ -220,13 +220,13 @@
             </div>
             <!-- sidebar-content  -->
             <div class="sidebar-footer">
-                <a href="#">
+                @*<a href="#">
                     <i class="fa fa-bell"></i>
                     <span class="badge badge-pill badge-warning notification">3</span>
-                </a>
-                <a href="#">
+                </a>*@
+                <a href="/Message/List">
                     <i class="fa fa-envelope"></i>
-                    <span class="badge badge-pill badge-success notification">7</span>
+                    <span id="messagelink" class="badge badge-pill badge-success notification"></span>
                 </a>
                 @* <a href="#">
                     <i class="fa fa-cog"></i>

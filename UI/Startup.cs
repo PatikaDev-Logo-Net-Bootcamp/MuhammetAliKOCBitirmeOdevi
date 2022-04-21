@@ -55,7 +55,7 @@ namespace UI
             services.AddTransient<IBillService, BillService>();
             services.AddTransient<IBillFlatService, BillFlatService>();
             services.AddTransient<IBillTypeService, BillTypeService>();
-
+            services.AddTransient<IMessageService, MessageService>();
 
             services.ConfigureApplicationCookie(options =>
             {

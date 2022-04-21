@@ -31,6 +31,7 @@ IdentityRoleClaim<string>, IdentityUserToken<string>>
             builder.ApplyConfiguration(new BillConfiguration());
             builder.ApplyConfiguration(new BillFlatConfiguration());
             builder.ApplyConfiguration(new BillTypeConfiguration());
+            builder.ApplyConfiguration(new MessageConfiguration());
 
             builder.HasDefaultSchema("Identity");
             builder.Entity<User>(entity =>

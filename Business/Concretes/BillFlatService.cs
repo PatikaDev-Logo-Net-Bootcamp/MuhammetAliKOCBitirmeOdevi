@@ -227,6 +227,33 @@ namespace Business.Concretes
             }
         }
 
+        public ReturnObjectDTO Pay(int id, string userid)
+        {
+ 
+
+            var entity = repository.GetById(id);// GetBillFlat(id);
+            if (entity == null)
+            {
+                return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı.(2)" };
+            }
+
+            entity.IsPaid = true;
+            entity.PayUserId = userid;
+            entity.PayTime = DateTime.Now;       
+
+            try
+            {
+                repository.Update(entity);
+                unitOfWork.Commit();
+               
+                return new ReturnObjectDTO() {   successMessage = "İşlem Başarılı" };
+            }
+            catch (Exception)
+            {
+                return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
+            }
+        }
+
 
         public ReturnObjectDTO DeleteBillFlat(int id, string updatedBy = "Api Kullanicisi")
         {
@@ -332,6 +359,9 @@ namespace Business.Concretes
                     FlatId = x.FlatId,
                     Description = x.Description,
                     Amount = x.Amount,
+                    IsPaid = x.IsPaid,
+                    PayTime = x.PayTime,
+                    PayUserId = x.PayUserId,
                     BillDTO = new BillDTO()
                     {
                         Id = x.Bill.Id

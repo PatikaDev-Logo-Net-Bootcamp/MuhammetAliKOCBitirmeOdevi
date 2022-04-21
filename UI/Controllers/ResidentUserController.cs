@@ -71,5 +71,14 @@ namespace UI.Controllers
             return View(billflats);
         }
 
+        [HttpPost]
+        public JsonResult Pay(int id)
+        {
+            var currentUser = _userManager.GetUserAsync(User).Result;
+            var res = _billFlatService.Pay(id, currentUser.Id);
+
+            return new JsonResult(res);
+        }
+
     }
 }
