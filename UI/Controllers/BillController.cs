@@ -379,6 +379,42 @@ namespace UI.Controllers
 
 
 
+        public async Task<IActionResult> BillSummory(int Yearid, int Mountid, int BillTypeid)
+        {
+
+            ViewBag.Years = Year.Years;
+            ViewBag.Mounts = Mount.Mounts;
+            ViewBag.BillTypes = _billTypeService.GetAllBillTypes();
+             
+
+            ViewData["CurrentFilterYearid"] = Yearid;
+            ViewData["CurrentFilterMountid"] = Mountid;
+            ViewData["CurrentFilterBillTypeid"] = BillTypeid;
+
+
+
+            var model = new List<SummoryDTO>();
+
+            var list = _billFlatService.GetAllBillFlatsAsQueryable(Yearid, Mountid, BillTypeid, -1).ToList();
+                
+               var paidBillValue = list.Where(x=>x.IsPaid).Sum(x=>x.Amount);
+            model.Add(new SummoryDTO("Ödenen", paidBillValue));
+
+            var unPaidBillValue = list.Where(x => !x.IsPaid).Sum(x => x.Amount);
+            model.Add(new SummoryDTO("Ödenmemiş", unPaidBillValue));
+
+
+            model.Add(new SummoryDTO("TOPLAM", paidBillValue+ unPaidBillValue));
+
+
+
+      
+
+
+            return View(model);
+        }
+
+
 
     }
 

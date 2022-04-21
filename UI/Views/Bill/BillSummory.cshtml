@@ -1,0 +1,142 @@
+﻿@using Business.DTO
+@using UI.Helpers
+@{
+    ViewData["Title"] = "Fatura Özet Liste";
+    Layout = "_Layout2";
+}
+@model List<SummoryDTO>
+
+<h2>Fatura Özet Liste</h2>
+
+
+
+
+<form asp-action="BillSummory" method="get">
+    <div class="form-actions no-color">
+
+        <div class=row>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Yıl</label>
+
+                    <input type="hidden" id="Yearidhidden" value="@ViewData["CurrentFilterYearid"]" />
+
+                    <select name="Yearid" id="Yearid" class="form-control">
+                        @foreach (KodDTO item in @ViewBag.Years)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+
+
+
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Ay</label>
+
+                    <input type="hidden" id="Mountidhidden" value="@ViewData["CurrentFilterMountid"]" />
+                    <select name="Mountid" id="Mountid" class="form-control">
+                        @foreach (KodDTO item in @ViewBag.Mounts)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+
+                    </select>
+
+                </div>
+            </div>
+
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Fatura Tipi</label>
+                    <input type="hidden" id="BillTypeidhidden" value="@ViewData["CurrentFilterBillTypeid"]" />
+                    <select name="BillTypeid" id="BillTypeid" class="form-control">
+                        @foreach (BillTypeDTO item in @ViewBag.BillTypes)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+
+                </div>
+            </div>    
+ 
+            <div class="col-md-2" style="padding-left:0px; padding-right:0px;">
+                <div class="form-group">
+                    <label>&nbsp</label><br />
+                    <input type="submit" value="Ara" class="btn btn-success" style="float:left" />
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+</form>
+
+
+<div class ="row">
+    <div class="col-md-6">
+
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+
+            <th scope="col">
+                Ödeme Durumu
+            </th>
+            <th scope="col">
+                Miktar
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr> 
+                <td class="">
+                    @item.Text
+                </td>
+                <td class="">
+                    @item.Amount
+                </td> 
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+     </div>
+</div>
+
+ 
+
+
+
+
+
+@section Scripts {
+
+<script type="text/javascript">
+
+    $(document).ready( function () {
+
+         $("#Yearid").val($("#Yearidhidden").val());
+         $("#Mountid").val($("#Mountidhidden").val());
+         $("#BillTypeid").val($("#BillTypeidhidden").val());
+         
+    });
+
+</script>
+
+    }
+
+
