@@ -124,7 +124,7 @@ namespace Business.Concretes
         {
             var isPaidBoll = Convert.ToBoolean(isPaidid);
             var billFlats = repository.GetAllEntities().Include(u => u.Bill).ThenInclude(u => u.BillType).Include(u => u.Flat).ThenInclude(u => u.Block).Include(u => u.Flat).ThenInclude(u => u.User).Include(u => u.Flat).ThenInclude(u => u.UserType)
-                .Where(x=>(yearid==-1 || x.Bill.Year == yearid) && (mountid==-1 || x.Bill.Mount==mountid) && (billtypeid == -1 ||x.Bill.BillTypeId == billtypeid) && (isPaidid == -1 || x.IsPaid== isPaidBoll))
+                .Where(x=>(yearid==-1 || x.Bill.Year == yearid) && (mountid==-1 || x.Bill.Mount==mountid) && (billtypeid == 0 ||x.Bill.BillTypeId == billtypeid) && (isPaidid == -1 || x.IsPaid== isPaidBoll))
                 .Select(x => new BillFlatDTO()
                 {
                     Id = x.Id,
@@ -132,6 +132,9 @@ namespace Business.Concretes
                     FlatId = x.FlatId,
                     Description = x.Description,
                     Amount = x.Amount,
+                    IsPaid = x.IsPaid,
+                     PayUserId = x.PayUserId,
+                     PayTime    = x.PayTime,
                     BillDTO = new BillDTO()
                     {
                         Id = x.Bill.Id
