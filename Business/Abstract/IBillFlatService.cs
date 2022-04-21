@@ -19,5 +19,7 @@ namespace Business.Abstract
         ReturnObjectDTO UpdateBillFlat(int id, BillFlatDTO flatType, string updatedBy = "Api Kullanicisi");
 
         ReturnObjectDTO DeleteBillFlat(int id, string updatedBy = "Api Kullanicisi");
+
+        ReturnObjectDTO AddOrUpdateBillFlat(List<BillFlatAjaxDTO> billflatdtos, string updatedBy = "Api Kullanicisi");
     }
 }

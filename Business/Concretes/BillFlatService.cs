@@ -28,7 +28,7 @@ namespace Business.Concretes
 
         public ReturnObjectDTO GetBillFlat(int id)
         {
-            var billFlat = BillFlats().Include(u => u.Bill).ThenInclude(u=>u.BillType).Include(u=>u.Flat).ThenInclude(u=>u.Block).Include(u=>u.Flat).ThenInclude(u=>u.User).Include(u => u.Flat).ThenInclude(u => u.UserType)
+            var billFlat = BillFlats().Include(u => u.Bill).ThenInclude(u => u.BillType).Include(u => u.Flat).ThenInclude(u => u.Block).Include(u => u.Flat).ThenInclude(u => u.User).Include(u => u.Flat).ThenInclude(u => u.UserType)
                 .Select(x => new BillFlatDTO()
                 {
                     Id = x.Id,
@@ -36,29 +36,39 @@ namespace Business.Concretes
                     FlatId = x.FlatId,
                     Description = x.Description,
                     Amount = x.Amount,
-                    BillDTO = new BillDTO() { Id = x.Bill.Id
-                                            , BillTypeId = x.Bill.BillTypeId
-                                            , BillTypeName = x.Bill.BillType.Name
-                                            , Description = x.Bill.Description
-                                            , Mount = x.Bill.Mount
-                                            , Year=x.Bill.Year},
-                    FlatDTO = new FlatDTO() { Id = x.Flat.Id,
-                                              BlockId = x.Flat.BlockId,
-                                              BlockName = x.Flat.Block.Name,
-                                              Description = x.Flat.Description,
-                                              FlatTypeId = x.Flat.FlatTypeId,   
-                                              FlatTypeName = x.Flat.FlatType.Name,
-                                              Floor = x.Flat.Floor, 
-                                              No  = x.Flat.No,
-                                              UserId = x.Flat.UserId,
-                                              UserEmail = x.Flat.User.Email,
-                                              UserFirstName = x.Flat.User.FirstName,
-                                              UserLastName = x.Flat.User.LastName,  
-                                              UserPhoneNumber = x.Flat.User.PhoneNumber,
-                                              UserTypeId = x.Flat.UserTypeId,
-                                              UserTypeName  = x.Flat.UserType.Name
-                                             }
-                     
+                    BillDTO = new BillDTO()
+                    {
+                        Id = x.Bill.Id
+                                            ,
+                        BillTypeId = x.Bill.BillTypeId
+                                            ,
+                        BillTypeName = x.Bill.BillType.Name
+                                            ,
+                        Description = x.Bill.Description
+                                            ,
+                        Mount = x.Bill.Mount
+                                            ,
+                        Year = x.Bill.Year
+                    },
+                    FlatDTO = new FlatDTO()
+                    {
+                        Id = x.Flat.Id,
+                        BlockId = x.Flat.BlockId,
+                        BlockName = x.Flat.Block.Name,
+                        Description = x.Flat.Description,
+                        FlatTypeId = x.Flat.FlatTypeId,
+                        FlatTypeName = x.Flat.FlatType.Name,
+                        Floor = x.Flat.Floor,
+                        No = x.Flat.No,
+                        UserId = x.Flat.UserId,
+                        UserEmail = x.Flat.User.Email,
+                        UserFirstName = x.Flat.User.FirstName,
+                        UserLastName = x.Flat.User.LastName,
+                        UserPhoneNumber = x.Flat.User.PhoneNumber,
+                        UserTypeId = x.Flat.UserTypeId,
+                        UserTypeName = x.Flat.UserType.Name
+                    }
+
                 }).FirstOrDefault(x => x.Id == id);
             return new ReturnObjectDTO() { data = billFlat, successMessage = "İşlem Başarılı" };
         }
@@ -118,7 +128,7 @@ namespace Business.Concretes
                     BillId = billFlat.BillId,
                     FlatId = billFlat.FlatId,
                     Description = billFlat.Description,
-                    Amount = billFlat.Amount,                    
+                    Amount = billFlat.Amount,
                     DateCreated = DateTime.Now,
                     IsActive = true
                 };
@@ -154,8 +164,8 @@ namespace Business.Concretes
             entity.BillId = billFlat.BillId;
             entity.FlatId = billFlat.FlatId;
             entity.Description = billFlat.Description;
-            entity.Amount = billFlat.Amount;        
- 
+            entity.Amount = billFlat.Amount;
+
             try
             {
                 repository.Update(entity);
@@ -191,5 +201,72 @@ namespace Business.Concretes
 
         }
 
+        public ReturnObjectDTO AddOrUpdateBillFlat(List<BillFlatAjaxDTO> billflatdtos, string updatedBy = "Api Kullanicisi")
+        {
+            var res = new List<BillFlatDTO>();
+
+            var addList = new List<BillFlat>();
+            var updateList = new List<BillFlat>();
+
+            try
+            {
+
+                foreach (BillFlatAjaxDTO item in billflatdtos)
+                {
+                    if (item.i == 0)
+                    {
+                        var entity = BillFlats().Where(x => x.BillId == item.b && x.FlatId == item.f).FirstOrDefault();
+                        if (entity == null)
+                        {
+                            entity = new BillFlat() { FlatId = item.f, BillId = item.b, Description = item.d, Amount = item.a, IsActive = true, DateCreated = DateTime.Now };
+                            addList.Add(entity);
+                            repository.Add(entity);
+                        }
+                        else
+                        {
+                            entity.Amount = item.a;
+                            entity.Description = item.d;
+
+                            updateList.Add(entity);
+                            repository.Update(entity);
+                        }
+                    }
+                    else
+                    {
+                        var entity = BillFlats().Where(x => x.Id == item.i).FirstOrDefault();
+                        entity.Amount = item.a;
+                        entity.Description = item.d;
+
+                        updateList.Add(entity);
+                        repository.Update(entity);
+
+
+                    }
+
+                }
+
+                //repository.AddRange(addList);
+                //repository.UpdateRange(updateList);
+                unitOfWork.Commit();
+
+
+                foreach (var item in addList)
+                {
+                    res.Add((BillFlatDTO)GetBillFlat(item.Id).data);
+                }
+                foreach (var item in updateList)
+                {
+                    res.Add((BillFlatDTO)GetBillFlat(item.Id).data);
+                }
+
+                //res.AddRange(addList.Select(x => new BillFlatDTO() { Id = x.Id, Amount = x.Amount, Description = x.Description, BillId = x.BillId, FlatId = x.FlatId }).ToList());
+                //res.AddRange(updateList.Select(x => new BillFlatDTO() { Id = x.Id, Amount = x.Amount, Description = x.Description, BillId = x.BillId, FlatId = x.FlatId }).ToList());
+                return new ReturnObjectDTO() { data = res, successMessage = "İşlem Başarılı" };
+            }
+            catch (Exception)
+            {
+                return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
+            }
+        }
     }
 }

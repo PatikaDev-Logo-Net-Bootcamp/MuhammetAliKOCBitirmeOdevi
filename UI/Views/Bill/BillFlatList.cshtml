@@ -17,37 +17,37 @@
     <a asp-action="Create">Create New</a>
     </p>*@
 
- 
 
-<button style="float:right;" type="button" class="btn btn-info btnAdd"> Toplu Fatura Girişi</button>
+
+<button style="float:right;" type="button" class="btn btn-info btnToplu"> Toplu Fatura Girişi</button>
 
 
 <form asp-action="BillFlatList" method="get">
     <div class="form-actions no-color">
-      
-        <div class=row>
-@*            <div class="col-md-3" style="padding-left:0px; padding-right:0px;">
 
-                  <select name="SearchBlok"  class = "form-control">
-                            @foreach(BlockDTO blok in @ViewBag.Blocks)
-                            {
-                                 <option value="@blok.Id">@blok.Name</option>
-                            }                   
-                  </select>
-            </div>*@
-            <input type="hidden" value="@ViewBag.BillId" id="BillIdinSearch" name="billId"/>
+        <div class=row>
+            @*            <div class="col-md-3" style="padding-left:0px; padding-right:0px;">
+
+                <select name="SearchBlok"  class = "form-control">
+                @foreach(BlockDTO blok in @ViewBag.Blocks)
+                {
+                <option value="@blok.Id">@blok.Name</option>
+                }
+                </select>
+                </div>*@
+            <input type="hidden" value="@ViewBag.BillId" id="BillIdinSearch" name="billId" />
 
 
             <div class="col-md-3" style="padding-left:0px; padding-right:0px;">
-                        <input  type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" />
+                <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" />
             </div>
             <div class="col-md-3" style="padding-left:0px; padding-right:0px;">
-                  <input type="submit" value="Ara" class="btn btn-success" style="float:left"/>          
+                <input type="submit" value="Ara" class="btn btn-success" style="float:left" />
             </div>
         </div>
-    
-          
-    
+
+
+
     </div>
 
 </form>
@@ -55,6 +55,14 @@
 <table class="table table-hover">
     <thead>
         <tr>
+            <th>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkAll">
+                    <label class="form-check-label" for="checkAll">
+                        Tümü
+                    </label>
+                </div>
+            </th>
             <th scope="col">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["BlockSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Daire</a>
             </th>
@@ -74,9 +82,13 @@
         @foreach (var item in Model)
         {
             <tr>
- 
+                <td class="checkbox">
+                    <div class="form-check">
+                        <input class="form-check-input checkboxInTheRow" type="checkbox" value="" data-flatid="@item.Id" data-billid="@ViewBag.BillId" data-id="@(item.BillFlatDTO == null ? 0:item.BillFlatDTO.Id)">
+                    </div>
+                </td>
                 <td class="Flat">
-                   @(item.BlockName + " .Blok " + @item.Floor + " .Kat No:" + @item.No )
+                    @(item.BlockName + " .Blok " + @item.Floor + " .Kat No:" + @item.No )
                 </td>
                 <td class="BillTypeName">
                     @item.BillFlatDTO?.BillDTO.BillTypeName
@@ -84,17 +96,19 @@
                 <td class="Amount">
                     @item.BillFlatDTO?.Amount
                 </td>
-                 <td class="Description">
+                <td class="Description">
                     @item.BillFlatDTO?.Description
                 </td>
-                <td>
-                    @if(item.BillFlatDTO != null)
+                <td class="buttons">
+                    @if (item.BillFlatDTO != null)
                     {
-                          <button type="button" class="btn btn-primary btnUpdate" data-flatid = "@item.Id" data-billid ="@ViewBag.BillId" data-id="@item.BillFlatDTO.Id">Güncelle</button>
-                          <button type="button" class="btn btn-danger btnDelete" data-flatid = "@item.Id" data-billid ="@ViewBag.BillId"  data-id="@item.BillFlatDTO.Id">Sil</button>
-                        
-                    }else{
-                            <button type="button" class="btn btn-info btnAdd" data-flatid="@item.Id"  data-billid ="@ViewBag.BillId" data-id="0">Ekle</button>
+                        <button type="button" class="btn btn-primary btnUpdate" data-flatid="@item.Id" data-billid="@ViewBag.BillId" data-id="@item.BillFlatDTO.Id">Güncelle</button>
+                        <button type="button" class="btn btn-danger btnDelete" data-flatid="@item.Id" data-billid="@ViewBag.BillId" data-id="@item.BillFlatDTO.Id">Sil</button>
+
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-info btnAdd" data-flatid="@item.Id" data-billid="@ViewBag.BillId" data-id="0">Ekle</button>
                     }
 
                 </td>
@@ -109,7 +123,7 @@
 }
 
 <a asp-action="BillFlatList"
-    asp-route-billId="@ViewData["BillId"]"
+   asp-route-billId="@ViewData["BillId"]"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
@@ -117,7 +131,7 @@
     Önceki
 </a>
 <a asp-action="BillFlatList"
-    asp-route-billId="@ViewData["BillId"]"
+   asp-route-billId="@ViewData["BillId"]"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
@@ -125,7 +139,7 @@
     Sonraki
 </a>
 @*
-<p>Toplam  <span id="Count">@Model.Count()</span> kayıt bulunmuştur.</p>*@
+    <p>Toplam  <span id="Count">@Model.Count()</span> kayıt bulunmuştur.</p>*@
 
 
 <!-- Modal Add -->
@@ -146,31 +160,31 @@
                     @Html.HiddenFor(x=>x.FirstOrDefault().BillFlatDTO.BillId, new { @id="BillId"})
                     @Html.HiddenFor(x=>x.FirstOrDefault().BillFlatDTO.FlatId, new { @id="FlatId"})
 
-@*                      <input type="hidden" value="@ViewBag.BillId" name="billId"/>
-                      <input type="hidden" value="0" id="FlatId" name="flatId" />*@
+                    @*                      <input type="hidden" value="@ViewBag.BillId" name="billId"/>
+                        <input type="hidden" value="0" id="FlatId" name="flatId" />*@
 
                     <div class="form-group">
                         <p>@ViewBag.BillName</p>
                     </div>
 
-@*                    <div class="form-group">
+                    @*                    <div class="form-group">
                         <label>Fatura Miktarı</label>
-                        
+
                         <input  type="text" name="amount" value="0" class="form-control" />
 
-                    </div>   *@
+                        </div>   *@
 
                     <div class="form-group">
                         <label>Fatura Miktarı</label>
                         <input asp-for="@Model.FirstOrDefault().BillFlatDTO.Amount" id="Amount" type="text" class="form-control" placeholder="">
                         @Html.ValidationMessageFor(model => model.FirstOrDefault().BillFlatDTO.Amount, "", new { @class = "text-danger" })
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Açıklama</label>
                         <input asp-for="@Model.FirstOrDefault().BillFlatDTO.Description" id="Description" type="text" class="form-control" placeholder="Açıklama">
                         @Html.ValidationMessageFor(model => model.FirstOrDefault().BillFlatDTO.Description, "", new { @class = "text-danger" })
-                    </div>                    
+                    </div>
 
                     <div style="min-height:40px">
                         <p id="pMesajModal"></p>
@@ -179,6 +193,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
                     <button type="submit" class="btn btn-info" id="btnSubmit">Ekle</button>
+            
                 </div>
 
             </form>
@@ -192,251 +207,410 @@
 @section Scripts {
 
 <script type="text/javascript">
-    var table;
-    var clickedBottom;
-    var clickedRow;
-    $(document).ready( function () {
 
-        $("#Amount").rules("remove", "number");
-
-
-        //$( ".btnAdd").on( "click", function() {
-               $(document).on('click','.btnAdd', function(){
-            clickedBottom = $(this);
-            clickedRow = $(this).parent().parent();
-
-            let flatid = $(this).data("flatid");
-            let billId = $(this).data("billid");
-
-             modalEmpty(0,flatid,billId);
-              $('#modal').modal();
+        $("#checkAll").click(function(){
+        $('input:checkbox').not(this).prop('checked', this.checked);
         });
 
-        $(document).on('click','.btnUpdate', function(){
-            clickedBottom = $(this);
-            clickedRow = $(this).parent().parent();
-                let id = $(this).data("id");
+
+
+        var table;
+        var clickedBottom;
+        var clickedRow;
+        $(document).ready( function () {
+
+            //Test();
+
+            $("#Amount").rules("remove", "number");
+
+
+            //$( ".btnAdd").on( "click", function() {
+                $(document).on('click','.btnAdd', function(){
+                clickedBottom = $(this);
+                clickedRow = $(this).parent().parent();
+
                 let flatid = $(this).data("flatid");
                 let billId = $(this).data("billid");
 
-                modalEmpty(id,flatid,billId);
-             getBillForUpdate(id);
+                 modalEmpty(0,flatid,billId);
+                  $('#modal').modal();
+            });
+
+            $(document).on('click','.btnUpdate', function(){
+                clickedBottom = $(this);
+                clickedRow = $(this).parent().parent();
+                    let id = $(this).data("id");
+                    let flatid = $(this).data("flatid");
+                    let billId = $(this).data("billid");
+
+                    modalEmpty(id,flatid,billId);
+                 getBillForUpdate(id);
+            });
+
+            $(document).on('click','.btnDelete', function(){
+              if (confirm('Dairenin Fatura Bilgisini Silmek İstediğinizden Emin Misiniz?')) {
+                  clickedBottom = $(this);
+                  clickedRow = $(this).parent().parent();
+                   let id = $(this).data("id");
+                   deleteFlat($(this),id);
+                }
+            });
+
+            $(document).on('click','.btnToplu', function(){
+                //clickedBottom = $(this);
+                //clickedRow = $(this).parent().parent();
+
+                //let flatid = $(this).data("flatid");
+                //let billId = $(this).data("billid");
+
+                 modalEmpty(-1,-1,-1);
+                  $('#modal').modal();
+            });
+
+
+            
+
+                        $( "#btnMultiple").on( "click", function(e) {
+                 e.preventDefault();
+                      addUpdateChecked();
+                        })
+
+
+            $( "#btnSubmit").on( "click", function(e) {
+                 e.preventDefault();
+
+                $('#FlatAddForm').validate();
+
+                if ($('#FlatAddForm').valid()) {
+                    if($('#Id').val()==-1){
+
+                        addUpdateChecked();
+
+                    }else if($('#Id').val()==0){
+                        addBill();
+                    }else{
+                        updateBill();
+                    }
+
+                }
+            });
+
+
+
         });
+                function modalEmpty(id, flatid, billId){
+                    $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
 
-        $(document).on('click','.btnDelete', function(){
-          if (confirm('Dairenin Fatura Bilgisini Silmek İstediğinizden Emin Misiniz?')) {
-              clickedBottom = $(this);
-              clickedRow = $(this).parent().parent();
-               let id = $(this).data("id");
-               deleteFlat($(this),id);
-            }
-        });
+                    $("#Id").val(id);
+                    $("#FlatId").val(flatid);
+                     $("#BillId").val(billId);
 
+                 
 
-        $( "#btnSubmit").on( "click", function(e) {
-             e.preventDefault();
+                    $("#Amount").val(0);
+                    $("#Description").val("");
 
-            $('#FlatAddForm').validate();
-
-            if ($('#FlatAddForm').valid()) {
-                if($('#Id').val()==0){
-                    addBill();
-                }else{
-                      updateBill();
+                    if(id==-1)
+                    {
+                         $('#btnSubmit').html("Toplu Kaydet");
+                         $('#btnSubmit').removeClass("btn-primary").removeClass("btn-info").addClass("btn-danger");
+                    }
+                     else if(id==0){
+                        $('#btnSubmit').html("Ekle");
+                         $('#btnSubmit').removeClass("btn-primary").removeClass("btn-danger").addClass("btn-info");
+                    }else{
+                          $('#btnSubmit').html("Güncelle");
+                          $('#btnSubmit').removeClass("btn-info").removeClass("btn-danger").addClass("btn-primary");
+                    }
                 }
 
-            }
-        });
 
+                function getBillForUpdate(id) {
+                        $.ajax({
+                                type: 'POST',
+                                url: '/Bill/GetBillFlat',
+                                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                                data: { id: id },
+                                success: function (result) {
 
+                                
+                                    if(result.isSuccess){
+                                        //$("#Id").val(result.data.id);
+                                        //$("#FlatId").val(result.data.flatId);
+                                        $("#Amount").val(result.data.amount);
+                                        $("#Description").val(result.data.description);
 
-    });
-            function modalEmpty(id, flatid, billId){
-                $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
+                                        $('#modal').modal();
+                                    }else{
 
-                $("#Id").val(id);
-                $("#FlatId").val(flatid);
-                 $("#BillId").val(billId);
-
-                console.log(id +  " - " + flatid);
-                
-                $("#Amount").val(0);
-                $("#Description").val("");
-
-
-                 if(id==0){
-                    $('#btnSubmit').html("Ekle");
-                     $('#btnSubmit').removeClass("btn-primary").addClass("btn-info");
-                }else{
-                      $('#btnSubmit').html("Güncelle");
-                      $('#btnSubmit').removeClass("btn-info").addClass("btn-primary");
-                }
-            }
-
-
-            function getBillForUpdate(id) {
-                    $.ajax({
-                            type: 'POST',
-                            url: '/Bill/GetBillFlat',
-                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                            data: { id: id },
-                            success: function (result) {
-
-                                //console.log(result);
-                                if(result.isSuccess){
-                                    //$("#Id").val(result.data.id);
-                                    //$("#FlatId").val(result.data.flatId);
-                                    $("#Amount").val(result.data.amount);
-                                    $("#Description").val(result.data.description);
-
-                                    $('#modal').modal();
-                                }else{
-
-                                     $("#pMesajModal").text(result.errorMessage);
+                                         $("#pMesajModal").text(result.errorMessage);
+                                         $("#pMesajModal").css("color", "red");
+                                    }
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                     alert(xhr.status );
+                                     alert(thrownError);
+                                     $("#pMesajModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
                                      $("#pMesajModal").css("color", "red");
                                 }
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                 alert(xhr.status );
-                                 alert(thrownError);
-                                 $("#pMesajModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
-                                 $("#pMesajModal").css("color", "red");
-                            }
-                        })
-            }
+                            })
+                }
 
-            var SetTimeOutId;
-            function addBill() {
+                var SetTimeOutId;
+                function addBill() {
+                        $("#pMesajModal").text("");
+                        var data = $("#FlatAddForm").serialize();
+               
+                        $.ajax({
+                                type: 'POST',
+                                url: '/Bill/AddBillFlat',
+                                dataType: 'json',
+                                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                                data: data,
+                                success: function (result) {
+                                         if(result.isSuccess)
+                                        {
+                               
+                                              $("#pMesajModal").text(result.successMessage);
+                                              $("#pMesajModal").css("color", "green");
+
+                                              clickedBottom.parent().html(
+                                              "<button type='button' class='btn btn-primary btnUpdate' data-billid = '"+ result.data.billId + "' data-flatid = '" + result.data.flatId+"' data-id='"+result.data.id+"'>Güncelle</button>" +
+                                              "<button type='button' class='btn btn-danger btnDelete' data-billid = '"+ result.data.billId + "' data-flatid = '" + result.data.flatId +"' data-id='"+result.data.id+"'>Sil</button>"
+                                              );
+                                              clickedRow.children(".Amount").html(result.data.amount);
+                                              clickedRow.children(".Description").html(result.data.description);
+                                              clickedRow.children(".BillTypeName").html(result.data.billDTO.billTypeName);
+
+                                              console.log(clickedRow.children(".checkbox").children(".form-check").children(".checkboxInTheRow"));
+                                              console.log(result.data.id);
+
+                                              clickedRow.children(".checkbox").children(".form-check").children(".checkboxInTheRow").attr('data-id',result.data.id);
+
+
+                                             SetTimeOutId =  setTimeout(function(){
+                                                                            $('#modal').modal('hide');
+                                                                            $("#pMesajModal").text("");
+                                                                        }, 2500);
+                                        }else{
+                                    
+                                             $("#pMesajModal").text(result.errorMessage);
+                                             $("#pMesajModal").css("color", "red");
+                                        }
+                                },
+                                 error: function (xhr, ajaxOptions, thrownError) {
+                                     alert(xhr.status );
+                                     alert(thrownError);
+                                     $("#pMesajModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                     $("#pMesajModal").css("color", "red");
+                                }
+                            })
+                }
+
+                //Add model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+                $('#modal').on('hide.bs.modal', function () {
                     $("#pMesajModal").text("");
-                    var data = $("#FlatAddForm").serialize();
-                    console.log(data);
-                    $.ajax({
-                            type: 'POST',
-                            url: '/Bill/AddBillFlat',
-                            dataType: 'json',
-                            //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                            data: data,
-                            success: function (result) {
-                                     if(result.isSuccess)
-                                    {
-                                        //console.log(result);
-                                          $("#pMesajModal").text(result.successMessage);
-                                          $("#pMesajModal").css("color", "green");
-
-                                          clickedBottom.parent().html(
-                                          "<button type='button' class='btn btn-primary btnUpdate' data-billid = '"+ result.data.billId + "' data-flatid = '" + result.data.flatId+"' data-id='"+result.data.id+"'>Güncelle</button>" +
-                                          "<button type='button' class='btn btn-danger btnDelete' data-billid = '"+ result.data.billId + "' data-flatid = '" + result.data.flatId +"' data-id='"+result.data.id+"'>Sil</button>"
-                                          );
-                                          clickedRow.children(".Amount").html(result.data.amount);
-                                          clickedRow.children(".Description").html(result.data.description);
-                                          clickedRow.children(".BillTypeName").html(result.data.billDTO.billTypeName);
-
-                                         SetTimeOutId =  setTimeout(function(){
-                                                                        $('#modal').modal('hide');
-                                                                        $("#pMesajModal").text("");
-                                                                    }, 2500);
-                                    }else{
-                                        console.log(result.errorMessage);
-                                         $("#pMesajModal").text(result.errorMessage);
-                                         $("#pMesajModal").css("color", "red");
-                                    }
-                            },
-                             error: function (xhr, ajaxOptions, thrownError) {
-                                 alert(xhr.status );
-                                 alert(thrownError);
-                                 $("#pMesajModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
-                                 $("#pMesajModal").css("color", "red");
-                            }
-                        })
-            }
-
-            //Add model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
-            $('#modal').on('hide.bs.modal', function () {
-                $("#pMesajModal").text("");
-                clearTimeout(SetTimeOutId);
-            });
+                    clearTimeout(SetTimeOutId);
+                });
 
 
-            function updateBill() {
+                function updateBill() {
+                        $("#pMesajModal").text("");
+                        var data = $("#FlatAddForm").serialize();
+                        $.ajax({
+                                type: 'POST',
+                                url: '/Bill/UpdateBillFlat',
+                                dataType: 'json',
+                                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                                data: data,
+                                success: function (result) {
+                                        if(result.isSuccess)
+                                        {
+                                              $("#pMesajModal").text(result.successMessage);
+                                              $("#pMesajModal").css("color", "green");
+
+                                              clickedRow.children(".Amount").html(result.data.amount);
+                                              clickedRow.children(".Description").html(result.data.description);
+                                              clickedRow.children(".BillTypeName").html(result.data.billDTO.billTypeName);
+
+
+
+
+
+                                              SetTimeOutId = setTimeout(function(){ $('#modal').modal('hide'), $("#pMesajModal").text("");}, 2500);
+                                        }else{
+                                             $("#pMesajModal").text(result.errorMessage);
+                                             $("#pMesajModal").css("color", "red");
+                                        }
+                                },
+                                error: function () {
+                                       $("#pMesajModal").text("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                                       $("#pMesajModal").css("color", "red");
+                                }
+                            })
+
+
+                }
+                //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+                $('#modal').on('hide.bs.modal', function () {
                     $("#pMesajModal").text("");
-                    var data = $("#FlatAddForm").serialize();
-                    $.ajax({
-                            type: 'POST',
-                            url: '/Bill/UpdateBillFlat',
-                            dataType: 'json',
-                            //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                            data: data,
-                            success: function (result) {
+                    clearTimeout(SetTimeOutId);
+                });
+
+
+                function deleteFlat(deleteButton, id) {
+                        $("#pPageMesaj").text("");
+                        $.ajax({
+                                type: 'POST',
+                                url: '/Bill/DeleteBillFlat',
+                                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                                data: { id: id },
+                                success: function (result) {
                                     if(result.isSuccess)
                                     {
-                                          $("#pMesajModal").text(result.successMessage);
-                                          $("#pMesajModal").css("color", "green");
+                                        $("#pPageMesaj").text(result.successMessage);
+                                        $("#pPageMesaj").css("color", "green");
 
-                                          clickedRow.children(".Amount").html(result.data.amount);
-                                          clickedRow.children(".Description").html(result.data.description);
-                                          clickedRow.children(".BillTypeName").html(result.data.billDTO.billTypeName);
+                                              clickedRow.children(".Amount").html('');
+                                              clickedRow.children(".Description").html('');
+                                              clickedRow.children(".BillTypeName").html('');
+
+                                              clickedBottom.parent().children(".btnUpdate").removeClass("btn-primary").addClass("btn-info").removeClass("btnUpdate").addClass("btnAdd").html("Ekle");
+                                              clickedBottom.remove();
 
 
+                                        //clickedRow.remove();
 
-
-
-                                          SetTimeOutId = setTimeout(function(){ $('#modal').modal('hide'), $("#pMesajModal").text("");}, 2500);
+                                        setTimeout(function(){ $("#pPageMesaj").text("");}, 3000);
                                     }else{
-                                         $("#pMesajModal").text(result.errorMessage);
-                                         $("#pMesajModal").css("color", "red");
+                                        $("#pPageMesaj").text(result.errorMessage);
+                                        $("#pPageMesaj").css("color", "red");
                                     }
-                            },
-                            error: function () {
-                                   $("#pMesajModal").text("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
-                                   $("#pMesajModal").css("color", "red");
-                            }
-                        })
-
-
-            }
-            //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
-            $('#modal').on('hide.bs.modal', function () {
-                $("#pMesajModal").text("");
-                clearTimeout(SetTimeOutId);
-            });
-
-
-            function deleteFlat(deleteButton, id) {
-                    $("#pPageMesaj").text("");
-                    $.ajax({
-                            type: 'POST',
-                            url: '/Bill/DeleteBillFlat',
-                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                            data: { id: id },
-                            success: function (result) {
-                                if(result.isSuccess)
-                                {
-                                    $("#pPageMesaj").text(result.successMessage);
-                                    $("#pPageMesaj").css("color", "green");
-
-                                          clickedRow.children(".Amount").html('');
-                                          clickedRow.children(".Description").html('');
-                                          clickedRow.children(".BillTypeName").html('');
-
-                                          clickedBottom.parent().children(".btnUpdate").removeClass("btn-primary").addClass("btn-info").removeClass("btnUpdate").addClass("btnAdd").html("Ekle");
-                                          clickedBottom.remove();
-                                    
-
-                                    //clickedRow.remove();
-
-                                    setTimeout(function(){ $("#pPageMesaj").text("");}, 3000);
-                                }else{
-                                    $("#pPageMesaj").text(result.errorMessage);
+                                },
+                                error: function () {
+                                    $("#pPageMesaj").text("Silme işlemi sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
                                     $("#pPageMesaj").css("color", "red");
                                 }
-                            },
-                            error: function () {
-                                $("#pPageMesaj").text("Silme işlemi sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
-                                $("#pPageMesaj").css("color", "red");
-                            }
-                        })
-            }
+                            })
+                }
 
+
+
+                function addUpdateChecked() {
+
+                    let amount = parseFloat($("#Amount").val());
+                    let description = $("#Description").val();
+
+                    //var obj = {};
+
+                    //var list = [];
+                    var billflatdtos = new Array();
+
+                   var allCheckboxes =  $('.checkboxInTheRow:checkbox:checked');
+                   //stuff.push(element);
+                   allCheckboxes.each(function( index ) {
+                         let id =  $(this).data("id");
+                         let flatid =  $(this).data("flatid");
+                         let billid =  $(this).data("billid");
+
+                         //let BillFlatAjaxDTO = {id: id, flatId: flatid, billId: billid, amount: amount, description: description};
+                         let BillFlatAjaxDTO = {i: id, f: flatid, b: billid, a: amount, d: description};
+
+                        //list.push(checkeditem);
+                         //let BillFlatDTO = {};
+                         //BillFlatDTO.Id = id;
+                         //BillFlatDTO.FlatId = flatid;
+                         //BillFlatDTO.BillId = billid;
+                         //BillFlatDTO.Amount = amount;
+                         //BillFlatDTO.Description = description;
+                         //BillFlatDTO.BillDTO = {}
+                         //BillFlatDTO.FlatDTO={};
+                        billflatdtos.push(BillFlatAjaxDTO);
+
+                       
+                     });
+
+
+
+
+                        $("#pMesajModal").text(""); 
+                        var data = {"billflatdtos" :billflatdtos }
+              
+                        $.ajax({
+                                ContentType: 'application/json; charset=utf-8',
+                                type: 'POST',
+                                url: '/Bill/AddUpdateCheckedBillFlat',
+                                dataType: 'json',
+                                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                                data: data,
+                                success: function (result) {
+                                         if(result.isSuccess)
+                                        {
+                                       
+                                              $("#pMesajModal").text(result.successMessage);
+                                              $("#pMesajModal").css("color", "green");
+
+                       
+
+                                                 //result.data.forEach(function( data , index, arr) {
+                                                  $.each(result.data, function( index, data ) {
+ 
+
+                                                let checkboxInTheRow =  $('.checkboxInTheRow[data-billid="' + data.billId + '"][data-flatid="'+data.flatId+'"]');
+                                           
+                                                checkboxId = checkboxInTheRow.data("id");
+                                                
+                                                clickedRow = checkboxInTheRow.parent().parent().parent();
+                                               
+                                                let AddorUpdateButton = clickedRow.children(".buttons").children(".btnAdd");
+                                                     
+
+
+                                                if(checkboxId==0)//insert satırı işlem sonrası düzenleme
+                                                {
+                                                    AddorUpdateButton.parent().html(
+                                              "<button type='button' class='btn btn-primary btnUpdate' data-billid = '"+ data.billId + "' data-flatid = '" + data.flatId+"' data-id='"+data.id+"'>Güncelle</button>" +
+                                              "<button type='button' class='btn btn-danger btnDelete' data-billid = '"+ data.billId + "' data-flatid = '" + data.flatId +"' data-id='"+data.id+"'>Sil</button>"
+                                              );
+                                              clickedRow.children(".Amount").html(data.amount);
+                                              clickedRow.children(".Description").html(data.description);
+                                              clickedRow.children(".BillTypeName").html(data.billDTO.billTypeName);
+
+                                                }else//update satırı işlem sonrası düzenleme.
+                                                {
+
+                                              clickedRow.children(".Amount").html(data.amount);
+                                              clickedRow.children(".Description").html(data.description);
+                                              clickedRow.children(".BillTypeName").html(data.billDTO.billTypeName);
+
+
+                                                }
+
+                                              });
+                                              
+
+                                             SetTimeOutId =  setTimeout(function(){
+                                                                            $('#modal').modal('hide');
+                                                                            $("#pMesajModal").text("");
+                                                                        }, 2500);
+                                        }else{
+                                          
+                                             $("#pMesajModal").text(result.errorMessage);
+                                             $("#pMesajModal").css("color", "red");
+                                        }
+                                },
+                                 error: function (xhr, ajaxOptions, thrownError) {
+                                     alert(xhr.status );
+                                     alert(thrownError);
+                                     $("#pMesajModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                                     $("#pMesajModal").css("color", "red");
+                                }
+                            })
+                }
+
+
+
+ 
 </script>
 
     }

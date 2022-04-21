@@ -14,7 +14,9 @@ namespace EntityFramework.Repository.Abstracts
         DbSet<T> GetAllEntities();
         T GetById(int Id);
         void Add(T entity);
+        void AddRange(List<T> entities);
         void Update(T entity);
+        void UpdateRange(List<T> entities);
         void Delete(T entity);
     }
 }

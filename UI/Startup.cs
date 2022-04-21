@@ -6,16 +6,19 @@ using EntityFramework.Repository.Abstracts;
 using EntityFramework.Repository.Concretes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+ 
 
 namespace UI
 {
@@ -60,6 +63,13 @@ namespace UI
                 options.LogoutPath = $"/Authorize/Logout";
                 options.AccessDeniedPath = $"/Authorize/AccessDenied";
             });
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueCountLimit = int.MaxValue;
+                options.ValueLengthLimit = int.MaxValue;
+            });
+
 
         }
 

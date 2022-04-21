@@ -37,9 +37,19 @@ namespace EntityFramework.Repository.Concretes
             unitOfWork.Context.Set<T>().Add(entity);
         }
 
+        public void AddRange(List<T> entities)
+        {
+            unitOfWork.Context.Set<T>().AddRange(entities);
+        }
+
         public void Update(T entity)
         {
             unitOfWork.Context.Entry(entity).State = EntityState.Modified;
+        }
+
+        public void UpdateRange(List<T> entities)
+        {
+            unitOfWork.Context.Entry(entities).State = EntityState.Modified;
         }
 
         public void Delete(T entity)

@@ -301,6 +301,31 @@ namespace UI.Controllers
         }
 
 
+        [HttpPost]
+        public JsonResult AddUpdateCheckedBillFlat(List<BillFlatAjaxDTO> billflatdtos)
+        {
+
+            var res = _billFlatService.AddOrUpdateBillFlat(billflatdtos);
+
+            return new JsonResult(res);
+        }
+
+
+
+        //public void PassThings([FromBody] List<Thing> things)
+        //{
+        //    var t = things;
+        //}
 
     }
+
+
+
+    public class Thing
+    {
+        public int Id { get; set; }
+        public string Color { get; set; }
+    }
+
+
 }
