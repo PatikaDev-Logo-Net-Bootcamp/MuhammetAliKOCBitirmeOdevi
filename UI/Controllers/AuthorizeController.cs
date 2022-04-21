@@ -65,32 +65,51 @@ namespace UI.Controllers
         {
             if (ModelState.IsValid)
             {
+                var currentUser = _userManager.GetUserAsync(User).Result;
+                
 
                 if (model.Password != model.RePassword)
                 {
                     model.IsSuccess = false;
                     model.Message = "İşlem başarısız. Girilen Şifreler Aynı Değil!";
-                    return View(model);
+                    //return View(model);
+                }else if (!(await _userManager.CheckPasswordAsync(currentUser, model.Password)))//Şifre uygunluğu kontrol ediliyor. 
+                {
+                    model.IsSuccess = false;
+                    model.Message = "Belirlediğiniz şifre geçerli bir şifre değil. Şifreniz En az 1 büyük harf, küçük harf, rakam, özel karakter içeren en az 6 haneden oluşmalıdır.  ";
                 }
+                else
+                {
+                //Hard code, but better then nothing :)
+               
 
-
-                var currentUser = _userManager.GetUserAsync(User).Result;
-
-
-                //var res = await _userManager.ResetPasswordAsync(currentUser, model.Password);
-                //if (userEntity != null)
-                //{
-                //    var result = await _signInManager.PasswordSignInAsync(userEntity.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
-                //    if (result.Succeeded)
-                //    {
-                //        _logger.LogInformation($"{model.Email} Maail user logged in.");
-                //        //TempData["Student"] = userEntity;
-                //        return RedirectToAction("Index", "Home");
-                //    }
-                //}
-
-
-
+                    var res1 = await _userManager.RemovePasswordAsync(currentUser);
+                    if (res1.Succeeded)
+                    {
+                        var res2 = await _userManager.AddPasswordAsync(currentUser, model.Password);
+                        if (res2.Succeeded)
+                        {
+                            model.IsSuccess = true;
+                            model.Message = "Şifreniz değişmiştir.";
+                        }
+                        else
+                        {
+                            model.IsSuccess = false;
+                            model.Message = "Şifreniz güncellenirken beklenmedik bir hata alınmıştır. Bu konuda lütfen sistem yöneticiniz ile irtibata geçiniz!";
+                        }
+                    }
+                    else
+                    {
+                        model.IsSuccess = false;
+                        model.Message = "İşlem başarısız. Lüften tekrar deneyiniz.";
+                    }
+                   
+                }
+            }
+            else
+            {
+                model.IsSuccess = false;
+                
             }
             return View(model);
         }

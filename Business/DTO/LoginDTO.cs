@@ -15,6 +15,7 @@ namespace Business.DTO
         public string Email { get; set; }
         [Display(Name = "Şifre")]
         [Required(ErrorMessage = "Şifre alanı zorunludur.")]
+        
         public string Password { get; set; }
         public bool RememberMe { get; set; }
     }
