@@ -27,9 +27,9 @@ namespace Business.Concretes
             return repository.GetAll();
         }
 
-        public List<MessageDTO> GetMessages(int SenderUserId, int ReceiverUserId)
+        public ReturnObjectDTO GetMessages(string user1, string user2)
         {
-            var messages = Messages()
+            var messages = Messages().Where(x=>(x.SendUserId == user1 && x.ReceiveUserId==user2) || (x.SendUserId == user2 && x.ReceiveUserId == user1) )
                 .Select(x => new MessageDTO()
                 {
                     Id = x.Id,
@@ -39,20 +39,45 @@ namespace Business.Concretes
                     SendUserId = x.SendUserId,
                     ReceiveUserId = x.ReceiveUserId
 
-                }).ToList();
-            return messages;
+                }).OrderBy(x=>x.Id).ToList(); 
+
+            return new ReturnObjectDTO() { data = messages, successMessage = "İşlem Başarılı" };
         }
-  
+
+        public ReturnObjectDTO GetMessagesWithConditions(string currentUserId, string receiverUserId, int id)
+        {
+            var messages = Messages().Where(x => x.SendUserId == receiverUserId && x.ReceiveUserId == currentUserId && x.Id>id)
+                .Select(x => new MessageDTO()
+                {
+                    Id = x.Id,
+                    Text = x.Text,
+                    DateCreated = x.DateCreated,
+                    IsLooked = x.IsLooked,
+                    SendUserId = x.SendUserId,
+                    ReceiveUserId = x.ReceiveUserId
+
+                }).OrderBy(x => x.Id).ToList();
+
+            return new ReturnObjectDTO() { data = messages, successMessage = "İşlem Başarılı" };
+        }
+
+        public ReturnObjectDTO GetUnLookedMessageCountForUser(string currentUserId)
+        {
+            var count = Messages().Where(x => x.ReceiveUserId == currentUserId && x.IsLooked == false).Count();
+
+            return new ReturnObjectDTO() { data = count, successMessage = "İşlem Başarılı" };
+        }
+
+
         public ReturnObjectDTO AddMessage(MessageDTO message)
         {
             try
             { 
                 var messageEntity = new Message()
                 {
-                    Id = message.Id,
                     Text = message.Text,
                     DateCreated = message.DateCreated,
-                    IsLooked = false,
+                    IsLooked = message.IsLooked,
                     SendUserId = message.SendUserId,
                     ReceiveUserId = message.ReceiveUserId
                 };

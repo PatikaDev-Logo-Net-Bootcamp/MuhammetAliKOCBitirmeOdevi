@@ -7,6 +7,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+ 
+  
+ 
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - UI</title>
@@ -268,14 +272,61 @@
 
 
 
-
-
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
     <script src="~/js/site2.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+ 
+
+ 
+    <script type="text/javascript">
+        $(document).ready(function () {
+        messageNotification();
+                //5 saniyede bir kontrol et mesaj geliyormu diye 
+        setInterval(messageNotification, 5000);          
+
+
+
+        });
+
+
+        function messageNotification(){
+               $.ajax({
+                    ContentType: 'application/json; charset=utf-8',
+                    type: 'POST',
+                    url: '/Message/GetUnLookedMessageCountForUser',
+                    dataType: 'json',
+                    //data: data,
+                    success: function (result) {
+                        if (result.isSuccess) {                          
+                           console.log(result.data);
+
+                           if(result.data == 0)
+                           {
+                               $("#messagelink").text("");
+                           }else{
+                               $("#messagelink").text(result.data );
+                           }
+
+
+
+                        } else {
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    }
+                })
+        }
+    </script>
+ 
+ 
+
+
 </body>
 </html>
+
+
+

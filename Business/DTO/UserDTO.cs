@@ -35,6 +35,15 @@ namespace Business.DTO
         public string TC { get; set; }
 
         public string Description { get; set; }
+
+        public List<MessageDTO> Messages { get; set; }
+
+        public MessageDTO LastMessageDTO { get; set; }
+
+        public DateTime LastMessageDate { get; set; }
+
+        public int UnLookedMessagesCount { get; set; }
+
         public List<RoleDTO> Roles { get; set; }
 
         //public User UserEntity { get; set; }

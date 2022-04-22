@@ -137,8 +137,12 @@
 .chat-discussion {
     background: #eee;
     padding: 15px;
-/*    height: 400px;*/
+    /*    height: 400px;*/
     overflow-y: auto;
+    height: calc(100vh - 200px);
+    /*height: -o-calc(100% - 65px);*/ /* opera */
+    /*height: -webkit-calc(100% - 65px);*/ /* google, safari */
+    /*height: -moz-calc(100% - 65px);*/ /* firefox */
 }
 
 .chat-users {
@@ -223,4 +227,29 @@
     transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
     width: 100%;
     font-size: 14px;
+}
+
+
+.ChatUser:hover{
+    cursor:pointer;
+}
+
+.chat-user:hover{
+    background-color:lightgrey;
+}
+
+
+#bottomRow {
+ /*   position: fixed;*/
+    bottom: 50px;
+ 
+}
+
+
+.pale-green{
+    background-color:darkseagreen!important;
+}
+
+.light-grey {
+    background-color: lightgrey!important;
 }

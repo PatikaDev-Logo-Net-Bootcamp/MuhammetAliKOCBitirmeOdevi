@@ -11,7 +11,12 @@ namespace Business.Abstract
     public interface IMessageService
     {
         IQueryable<Message> Messages();
-        List<MessageDTO> GetMessages(int SenderUserId, int ReceiverUserId);
+        ReturnObjectDTO GetMessages(string user1, string user2);
+
+        ReturnObjectDTO GetMessagesWithConditions(string currentUserId, string receiverUserId, int id);
+
+        ReturnObjectDTO GetUnLookedMessageCountForUser(string currentUserId);
+        
         ReturnObjectDTO AddMessage(MessageDTO message);
         ReturnObjectDTO UpdateMessageAsLooked(int id);
     }

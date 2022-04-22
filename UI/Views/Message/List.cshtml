@@ -22,30 +22,8 @@
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-md-9 ">
-                            <div class="chat-discussion" data-userid="">
-
-                                <div class="chat-message left">
-                                    <img class="message-avatar" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
-                                    <div class="message">
-                                        <a class="message-author" href="#"> Michael Smith </a>
-                                        <span class="message-date"> Mon Jan 26 2015 - 18:39:23 </span>
-                                        <span class="message-content">
-                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="chat-message right">
-                                    <img class="message-avatar" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="">
-                                    <div class="message">
-                                        <a class="message-author" href="#"> Karl Jordan </a>
-                                        <span class="message-date">  Fri Jan 25 2015 - 11:12:36 </span>
-                                        <span class="message-content">
-                                            Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover.
-                                        </span>
-                                    </div>
-                                </div>
-
-
+                            <div id="chatdiscussion" class="chat-discussion" data-chatuserid="" data-chatuserlastmessageid="">
+    
                             </div>
 
                         </div>
@@ -60,8 +38,9 @@
 
                                     @foreach (var item in Model)
                                     {
+                                        
 
-                                        <div class="chat-user">
+                                        <div class="chat-user @(item.UnLookedMessagesCount > 0?"pale-green":"")">
 
                                             @if (String.IsNullOrEmpty(item.PictureUrl))
                                             {
@@ -73,7 +52,11 @@
                                             }
 
                                             <div class="chat-user-name">
-                                                <span class="ChatUser" data-userid="@item.Id">@(item.FirstName + " " + item.LastName)</span>
+                                                <span class="ChatUser"  data-chatuserid="@item.Id">@(item.FirstName + " " + item.LastName)</span> 
+                                                
+                                                <span class="ChatUserNotification">@(item.UnLookedMessagesCount > 0?"(" + item.UnLookedMessagesCount.ToString() + ")":"")</span>
+
+                                                
                                             </div>
                                         </div>
                                     }
@@ -85,18 +68,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-10">
+                    <div class="row" id="bottomRow">
+                        <div class="col-lg-10" style="padding-right:0;">
                             <div class="chat-message-form">
                                 <div class="form-group">
-                                    <textarea class="form-control message-input" id="message" placeholder="Enter message text and press enter"></textarea>
+                                    <textarea class="form-control message-input" id="message" placeholder=". . . "></textarea>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2" style="padding-left:0;">
                             <div class="chat-message-form">
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-secondary" style="width:100%; height:100%;" id="SendMessage">Gönder</button>
+                                    <button type="button" class="btn btn-secondary" style="width:100%;height: 90px !important;" id="SendMessage">Gönder</button>
                                 </div>
                             </div>
                         </div>
@@ -113,17 +96,136 @@
 @section Scripts {
 
     <script type="text/javascript">
-    var table;
-    var clickedRow;
+
+
+     var chatUserId = 0;
+     var clickedUserElement;
+     var chatDiscussionElement;
+
+
     $(document).ready( function () {
+
+        chatDiscussionElement = $(".chat-discussion");
+
+
+        $(document).on('click','.ChatUser',function(){
+        //$(".ChatUser").on("click", function () {
+        
+                    clickedUserElement = $(this);
+                    chatUserId = $(this).data("chatuserid");
+                    chatDiscussionElement.attr("data-chatuserid",chatUserId);
+                    
+                    
+
+                    chatDiscussionElement.html('');
+
+
+                    var data = { chatuserid: chatUserId }
+
+                    //console.log(chatUserId);
+               
+
+                $.ajax({
+                    ContentType: 'application/json; charset=utf-8',
+                    type: 'POST',
+                    url: '/Message/Messages',
+                    dataType: 'json',
+                    data: data,
+                    success: function (result) {
+                        if (result.isSuccess) {
+
+                           // console.log(result.data);
+                           let chatuserlastmessageid = chatDiscussionElement.data("chatuserlastmessageid");
+                           
+                           $.each(result.data, function( index, data ) {
+                        
+
+                               if(data.sendUserId == chatUserId)//Mesaj bana gelmiş
+                               {     
+                                          console.log("chatuserlastmessageid = "+chatuserlastmessageid);
+                                            console.log(data.id);
+                                            console.log(chatDiscussionElement);
+
+
+                                    if(data.id>chatuserlastmessageid){ chatuserlastmessageid = data.id;}
+
+                                   let message = 
+                                  "<div class='chat-message left'>"+
+                                    "<img class='message-avatar' src='/images/EmptyUser.png' alt=''>"+
+                                    "<div class='message'>"+
+                                        "<a class='message-author' href='#'>" + clickedUserElement.text() + "</a>"+
+                                        "<span class='message-date'>" +  data.dateCreated + "</span>"+
+                                        "<span class='message-content'>"+
+                                           data.text +
+                                        "</span>"+
+                                    "</div>"+
+                                "</div>"
+
+                                chatDiscussionElement.append(message);
+                               
+
+                               }
+                               else//Benim gönderdiğim mesaj.
+                               {
+             
+
+
+                                let message = 
+                                  "<div class='chat-message right'>"+
+                                    "<img class='message-avatar' src='/images/EmptyUser.png' alt=''>"+
+                                    "<div class='message'>"+
+                                        "<a class='message-author' href='#'>" + "Ben" + "</a>"+
+                                        "<span class='message-date'>" +  data.dateCreated + "</span>"+
+                                        "<span class='message-content'>"+
+                                           data.text +
+                                        "</span>"+
+                                    "</div>"+
+                                "</div>"
+
+                                chatDiscussionElement.append(message);
+                               }           
+                           });
+
+                           chatDiscussionElement.attr("data-chatuserlastmessageid",chatuserlastmessageid);
+                           
+                           scrollBottom(0);
+
+                          clickedUserElement.parent().children(".ChatUserNotification").text("");
+                          $(".light-grey").removeClass("light-grey");
+                          clickedUserElement.parent().parent().removeClass("pale-green").addClass("light-grey");
+
+
+
+
+
+                 
+                        } else {
+
+                            alert(result.errorMessage);
+                         
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status);
+                        alert(thrownError);
+                    }
+                })
+        
+        });
+
+
+
 
         $("#SendMessage").on("click", function () {
 
-            let receiverUserId = $(".chat-discussion").data("userid");
-            let text = $("#message").text();
+            let receiverUserId = chatDiscussionElement.data("chatuserid");
+            let text = $("#message").val();
 
-            console.log(receiverUserId);
-            console.log(text);
+            //console.log(receiverUserId);
+            //console.log(text);
+
+            var data = { receiverUserId: receiverUserId,text:text  }
+
 
             $.ajax({
                 type: 'POST',
@@ -133,9 +235,23 @@
                 success: function (result) {
                     if (result.isSuccess) {
                
-              
+                    $("#message").val('');
                       
+                        let message = 
+                                  "<div class='chat-message right'>"+
+                                    "<img class='message-avatar' src='/images/EmptyUser.png' alt=''>"+
+                                    "<div class='message'>"+
+                                        "<a class='message-author' href='#'>" + "Ben" + "</a>"+
+                                        "<span class='message-date'>" +  result.data.dateCreated + "</span>"+
+                                        "<span class='message-content'>"+
+                                           result.data.text +
+                                        "</span>"+
+                                    "</div>"+
+                                "</div>"
 
+                                chatDiscussionElement.append(message);
+
+                                scrollBottom(1000);
     
 
 
@@ -153,12 +269,92 @@
             })
         });
 
-    
- 
+    //5 saniyede bir kontrol et mesaj geliyormu diye 
+    setInterval(checkChatUserMessage, 5000);
+
+
 
 
     });
          
+    function scrollBottom(time){
+        chatDiscussionElement.animate({ scrollTop: chatDiscussionElement.prop("scrollHeight")}, time);
+    }
+
+
+    function checkChatUserMessage(){
+
+        const chatdiscussion = document.getElementById("chatdiscussion");
+ 
+        let chatuserlastmessageid = chatdiscussion.dataset.chatuserlastmessageid;
+        let chatUserId            = chatdiscussion.dataset.chatuserid;
+
+
+        var data = {chatUserId:chatUserId,  chatuserlastmessageid: chatuserlastmessageid  }
+
+                    $.ajax({
+                    ContentType: 'application/json; charset=utf-8',
+                    type: 'POST',
+                    url: '/Message/ChatUserSessionMessages',
+                    dataType: 'json',
+                    data: data,
+                    success: function (result) {
+                        if (result.isSuccess) {
+
+                            let chatUserIdKontrol = chatDiscussionElement.data("chatuserid");
+
+                            /*kontol et! ajax sorgusu devam ederken kullanıcı başka bir kullanıcı ile sohbet etmeye başlamış olabilir. Eğer öyleyse birşey yapma!*/
+                            if(chatUserIdKontrol!= chatUserId)
+                            return
+
+
+                           // console.log(result.data);
+                           let chatuserlastmessageid2 = chatdiscussion.dataset.chatuserlastmessageid;
+                           let scroll = false;
+                           $.each(result.data, function( index, data ) {
+                               
+                              // console.log(data);
+
+                               if(data.sendUserId == chatUserId)//Mesaj bana gelmiş
+                               {           
+                                   if(data.id>chatuserlastmessageid2){ chatuserlastmessageid2 = data.id;}
+                                  
+                                   scroll = true;
+                                   let message = 
+                                  "<div class='chat-message left'>"+
+                                    "<img class='message-avatar' src='/images/EmptyUser.png' alt=''>"+
+                                    "<div class='message'>"+
+                                        "<a class='message-author' href='#'>" + clickedUserElement.text() + "</a>"+
+                                        "<span class='message-date'>" +  data.dateCreated + "</span>"+
+                                        "<span class='message-content'>"+
+                                           data.text +
+                                        "</span>"+
+                                    "</div>"+
+                                "</div>"
+
+                                chatDiscussionElement.append(message);                             
+
+                               }
+          
+                           });
+
+                           chatDiscussionElement.attr("data-chatuserlastmessageid",chatuserlastmessageid2);
+                           
+                           if(scroll){ scrollBottom(1000);}
+                          
+                           
+                        } else {
+
+                          //  alert(result.errorMessage);
+                         
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                       // alert(xhr.status);
+                       // alert(thrownError);
+                    }
+                })
+    }
 
 
     
