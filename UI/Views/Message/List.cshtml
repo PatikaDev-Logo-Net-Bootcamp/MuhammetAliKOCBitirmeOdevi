@@ -4,14 +4,23 @@
     ViewData["Title"] = "Mesajlar";
     Layout = "_Layout2";
 }
-@model List<UserDTO>
-
+@model UserMessageListDTO 
+    <head>
+        <link rel="stylesheet" type="text/css" href="~/lib/DataTable/datatables.min.css" />
+    </head>
 
 
 
 
 <link href="~/css/Message.css" rel="stylesheet" />
 
+<div class=row>
+    <div class="col-md-12">
+        <button style="float:right;" type="button" class="btn btn-danger btnAdd">Kullanıcı Ara</button>
+    </div>
+
+
+</div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
 
@@ -23,7 +32,6 @@
                     <div class="row">
                         <div class="col-md-9 ">
                             <div id="chatdiscussion" class="chat-discussion" data-chatuserid="" data-chatuserlastmessageid="">
-    
                             </div>
 
                         </div>
@@ -36,9 +44,9 @@
 
                                 <div class="users-list">
 
-                                    @foreach (var item in Model)
+                                    @foreach (var item in Model.MessageUsers)
                                     {
-                                        
+
 
                                         <div class="chat-user @(item.UnLookedMessagesCount > 0?"pale-green":"")">
 
@@ -52,11 +60,11 @@
                                             }
 
                                             <div class="chat-user-name">
-                                                <span class="ChatUser"  data-chatuserid="@item.Id">@(item.FirstName + " " + item.LastName)</span> 
-                                                
+                                                <span class="ChatUser" data-chatuserid="@item.Id">@(item.FirstName + " " + item.LastName)</span>
+
                                                 <span class="ChatUserNotification">@(item.UnLookedMessagesCount > 0?"(" + item.UnLookedMessagesCount.ToString() + ")":"")</span>
 
-                                                
+
                                             </div>
                                         </div>
                                     }
@@ -92,10 +100,65 @@
 </div>
 
 
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Yeni Daire</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+
+                <table id="UserListTable" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Ad Soyad</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col"></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td class="">@user.FirstName @user.LastName</td>
+                                <td class="">@String.Join(",",user.Roles.Select(x=>x.Name).ToList())</td>                     
+                                <td class="">
+                                    <button type="button" class="btn btn-success btnSohbetAc" data-userid="@user.Id" data-firstname="@user.FirstName" data-lastname="@user.LastName"> Listeye Ekle</button>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+
+
+            </div>
+
+            @*                <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                <button type="submit" class="btn btn-info" id="btnSubmit">Ekle</button>
+                </div>*@
+
+
+
+        </div>
+    </div>
+</div>
+
 
 @section Scripts {
+    <script src="~/lib/DataTable/datatables.min.js"></script>
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
 
      var chatUserId = 0;
@@ -105,17 +168,65 @@
 
     $(document).ready( function () {
 
+                   let table = $('#UserListTable').DataTable({
+                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tümü"]],
+                  //"language": {"url": "/lib/DataTable/Turkish.json"}
+                  "language": {"url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Turkish.json"}
+               });
+
+
+                $( ".btnAdd").on( "click", function() {
+                    $('#modal').modal();
+                });
+
+                
+                $( ".btnSohbetAc").on( "click", function() {
+
+                    console.log($(this).data("userid"));
+                    console.log($(this).data("firstname"));
+                    console.log($(this).data("lastname"));
+                    
+                    let DahaOnceEklenmisMi  = $(".ChatUser[data-chatuserid='"+ $(this).data("userid") +"']").length;
+
+                    console.log(DahaOnceEklenmisMi);
+
+                    if(DahaOnceEklenmisMi==0)
+                    {                 
+
+                    let element = 
+                     "<div class='chat-user'>"+
+                        "<img class='chat-avatar' src='/images/EmptyUser.png' alt='User picture'>"+
+                                "<div class='chat-user-name'>"+
+                                        "<span class='ChatUser' data-chatuserid='" + $(this).data("userid") +  "'>" + $(this).data("firstname") + " " + $(this).data("lastname") + "</span>"+
+                                            "<span class='ChatUserNotification'></span>"+
+                                             "</div>"+
+                                        "</div>";
+
+                    $(".users-list").prepend(element);
+                     $('#modal').modal('hide');
+                     
+                     }else{
+                         alert("Seçilen kullanıcı listede zaten var.");
+                     }
+                                        
+
+
+                });
+                
+
+
+
         chatDiscussionElement = $(".chat-discussion");
 
 
         $(document).on('click','.ChatUser',function(){
         //$(".ChatUser").on("click", function () {
-        
+
                     clickedUserElement = $(this);
                     chatUserId = $(this).data("chatuserid");
                     chatDiscussionElement.attr("data-chatuserid",chatUserId);
-                    
-                    
+
+
 
                     chatDiscussionElement.html('');
 
@@ -123,7 +234,7 @@
                     var data = { chatuserid: chatUserId }
 
                     //console.log(chatUserId);
-               
+
 
                 $.ajax({
                     ContentType: 'application/json; charset=utf-8',
@@ -136,12 +247,12 @@
 
                            // console.log(result.data);
                            let chatuserlastmessageid = chatDiscussionElement.data("chatuserlastmessageid");
-                           
+
                            $.each(result.data, function( index, data ) {
-                        
+
 
                                if(data.sendUserId == chatUserId)//Mesaj bana gelmiş
-                               {     
+                               {
                                           console.log("chatuserlastmessageid = "+chatuserlastmessageid);
                                             console.log(data.id);
                                             console.log(chatDiscussionElement);
@@ -149,7 +260,7 @@
 
                                     if(data.id>chatuserlastmessageid){ chatuserlastmessageid = data.id;}
 
-                                   let message = 
+                                   let message =
                                   "<div class='chat-message left'>"+
                                     "<img class='message-avatar' src='/images/EmptyUser.png' alt=''>"+
                                     "<div class='message'>"+
@@ -162,15 +273,15 @@
                                 "</div>"
 
                                 chatDiscussionElement.append(message);
-                               
+
 
                                }
                                else//Benim gönderdiğim mesaj.
                                {
-             
 
 
-                                let message = 
+
+                                let message =
                                   "<div class='chat-message right'>"+
                                     "<img class='message-avatar' src='/images/EmptyUser.png' alt=''>"+
                                     "<div class='message'>"+
@@ -183,11 +294,11 @@
                                 "</div>"
 
                                 chatDiscussionElement.append(message);
-                               }           
+                               }
                            });
 
                            chatDiscussionElement.attr("data-chatuserlastmessageid",chatuserlastmessageid);
-                           
+
                            scrollBottom(0);
 
                           clickedUserElement.parent().children(".ChatUserNotification").text("");
@@ -198,11 +309,11 @@
 
 
 
-                 
+
                         } else {
 
                             alert(result.errorMessage);
-                         
+
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -210,7 +321,7 @@
                         alert(thrownError);
                     }
                 })
-        
+
         });
 
 
@@ -230,14 +341,14 @@
             $.ajax({
                 type: 'POST',
                 url: '/Message/AddMessage',
-                dataType: 'json',  
+                dataType: 'json',
                 data: data,
                 success: function (result) {
                     if (result.isSuccess) {
-               
+
                     $("#message").val('');
-                      
-                        let message = 
+
+                        let message =
                                   "<div class='chat-message right'>"+
                                     "<img class='message-avatar' src='/images/EmptyUser.png' alt=''>"+
                                     "<div class='message'>"+
@@ -252,31 +363,31 @@
                                 chatDiscussionElement.append(message);
 
                                 scrollBottom(1000);
-    
 
 
-                        
+
+
                     } else {
                         alert(result.errorMessage);
- 
+
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     alert(xhr.status);
                     alert(thrownError);
- 
+
                 }
             })
         });
 
-    //5 saniyede bir kontrol et mesaj geliyormu diye 
+    //5 saniyede bir kontrol et mesaj geliyormu diye
     setInterval(checkChatUserMessage, 5000);
 
 
 
 
     });
-         
+
     function scrollBottom(time){
         chatDiscussionElement.animate({ scrollTop: chatDiscussionElement.prop("scrollHeight")}, time);
     }
@@ -285,7 +396,7 @@
     function checkChatUserMessage(){
 
         const chatdiscussion = document.getElementById("chatdiscussion");
- 
+
         let chatuserlastmessageid = chatdiscussion.dataset.chatuserlastmessageid;
         let chatUserId            = chatdiscussion.dataset.chatuserid;
 
@@ -312,15 +423,15 @@
                            let chatuserlastmessageid2 = chatdiscussion.dataset.chatuserlastmessageid;
                            let scroll = false;
                            $.each(result.data, function( index, data ) {
-                               
+
                               // console.log(data);
 
                                if(data.sendUserId == chatUserId)//Mesaj bana gelmiş
-                               {           
+                               {
                                    if(data.id>chatuserlastmessageid2){ chatuserlastmessageid2 = data.id;}
-                                  
+
                                    scroll = true;
-                                   let message = 
+                                   let message =
                                   "<div class='chat-message left'>"+
                                     "<img class='message-avatar' src='/images/EmptyUser.png' alt=''>"+
                                     "<div class='message'>"+
@@ -332,21 +443,21 @@
                                     "</div>"+
                                 "</div>"
 
-                                chatDiscussionElement.append(message);                             
+                                chatDiscussionElement.append(message);
 
                                }
-          
+
                            });
 
                            chatDiscussionElement.attr("data-chatuserlastmessageid",chatuserlastmessageid2);
-                           
+
                            if(scroll){ scrollBottom(1000);}
-                          
-                           
+
+
                         } else {
 
                           //  alert(result.errorMessage);
-                         
+
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -357,7 +468,7 @@
     }
 
 
-    
-    </script>
+
+</script>
 
 }

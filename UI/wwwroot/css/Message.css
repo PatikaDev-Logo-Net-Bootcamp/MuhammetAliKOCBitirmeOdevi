@@ -13,7 +13,7 @@
 }
 
 .wrapper-content {
-    padding: 20px 10px 40px;
+    padding: 10px 10px 10px;
 }
 
 #page-wrapper {
@@ -139,7 +139,7 @@
     padding: 15px;
     /*    height: 400px;*/
     overflow-y: auto;
-    height: calc(100vh - 200px);
+    height: calc(100vh - 220px);
     /*height: -o-calc(100% - 65px);*/ /* opera */
     /*height: -webkit-calc(100% - 65px);*/ /* google, safari */
     /*height: -moz-calc(100% - 65px);*/ /* firefox */

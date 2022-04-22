@@ -4,6 +4,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,8 @@ namespace UI.Controllers
 
         public IActionResult List()
         {
+            var model = new UserMessageListDTO();
+
             var currentUser = _userManager.GetUserAsync(User).Result;
 
             #region
@@ -60,7 +63,7 @@ namespace UI.Controllers
 
             
 
-            var model = _userManager.Users.Where(x => x.Id != currentUser.Id && ( x.ReceivedMessages.Any(y => y.ReceiveUserId == x.Id || y.SendUserId == x.Id) || (x.SendedMessages.Any(y => y.ReceiveUserId == x.Id || y.SendUserId == x.Id)))).Select(x => new UserDTO()
+            var messagedUsers = _userManager.Users.Where(x => x.Id != currentUser.Id && ( x.ReceivedMessages.Any(y => y.ReceiveUserId == x.Id || y.SendUserId == x.Id) || (x.SendedMessages.Any(y => y.ReceiveUserId == x.Id || y.SendUserId == x.Id)))).Select(x => new UserDTO()
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
@@ -97,9 +100,23 @@ namespace UI.Controllers
             // })
             #endregion
 
+            model.MessageUsers = messagedUsers;
 
 
+            var users = _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).Where(x=>x.Id !=currentUser.Id)
+          .Select(x => new UserDTO()
+          {
+              Id = x.Id,
+              UserName = x.UserName,               
+              Email = x.Email,
+              FirstName = x.FirstName,
+              LastName = x.LastName,              
+              PhoneNumber = x.PhoneNumber,
+              PictureUrl = x.PictureUrl,             
+              Roles = x.UserRoles.Select(y => new RoleDTO() { Id = y.RoleId, Name = y.Role.Name }).ToList()
+                }).ToList();
 
+            model.Users = users;
 
             return View(model);
         }
