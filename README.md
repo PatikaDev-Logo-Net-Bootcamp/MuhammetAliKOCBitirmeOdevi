@@ -12,11 +12,12 @@
 - Yönetici, Fatura oluşturabilmekte ve var olanları güncelleyebilmektedir.
 - Yönetici, Faturaların ödenip ödenmediği bilgisini görüntüleyebilmetedir.
 - Yönetci, Yıllık ve Aylık olarak fatura türüne göre Ödeme Dökümü alabilmektedir. 
+- Tüm kullanıcılar aralarında mesajlaşabilmektedir. Bu bölüm canlı bir sistemdir. Kullanıcıya mesaj geldiğinde birkaç seniye içinde ekranına bildirim düşmektedir. Canlı olarak karşılıklı yazışma yapılabilmektedir. 
 
 ## Eksik Kalan Adımlar
 - Ödeme işlemi için api tamamlanamadı.
-- Mesajlaşma modülü tamamlanamadı.
- 
+
+
 
 # Login İşlemi
 
@@ -101,7 +102,28 @@
 
 <img width="939" alt="9" src="https://user-images.githubusercontent.com/71590181/164479796-a249006f-0f1b-4da3-9686-c50de3dac9d6.PNG">
 
+
+# Mesajlaşma
+
+-Mesaj alanına sayfanın sol alt kısmında bulunan zarf simgesinden ulaşılabilmektedir. 
+
+![m1](https://user-images.githubusercontent.com/71590181/164583168-1d2a042e-071b-47e4-943b-df6a8630d0fc.PNG)
+
+-Kullanıcıya mesaj geldiğinde birkaç saniye içinde bildirim gösterilmektedir. 
+
+![m2](https://user-images.githubusercontent.com/71590181/164583249-cb5e8389-922c-4fe3-9f0a-71399b2103e7.PNG)
+
+-Kullanıcı mesaj sayfasına girdiğinde daha önce mesajlaştığı kullanıcılar sağ tarafta listelenmektedir. Eğer okumadığı bir mesaj varsa o mesajın sahibi yeşil tonda gösterilmektedir ve okunmayan mesaj adedi yanında yazmaktadır. 
+
+![m4ı](https://user-images.githubusercontent.com/71590181/164583428-081f38be-7005-4e10-a2c6-5bb61864bc3e.PNG)
+
+-Kullanıcı mesajı açtığında bildirimler kaybolmaktadır. 
+
+![m6](https://user-images.githubusercontent.com/71590181/164583481-97416ccb-1467-4135-9c25-ce1aefdceb15.PNG)
+
+-Kullanıcı daha önce yazışmadığı birine mesaj göndermek istediğinde "Kullanıcı ara" butonu yardımıyla ilgili kişiyi bulup listesine ekleyip  ardından yazışabilmektedir.
+
+![m8](https://user-images.githubusercontent.com/71590181/164583657-2063308c-2746-46ec-93c2-f00147285a45.PNG)
+
 - Güvenli çıkış işlemi menünün alt kısmında bulunan buton yardımıyla yapılabilmektedir. 
-
-
 
