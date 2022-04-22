@@ -1,11 +1,8 @@
 ﻿using Domain.Base;
 using EntityFramework.Repository.Abstracts;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EntityFramework.Repository.Concretes
 {
@@ -21,45 +18,33 @@ namespace EntityFramework.Repository.Concretes
         {
             return unitOfWork.Context.Set<T>().AsQueryable();
         }
-
         public DbSet<T> GetAllEntities()
         {
             return unitOfWork.Context.Set<T>();
         }
-
         public T GetById(int Id)
         {
             return GetAll().Where(x => x.Id == Id).FirstOrDefault();
         }
-
         public void Add(T entity)
         {
             unitOfWork.Context.Set<T>().Add(entity);
         }
-
         public void AddRange(List<T> entities)
         {
             unitOfWork.Context.Set<T>().AddRange(entities);
         }
-
         public void Update(T entity)
         {
             unitOfWork.Context.Entry(entity).State = EntityState.Modified;
         }
-
         public void UpdateRange(List<T> entities)
         {
             unitOfWork.Context.Entry(entities).State = EntityState.Modified;
         }
-
         public void Delete(T entity)
         {
             unitOfWork.Context.Entry(entity).State = EntityState.Deleted;
         }
-
-        //public IQueryable<T> Get()
-        //{
-        //    return unitOfWork.Context.Set<T>().Where(x => !x.IsDeleted).AsQueryable();
-        //}
     }
 }

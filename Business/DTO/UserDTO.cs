@@ -1,10 +1,5 @@
-﻿using Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Business.DTO
 {
@@ -33,21 +28,12 @@ namespace Business.DTO
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public string TC { get; set; }
-
         public string Description { get; set; }
-
         public List<MessageDTO> Messages { get; set; }
-
         public MessageDTO LastMessageDTO { get; set; }
-
         public DateTime LastMessageDate { get; set; }
-
         public int UnLookedMessagesCount { get; set; }
-
         public List<RoleDTO> Roles { get; set; }
-
-        //public User UserEntity { get; set; }
-
         public UserAddDTO UserAddModel { get; set; }
         public List<CarDTO> Cars { get; set; }
 

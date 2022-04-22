@@ -3,8 +3,6 @@ using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EntityFramework.Context
@@ -12,14 +10,9 @@ namespace EntityFramework.Context
     public class ContextSeed
     {
         public static async Task SeedRoleAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
-        {
-            //await roleManager.CreateAsync(new IdentityRole(Roles.SuperAdmin.ToString()));
-            //await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
- 
+        { 
             await roleManager.CreateAsync(new Role(Roles.Manager.ToString()));
             await roleManager.CreateAsync(new Role(Roles.User.ToString()));
- 
-
         }
         public static async Task SeedUserAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
@@ -41,7 +34,7 @@ namespace EntityFramework.Context
             };
             users.Add(tanimsiz);
 
-
+            #region ilerde kullanılabilir.
             /*User superadmin = new User()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -70,6 +63,7 @@ namespace EntityFramework.Context
             };
             users.Add(admin);
             */
+            #endregion
 
             User manager = new User()
             {
@@ -81,9 +75,7 @@ namespace EntityFramework.Context
                 PhoneNumber = "",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
-                TC ="-1"
-                
-                //Password = "hKaoJdFbclk=",/*123456*/
+                TC ="-1"             
             };
             users.Add(manager);
 
@@ -98,7 +90,6 @@ namespace EntityFramework.Context
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 TC = "-1"
-                //Password = "hKaoJdFbclk=",/*123456*/
             };
             users.Add(user);
 
@@ -111,9 +102,6 @@ namespace EntityFramework.Context
                            if (result.Succeeded && usr.UserName != "Tanimsiz")
                            {
                                await userManager.AddToRoleAsync(usr, usr.UserName);
-                               /*await userManager.AddToRoleAsync(usr, Roles.Manager.ToString());
-                               await userManager.AddToRoleAsync(usr, Roles.Admin.ToString());
-                               await userManager.AddToRoleAsync(usr, Roles.SuperAdmin.ToString());*/
                            }
 
                     }

@@ -5,8 +5,6 @@ using EntityFramework.Repository.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -19,18 +17,15 @@ namespace Business.Concretes
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
-
         public IQueryable<FlatType> FlatTypes()
         {
             return repository.GetAll();
         }
-
         public ReturnObjectDTO GetFlatType(int id)
         {
             var flatType =  FlatTypes().FirstOrDefault(x => x.Id == id);
             return new ReturnObjectDTO() { data = flatType, successMessage = "İşlem Başarılı" };
         }
-
         public List<FlatTypeDTO> GetAllFlatTypes()
         {
             var flatTypes =  repository.GetAll().Select(x=>new FlatTypeDTO() { Id = x.Id, Name = x.Name}).ToList();
@@ -58,9 +53,7 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess= false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO UpdateFlatType(int id, FlatTypeDTO flatType, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateFlatType(int id, FlatTypeDTO flatType, string updatedBy = "")
         {
             if (id != flatType.Id)
             {
@@ -86,9 +79,7 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO DeleteFlatType(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteFlatType(int id, string updatedBy = "")
         {
             var entity = repository.GetById(id);//GetFlatType(id);
             if (entity == null)

@@ -3,10 +3,7 @@ using Business.DTO;
 using Domain.Entities;
 using EntityFramework.Repository.Abstracts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -19,18 +16,15 @@ namespace Business.Concretes
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
-
         public IQueryable<Car> Cars()
         {
             return repository.GetAll();
         }
-
         public ReturnObjectDTO GetCar(int id)
         {
             var car =  Cars().FirstOrDefault(x => x.Id == id);
             return new ReturnObjectDTO() { data = car, successMessage = "İşlem Başarılı" };
         }
-
         public ReturnObjectDTO GetAllCars()
         {
             var cars =  repository.GetAll().ToList();
@@ -60,9 +54,7 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess= false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO UpdateCar(int id, CarDTO car, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateCar(int id, CarDTO car, string updatedBy = "")
         {
             if (id != car.Id)
             {
@@ -88,9 +80,7 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO DeleteCar(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteCar(int id, string updatedBy = "")
         {
             var entity = repository.GetById(id);//GetCar(id);
             if (entity == null)

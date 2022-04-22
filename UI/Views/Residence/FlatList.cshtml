@@ -4,156 +4,156 @@
     Layout = "_Layout2";
 }
 @model FlatListDTO
-    <head>
-        <link rel="stylesheet" type="text/css" href="~/lib/DataTable/datatables.min.css" />
-    </head>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/lib/DataTable/datatables.min.css" />
+</head>
 
-    <div class="row" style="margin-top:50px; margin-bottom:50px;">
-        <div class="col-md-10">
-            <p id="pPageMesaj"></p>
-        </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-info btnAdd"> + Yeni Daire</button>
-        </div>
+<div class="row" style="margin-top:50px; margin-bottom:50px;">
+    <div class="col-md-10">
+        <p id="pPageMesaj"></p>
     </div>
+    <div class="col-md-2">
+        <button type="button" class="btn btn-info btnAdd"> + Yeni Daire</button>
+    </div>
+</div>
 
 
 
-    <table id="ListTable" class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Blok</th>
-                <th scope="col">Tip</th>
-                <th scope="col">Kullanıcı</th> 
-                <th scope="col">Kullanıcı Tür</th> 
-                <th scope="col">Açıklama</th> 
-                <th scope="col"></th>
+<table id="ListTable" class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Blok</th>
+            <th scope="col">Tip</th>
+            <th scope="col">Kullanıcı</th>
+            <th scope="col">Kullanıcı Tür</th>
+            <th scope="col">Açıklama</th>
+            <th scope="col"></th>
 
-            </tr>
-        </thead>
-        <tbody>
+        </tr>
+    </thead>
+    <tbody>
 
         @foreach (var item in Model.Flats)
         {
             <tr>
-                    <td class="Flat">@(item.BlockName + " .Blok " + @item.Floor + " .Kat No:" + @item.No )</td>
-                    <td class="FlatType">@item.FlatTypeName</td>
-                    <td class="User">@(item.UserFirstName +  " " + item.UserLastName + " (Tel:" + item.UserPhoneNumber+")")</td>
-                    <td class="UserType">@item.UserTypeName</td>
-                    <td class="Description">@item.Description</td>                    
-                    <td>
-                        <button type="button" class="btn btn-primary btnUpdate" data-id="@item.Id">Güncelle</button>
-                        <button type="button" class="btn btn-danger btnDelete" data-id="@item.Id">Sil</button>
-                    </td>
-                </tr>
+                <td class="Flat">@(item.BlockName + " .Blok " + @item.Floor + " .Kat No:" + @item.No )</td>
+                <td class="FlatType">@item.FlatTypeName</td>
+                <td class="User">@(item.UserFirstName +  " " + item.UserLastName + " (Tel:" + item.UserPhoneNumber+")")</td>
+                <td class="UserType">@item.UserTypeName</td>
+                <td class="Description">@item.Description</td>
+                <td>
+                    <button type="button" class="btn btn-primary btnUpdate" data-id="@item.Id">Güncelle</button>
+                    <button type="button" class="btn btn-danger btnDelete" data-id="@item.Id">Sil</button>
+                </td>
+            </tr>
 
         }
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
-    <!-- Modal Add -->
-    <div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form id="FlatAddForm">
+<!-- Modal Add -->
+<div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="FlatAddForm">
                 @Html.AntiForgeryToken()
 
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Yeni Daire</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Yeni Daire</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-                        @Html.HiddenFor(x=>x.Flat.Id, new {@id="IdForAdd"})
+                    @Html.HiddenFor(x => x.Flat.Id, new { @id = "IdForAdd" })
 
-                        <div class="form-group">
-                            <label>Blok</label>
-                        @Html.DropDownListFor(x => x.Flat.BlockId,new SelectList(@ViewBag.Blocks, "Id", "Name"), new { @id="BlokIdForAdd", @class = "form-control" })
+                    <div class="form-group">
+                        <label>Blok</label>
+                        @Html.DropDownListFor(x => x.Flat.BlockId, new SelectList(@ViewBag.Blocks, "Id", "Name"), new { @id = "BlokIdForAdd", @class = "form-control" })
 
-                          @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
+                        @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
                             @foreach(RoleDTO item in @ViewBag.AllRoles)
                             {
                                  <option value="@item.Id">@item.Name</option>
-                            }                   
-                            </select>*@   
+                            }
+                            </select>*@
 
-                        </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Kat</label>
-                            <input asp-for="@Model.Flat.Floor" id="FloorForAdd" type="text" class="form-control" placeholder="Kat">
-                        @Html.ValidationMessageFor(model => model.Flat.Floor,"", new { @class = "text-danger" })
-                        </div>
-                        <div class="form-group">
-                            <label>No</label>
-                            <input asp-for="@Model.Flat.No" id="NoForAdd" type="text" class="form-control" placeholder="No">
+                    <div class="form-group">
+                        <label>Kat</label>
+                        <input asp-for="@Model.Flat.Floor" id="FloorForAdd" type="text" class="form-control" placeholder="Kat">
+                        @Html.ValidationMessageFor(model => model.Flat.Floor, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <label>No</label>
+                        <input asp-for="@Model.Flat.No" id="NoForAdd" type="text" class="form-control" placeholder="No">
                         @Html.ValidationMessageFor(model => model.Flat.No, "", new { @class = "text-danger" })
-                        </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Tip</label>
-                        @Html.DropDownListFor(x => x.Flat.FlatTypeId,new SelectList(@ViewBag.FlatTypes, "Id", "Name"), new { @id="FlatTypeIdForAdd", @class = "form-control" })
+                    <div class="form-group">
+                        <label>Tip</label>
+                        @Html.DropDownListFor(x => x.Flat.FlatTypeId, new SelectList(@ViewBag.FlatTypes, "Id", "Name"), new { @id = "FlatTypeIdForAdd", @class = "form-control" })
 
-                          @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
+                        @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
                             @foreach(RoleDTO item in @ViewBag.AllRoles)
                             {
                                  <option value="@item.Id">@item.Name</option>
-                            }                   
-                            </select>*@   
+                            }
+                            </select>*@
 
-                        </div>
+                    </div>
 
-                        <input type="hidden" id="Tanimsiz_User_Id" value="@(((List<UserDTO>)ViewBag.Users).FirstOrDefault(x=>x.UserName=="Tanimsiz").Id)"/>
+                    <input type="hidden" id="Tanimsiz_User_Id" value="@(((List<UserDTO>)ViewBag.Users).FirstOrDefault(x=>x.UserName=="Tanimsiz").Id)" />
 
-                        <div class="form-group">
-                            <label>Kullanıcı</label>
-                        @Html.DropDownListFor(x => x.Flat.UserId,new SelectList(@ViewBag.Users, "Id", "Description"), new { @id="UserIdForAdd", @class = "form-control" })
+                    <div class="form-group">
+                        <label>Kullanıcı</label>
+                        @Html.DropDownListFor(x => x.Flat.UserId, new SelectList(@ViewBag.Users, "Id", "Description"), new { @id = "UserIdForAdd", @class = "form-control" })
 
-                          @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
+                        @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
                             @foreach(RoleDTO item in @ViewBag.AllRoles)
                             {
                                  <option value="@item.Id">@item.Name</option>
-                            }                   
-                            </select>*@   
+                            }
+                            </select>*@
 
-                        </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Kullanıcı Tip</label>
-                        @Html.DropDownListFor(x => x.Flat.UserTypeId,new SelectList(@ViewBag.UserTypes, "Id", "Name"), new { @id="UserTypeIdForAdd", @class = "form-control" })
+                    <div class="form-group">
+                        <label>Kullanıcı Tip</label>
+                        @Html.DropDownListFor(x => x.Flat.UserTypeId, new SelectList(@ViewBag.UserTypes, "Id", "Name"), new { @id = "UserTypeIdForAdd", @class = "form-control" })
 
-                          @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
+                        @*  <select asp-for="@Model.UserForAdd.RoleSelected" id="RoleSelectedForAdd"  class = "form-control">
                             @foreach(RoleDTO item in @ViewBag.AllRoles)
                             {
                                  <option value="@item.Id">@item.Name</option>
-                            }                   
-                            </select>*@   
+                            }
+                            </select>*@
 
-                        </div>
+                    </div>
 
 
-                        <div class="form-group">
-                            <label>Açıklama</label>
-                            <input asp-for="@Model.Flat.Description" id="DescriptionForAdd" type="text" class="form-control" placeholder="Açıklama">
+                    <div class="form-group">
+                        <label>Açıklama</label>
+                        <input asp-for="@Model.Flat.Description" id="DescriptionForAdd" type="text" class="form-control" placeholder="Açıklama">
                         @Html.ValidationMessageFor(model => model.Flat.Description, "", new { @class = "text-danger" })
-                        </div>   
-
-                        <div style="min-height:40px">
-                            <p id="pAddMesajiModal"></p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
-                        <button type="submit" class="btn btn-info" id="btnAddSubmit">Ekle</button>
                     </div>
 
-                </form>
+                    <div style="min-height:40px">
+                        <p id="pAddMesajiModal"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-info" id="btnAddSubmit">Ekle</button>
+                </div>
 
-            </div>
+            </form>
+
         </div>
     </div>
+</div>
 
 
 
@@ -163,277 +163,247 @@
     <script type="text/javascript">
         var table;
         var clickedRow;
-        $(document).ready( function () {
+        $(document).ready(function () {
 
             //Data Table initilation
-           table = $('#ListTable').DataTable({
-                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tümü"]],
-                  //"language": {"url": "/lib/DataTable/Turkish.json"}
-                  "language": {"url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Turkish.json"}
-               });
+            table = $('#ListTable').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Tümü"]],
+                //"language": {"url": "/lib/DataTable/Turkish.json"}
+                "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Turkish.json" }
+            });
 
 
-            $( ".btnAdd").on( "click", function() {
-                 modalEmptyForAdd(0);
-                  $('#modalAdd').modal();
-            }); 
+            $(".btnAdd").on("click", function () {
+                modalEmptyForAdd(0);
+                $('#modalAdd').modal();
+            });
 
-            $(document).on('click','.btnUpdate', function(){
+            $(document).on('click', '.btnUpdate', function () {
                 clickedRow = $(this).parent();
-                    let id = $(this).data("id");
-                     modalEmptyForAdd(id);
-                 getFlatForUpdate(id);
-            }); 
+                let id = $(this).data("id");
+                modalEmptyForAdd(id);
+                getFlatForUpdate(id);
+            });
 
-            $(document).on('click','.btnDelete', function(){
-              if (confirm('Blok Silmek İstediğinizden Emin Misiniz?')) {
-                  clickedRow = $(this).parent();
-                   let id = $(this).data("id");
-                   deleteFlat($(this),id);
+            $(document).on('click', '.btnDelete', function () {
+                if (confirm('Blok Silmek İstediğinizden Emin Misiniz?')) {
+                    clickedRow = $(this).parent();
+                    let id = $(this).data("id");
+                    deleteFlat($(this), id);
                 }
             });
 
 
-            $( "#btnAddSubmit").on( "click", function(e) {
-                 e.preventDefault();
+            $("#btnAddSubmit").on("click", function (e) {
+                e.preventDefault();
 
                 $('#FlatAddForm').validate();
 
                 if ($('#FlatAddForm').valid()) {
-                    if($('#IdForAdd').val()==0){
+                    if ($('#IdForAdd').val() == 0) {
                         addFlat();
-                    }else{
-                          updateFlat();
+                    } else {
+                        updateFlat();
                     }
-                 
+
                 }
             });
 
-
-           //$( "#btnUpdateSubmit").on( "click", function(e) {
-           //     e.preventDefault();
-
-           //     $('#FlatAddForm').validate();
-
-           //     if ($('#FlatAddForm').valid()) {
-           //        updateFlat();
-           //     }
-           // });
         });
-                function modalEmptyForAdd(id){
-                    $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.                    
+        function modalEmptyForAdd(id) {
+            $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
 
-                    $("#IdForAdd").val(0);
+            $("#IdForAdd").val(0);
 
-                    $("#FloorForAdd").val("");
-                    $("#NoForAdd").val("");
-                    $("#DescriptionForAdd").val("");         
-                    
-                    $("#BlokIdForAdd").val(1);
-                    $("#FlatTypeIdForAdd").val(1);
-                    $("#UserIdForAdd").val($("#Tanimsiz_User_Id").val());
+            $("#FloorForAdd").val("");
+            $("#NoForAdd").val("");
+            $("#DescriptionForAdd").val("");
 
-                    $("#UserTypeIdForAdd").val(1);
+            $("#BlokIdForAdd").val(1);
+            $("#FlatTypeIdForAdd").val(1);
+            $("#UserIdForAdd").val($("#Tanimsiz_User_Id").val());
+
+            $("#UserTypeIdForAdd").val(1);
 
 
-                     if(id==0){
-                        $('#btnAddSubmit').html("Ekle");
-                         $('#btnAddSubmit').removeClass("btn-primary").addClass("btn-info");
-                    }else{
-                          $('#btnAddSubmit').html("Güncelle");
-                          $('#btnAddSubmit').removeClass("btn-info").addClass("btn-primary");
+            if (id == 0) {
+                $('#btnAddSubmit').html("Ekle");
+                $('#btnAddSubmit').removeClass("btn-primary").addClass("btn-info");
+            } else {
+                $('#btnAddSubmit').html("Güncelle");
+                $('#btnAddSubmit').removeClass("btn-info").addClass("btn-primary");
+            }
+
+
+            console.log($("#Tanimsiz_User_Id").val());
+            console.log($("#UserIdForAdd").val());
+        }
+
+        function getFlatForUpdate(id) {
+            $.ajax({
+                type: 'POST',
+                url: '/Residence/GetFlat',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                data: { id: id },
+                success: function (result) {
+                    if (result.isSuccess) {
+                        $("#IdForAdd").val(result.data.id);
+                        $("#BlokIdForAdd").val(result.data.blockId);
+                        $("#FloorForAdd").val(result.data.floor);
+                        $("#NoForAdd").val(result.data.no);
+                        $("#DescriptionForAdd").val(result.data.description);
+                        $("#FlatTypeIdForAdd").val(result.data.flatTypeId);
+                        $("#UserIdForAdd").val(result.data.userId);
+                        $("#UserTypeIdForAdd").val(result.data.userTypeId);
+
+                        $('#modalAdd').modal();
+                    } else {
+
+                        $("#pAddMesajiModal").text(result.errorMessage);
+                        $("#pAddMesajiModal").css("color", "red");
                     }
-
-
-                    console.log($("#Tanimsiz_User_Id").val());
-                    console.log($("#UserIdForAdd").val());
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                    $("#pAddMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                    $("#pAddMesajiModal").css("color", "red");
                 }
-                // function modalEmptyForUpdate(){
-                //     $('.field-validation-error').empty();//Daha önce validasyon mesajları gösterilmiş ise onları burada kaldırıyoruz.
-                //}
+            })
+        }
+
+        var addSetTimeOutId;
+        function addFlat() {
+            $("#pAddMesajiModal").text("");
+            var data = $("#FlatAddForm").serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/Residence/AddFlat',
+                dataType: 'json',
+                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                data: data,
+                success: function (result) {
+                    if (result.isSuccess) {
+                        $("#pAddMesajiModal").text(result.successMessage);
+                        $("#pAddMesajiModal").css("color", "green");
+
+                        table.row.add([
+                            result.data.blockName + " .Blok " + result.data.floor + " .Kat No:" + result.data.no,
+                            result.data.flatTypeName,
+                            result.data.userFirstName + " " + result.data.userLastName + " (Tel:" + result.data.userPhoneNumber + ")",
+                            result.data.userTypeName,
+                            result.data.description,
+                            "<button type='button' class='btn btn-primary btnUpdate' data-id='" + result.data.id + "'>Güncelle</button>" +
+                            "<button type='button' class='btn btn-danger btnDelete' data-id='" + result.data.id + "'>Sil</button>"
+                        ]).draw();
 
 
-                function getFlatForUpdate(id) {
-                        $.ajax({
-                                type: 'POST',
-                                url: '/Residence/GetFlat',
-                                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                                data: { id: id },
-                                success: function (result) {
-
-                                    //console.log(result);
-                                    if(result.isSuccess){
-                                        $("#IdForAdd").val(result.data.id);
-                                        $("#BlokIdForAdd").val(result.data.blockId);
-                                        $("#FloorForAdd").val(result.data.floor);
-                                        $("#NoForAdd").val(result.data.no);
-                                        $("#DescriptionForAdd").val(result.data.description);
-                                        $("#FlatTypeIdForAdd").val(result.data.flatTypeId);
-                                        $("#UserIdForAdd").val(result.data.userId);
-                                        $("#UserTypeIdForAdd").val(result.data.userTypeId);
-                                       
-                                        $('#modalAdd').modal();
-                                    }else{
-
-                                         $("#pAddMesajiModal").text(result.errorMessage);
-                                         $("#pAddMesajiModal").css("color", "red");
-                                    }
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                     alert(xhr.status );
-                                     alert(thrownError);
-                                     $("#pAddMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
-                                     $("#pAddMesajiModal").css("color", "red");
-                                }
-                            })
+                        addSetTimeOutId = setTimeout(function () {
+                            $('#modalAdd').modal('hide');
+                            $("#pAddMesajiModal").text("");
+                        }, 2500);
+                    } else {
+                        console.log(result.errorMessage);
+                        $("#pAddMesajiModal").text(result.errorMessage);
+                        $("#pAddMesajiModal").css("color", "red");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                    $("#pAddMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
+                    $("#pAddMesajiModal").css("color", "red");
                 }
+            })
+        }
 
-                var addSetTimeOutId;
-                function addFlat() {
-                        $("#pAddMesajiModal").text("");
-                        var data = $("#FlatAddForm").serialize();
-                        console.log(data);
-                        $.ajax({
-                                type: 'POST',
-                                url: '/Residence/AddFlat',
-                                dataType: 'json',
-                                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                                data: data,
-                                success: function (result) {
-                                         if(result.isSuccess)
-                                        {
-                                            //console.log(result);
-                                              $("#pAddMesajiModal").text(result.successMessage);
-                                              $("#pAddMesajiModal").css("color", "green");
+        //Add model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+        $('#modalAdd').on('hide.bs.modal', function () {
+            $("#pAddMesajiModal").text("");
+            clearTimeout(addSetTimeOutId);
+        });
 
-                                              //console.log(result.data);
-                                              //console.log(result.data.id);
 
-                                              //console.log(result.data.blockName + " .Blok " + result.data.floor + " .Kat No:" + result.data.no);
-                                              //console.log(result.data.flatTypeName);
-                                              // console.log(result.data.userFirstName +  " " + result.data.userLastName + " (Tel:" + result.data.userPhoneNumber+")");
-                                              //  console.log(result.data.userTypeName);
-                                              //  console.log(result.data.description);
+        function updateFlat() {
+            $("#pAddMesajiModal").text("");
+            var data = $("#FlatAddForm").serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/Residence/UpdateFlat',
+                dataType: 'json',
+                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                data: data,
+                success: function (result) {
+                    if (result.isSuccess) {
+                        $("#pAddMesajiModal").text(result.successMessage);
+                        $("#pAddMesajiModal").css("color", "green");
 
-                                            table.row.add( [
-                                                 result.data.blockName + " .Blok " + result.data.floor + " .Kat No:" + result.data.no ,
-                                                 result.data.flatTypeName,
-                                                 result.data.userFirstName +  " " + result.data.userLastName + " (Tel:" + result.data.userPhoneNumber+")",
-                                                 result.data.userTypeName,
-                                                 result.data.description,
-                                                 "<button type='button' class='btn btn-primary btnUpdate' data-id='"+result.data.id+"'>Güncelle</button>"+
-                                                 "<button type='button' class='btn btn-danger btnDelete' data-id='"+result.data.id+"'>Sil</button>"
-                                            ] ).draw();  
-                                      
-                  
-                                             addSetTimeOutId =  setTimeout(function(){
-                                                                            $('#modalAdd').modal('hide');
-                                                                            $("#pAddMesajiModal").text("");
-                                                                        }, 2500);
-                                        }else{
-                                            console.log(result.errorMessage);
-                                             $("#pAddMesajiModal").text(result.errorMessage);
-                                             $("#pAddMesajiModal").css("color", "red");
-                                        }
-                                },
-                                 error: function (xhr, ajaxOptions, thrownError) {
-                                     alert(xhr.status );
-                                     alert(thrownError);
-                                     $("#pAddMesajiModal").text("Hata! Tekrar deneyiniz. Hata almaya devam ediyorsanız; Lütfen yöneticinizle iletişime geçiniz!");
-                                     $("#pAddMesajiModal").css("color", "red");
-                                }
-                            })
+                        //var tableRow = table.row(clickedButton.parent());
+                        var rData = [
+                            result.data.blockName + " .Blok " + result.data.floor + " .Kat No:" + result.data.no,
+                            result.data.flatTypeName,
+                            result.data.userFirstName + " " + result.data.userLastName + " (Tel:" + result.data.userPhoneNumber + ")",
+                            result.data.userTypeName,
+                            result.data.description,
+                            "<button type='button' class='btn btn-primary btnUpdate' data-id='" + result.data.id + "'>Güncelle</button>" +
+                            "<button type='button' class='btn btn-danger btnDelete' data-id='" + result.data.id + "'>Sil</button>"
+                        ];
+
+                        table.row(clickedRow)
+                            .data(rData)
+                            .draw();
+
+
+                        addSetTimeOutId = setTimeout(function () { $('#modalUpdate').modal('hide'), $("#pAddMesajiModal").text(""); }, 2500);
+                    } else {
+                        $("#pAddMesajiModal").text(result.errorMessage);
+                        $("#pAddMesajiModal").css("color", "red");
+                    }
+                },
+                error: function () {
+                    $("#pAddMesajiModal").text("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                    $("#pAddMesajiModal").css("color", "red");
                 }
-
-                //Add model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
-                $('#modalAdd').on('hide.bs.modal', function () {
-                    $("#pAddMesajiModal").text("");
-                    clearTimeout(addSetTimeOutId);
-                });
-
-           
-                function updateFlat() {
-                        $("#pAddMesajiModal").text("");
-                        var data = $("#FlatAddForm").serialize();
-                        $.ajax({
-                                type: 'POST',
-                                url: '/Residence/UpdateFlat',
-                                dataType: 'json',
-                                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                                data: data,
-                                success: function (result) {
-                                        if(result.isSuccess)
-                                        {
-                                              $("#pAddMesajiModal").text(result.successMessage);
-                                              $("#pAddMesajiModal").css("color", "green");
-
-                                              //var tableRow = table.row(clickedButton.parent());
-                                              var rData = [
-                                                result.data.blockName + " .Blok " + result.data.floor + " .Kat No:" + result.data.no ,
-                                                 result.data.flatTypeName,
-                                                 result.data.userFirstName +  " " + result.data.userLastName + " (Tel:" + result.data.userPhoneNumber+")",
-                                                 result.data.userTypeName,
-                                                 result.data.description,
-                                                 "<button type='button' class='btn btn-primary btnUpdate' data-id='"+result.data.id+"'>Güncelle</button>"+
-                                                 "<button type='button' class='btn btn-danger btnDelete' data-id='"+result.data.id+"'>Sil</button>"
-                                                        ];
-
-                                            table.row(clickedRow)
-                                                .data(rData)
-                                                .draw();
+            })
 
 
-                                              addSetTimeOutId = setTimeout(function(){ $('#modalUpdate').modal('hide'), $("#pAddMesajiModal").text("");}, 2500);
-                                        }else{
-                                             $("#pAddMesajiModal").text(result.errorMessage);
-                                             $("#pAddMesajiModal").css("color", "red");
-                                        }
-                                },
-                                error: function () {
-                                       $("#pAddMesajiModal").text("İşlem sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
-                                       $("#pAddMesajiModal").css("color", "red");
-                                }
-                            })
+        }
+        //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
+        $('#modalUpdate').on('hide.bs.modal', function () {
+            $("#pAddMesajiModal").text("");
+            clearTimeout(addSetTimeOutId);
+        });
 
 
+        function deleteFlat(deleteButton, id) {
+            $("#pPageMesaj").text("");
+            $.ajax({
+                type: 'POST',
+                url: '/Residence/DeleteFlat',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                data: { id: id },
+                success: function (result) {
+                    if (result.isSuccess) {
+                        $("#pPageMesaj").text(result.successMessage);
+                        $("#pPageMesaj").css("color", "green");
+                        table.row(clickedRow)
+                            .remove()
+                            .draw();
+                        setTimeout(function () { $("#pPageMesaj").text(""); }, 3000);
+                    } else {
+                        $("#pPageMesaj").text(result.errorMessage);
+                        $("#pPageMesaj").css("color", "red");
+                    }
+                },
+                error: function () {
+                    $("#pPageMesaj").text("Silme işlemi sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
+                    $("#pPageMesaj").css("color", "red");
                 }
-                //update model kapanma anı.Kullanıcı elle kapatırsa modalı settime out  iptal edilsin!
-                $('#modalUpdate').on('hide.bs.modal', function () {
-                    $("#pAddMesajiModal").text("");
-                    clearTimeout(addSetTimeOutId);
-                });
-
-
-                function deleteFlat(deleteButton, id) {
-                        $("#pPageMesaj").text("");
-                        $.ajax({
-                                type: 'POST',
-                                url: '/Residence/DeleteFlat',
-                                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
-                                data: { id: id },
-                                success: function (result) {
-                                    if(result.isSuccess)
-                                    {
-                                        $("#pPageMesaj").text(result.successMessage);
-                                        $("#pPageMesaj").css("color", "green");
-                                        table.row(clickedRow)
-                                                .remove()
-                                                .draw();
-                                        setTimeout(function(){ $("#pPageMesaj").text("");}, 3000);
-                                    }else{
-                                        $("#pPageMesaj").text(result.errorMessage);
-                                        $("#pPageMesaj").css("color", "red");
-                                    }
-                                },
-                                error: function () {
-                                    $("#pPageMesaj").text("Silme işlemi sırasında hata alınmıştır. Hatayı almaya devam ederseniz lütfen yöneticinizle iletişime geçiniz!");
-                                    $("#pPageMesaj").css("color", "red");
-                                }
-                            })
-                }
+            })
+        }
 
     </script>
 
-    }
+}
 
 

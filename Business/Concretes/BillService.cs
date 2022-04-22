@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -80,8 +78,6 @@ namespace Business.Concretes
                 repository.Add(billEntity);
                 unitOfWork.Commit();
 
-                //bill.Id = billEntity.Id;
-
                 var resData = GetBill(billEntity.Id).data;
                 return new ReturnObjectDTO() { data = resData, successMessage = "İşlem Başarılı" };
             }
@@ -90,16 +86,13 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO UpdateBill(int id, BillDTO bill, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateBill(int id, BillDTO bill, string updatedBy = "")
         {
             var bilKontrolEntity = GetAllBills().Where(x => x.Id!=bill.Id && x.Year == bill.Year && x.Mount == bill.Mount && x.BillTypeId == bill.BillTypeId).FirstOrDefault();
             if (bilKontrolEntity != null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "Aynı Yıl,Ay,Tip e sahip yanlızca 1 fatura olabilir. Lütfen Kontrol Ediniz!" };
             }
-
 
             if (id != bill.Id)
             {
@@ -129,9 +122,7 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO DeleteBill(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteBill(int id, string updatedBy = "")
         {
             var entity = repository.GetById(id);//GetBill(id);
             if (entity == null)

@@ -1,19 +1,14 @@
 ﻿using Business.Abstract;
-using Business.Concretes;
 using Business.DTO;
 using Domain.Entities;
-using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using UI.Models;
 
 namespace UI.Controllers
 {
@@ -21,22 +16,18 @@ namespace UI.Controllers
     public class UserController : Controller
     {
         private readonly ILogger<UserController> _logger;
-        private readonly UserManager<User> _userManager;
-        //private readonly SignInManager<User> _signInManager;   
+        private readonly UserManager<User> _userManager;  
         private readonly RoleManager<Role> _roleManager;
         private readonly ICarService _carService;
 
 
-        public UserController(ILogger<UserController> logger, UserManager<User> userManager,/* SignInManager<User> signInManager ,*/ RoleManager<Role> roleManager, ICarService carService)
+        public UserController(ILogger<UserController> logger, UserManager<User> userManager, RoleManager<Role> roleManager, ICarService carService)
         {
             _logger = logger;
             _userManager = userManager;
-            //_signInManager = signInManager;
             _roleManager = roleManager;
             _carService = carService;
         }
-
-
  
         public IActionResult IdentityRoleList()
         {
@@ -62,25 +53,17 @@ namespace UI.Controllers
                 TwoFactorEnabled = x.TwoFactorEnabled,
                 SecurityStamp = x.SecurityStamp,
                 TC = x.TC,
-                Roles = x.UserRoles.Select(y => new RoleDTO() {Id = y.RoleId, Name=y.Role.Name }).ToList()
-                //UserEntity = x
-                
+                Roles = x.UserRoles.Select(y => new RoleDTO() {Id = y.RoleId, Name=y.Role.Name }).ToList()                
             }).ToList();
 
             model.Users = users;
 
-            //foreach (var usr in model)
-            //{
-            //    usr.Roles = _userManager.GetRolesAsync(usr.UserEntity).Result.ToList();
-            //    usr.UserEntity = null;
-            //}
-            var allRoles= _roleManager.Roles./*Where(x=>x.Name=="Manager" || x.Name=="User").*/Select(x=>new RoleDTO() { Id = x.Id, Name = x.Name}).ToList();
+            var allRoles= _roleManager.Roles.Select(x=>new RoleDTO() { Id = x.Id, Name = x.Name}).ToList();
             ViewBag.AllRoles = allRoles;            
             ViewBag.RoleUserId = allRoles.Where(x => x.Name == "User").FirstOrDefault()?.Id;
             return View(model);
         }
 
- 
         [HttpPost]
         public JsonResult Get(string UserId)
         {
@@ -123,12 +106,10 @@ namespace UI.Controllers
             return new JsonResult(res);
         }
 
- 
         [HttpPost]
         public async Task<JsonResult> Delete(string UserId)
         {
             var res = new ReturnObjectDTO();
-
             try
             {
                 var model = _userManager.Users.Where(x => x.Id == UserId).FirstOrDefault();
@@ -153,7 +134,6 @@ namespace UI.Controllers
             return new JsonResult(res);
         }
 
- 
         [HttpPost]
         public async Task<JsonResult> Add(UserIdentitiyRoleDTO userList)
         {
@@ -253,7 +233,6 @@ namespace UI.Controllers
             return new JsonResult(res);
         }
 
- 
         [HttpPost]
         public async Task<JsonResult> Update(UserIdentitiyRoleDTO userList)
         {
@@ -321,10 +300,6 @@ namespace UI.Controllers
             return new JsonResult(res);
         }
 
-
-
-
-
         public IActionResult UserCarList()
         {
             var model = new UserCarDTO();
@@ -348,12 +323,6 @@ namespace UI.Controllers
         [HttpPost]
         public JsonResult AddCar(UserCarDTO userList)
         {
-           /* var errors = ModelState
-    .Where(x => x.Value.Errors.Count > 0)
-    .Select(x => new { x.Key, x.Value.Errors })
-    .ToArray();
-           */
-
             CarDTO car = userList.CarForAddUpdate;
             var res = new ReturnObjectDTO();
 
@@ -380,12 +349,6 @@ namespace UI.Controllers
         [HttpPost]
         public JsonResult UpdateCar(UserCarDTO userList)
         {
-            /* var errors = ModelState
-     .Where(x => x.Value.Errors.Count > 0)
-     .Select(x => new { x.Key, x.Value.Errors })
-     .ToArray();
-            */
-
             CarDTO car = userList.CarForAddUpdate;
             var res = new ReturnObjectDTO();
 
@@ -408,6 +371,5 @@ namespace UI.Controllers
 
             return new JsonResult(res);
         }
-
     }
 }

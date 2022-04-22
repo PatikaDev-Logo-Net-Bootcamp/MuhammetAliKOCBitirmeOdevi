@@ -31,6 +31,7 @@ namespace UI.Controllers
             var model = new LoginDTO();
             return View(model);
         }
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO model)
@@ -44,7 +45,6 @@ namespace UI.Controllers
                     if (result.Succeeded)
                     {
                         _logger.LogInformation($"{model.Email} Maail user logged in.");
-                        //TempData["Student"] = userEntity;
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -52,7 +52,6 @@ namespace UI.Controllers
             }
             return View(model);
         }
-
 
         public IActionResult ResetPasword()
         {
@@ -72,7 +71,6 @@ namespace UI.Controllers
                 {
                     model.IsSuccess = false;
                     model.Message = "İşlem başarısız. Girilen Şifreler Aynı Değil!";
-                    //return View(model);
                 }else if (!(await _userManager.CheckPasswordAsync(currentUser, model.Password)))//Şifre uygunluğu kontrol ediliyor. 
                 {
                     model.IsSuccess = false;
@@ -80,8 +78,7 @@ namespace UI.Controllers
                 }
                 else
                 {
-                //Hard code, but better then nothing :)
-               
+                //Hard code, but better then nothing :)               
 
                     var res1 = await _userManager.RemovePasswordAsync(currentUser);
                     if (res1.Succeeded)
@@ -102,8 +99,7 @@ namespace UI.Controllers
                     {
                         model.IsSuccess = false;
                         model.Message = "İşlem başarısız. Lüften tekrar deneyiniz.";
-                    }
-                   
+                    }                   
                 }
             }
             else
@@ -114,17 +110,11 @@ namespace UI.Controllers
             return View(model);
         }
 
-
-
-
-
-
         public async Task<ActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("login", "Authorize");
         }
-
 
         public ActionResult AccessDenied()
         {

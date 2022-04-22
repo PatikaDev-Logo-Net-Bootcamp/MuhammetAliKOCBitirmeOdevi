@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -20,12 +18,10 @@ namespace Business.Concretes
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
-
         public IQueryable<Flat> Flats()
         {
             return repository.GetAll();
         }
-
         public IQueryable<FlatDTO> FlatDTOs()
         {
             return repository.GetAll().Include(b => b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr => usr.User).Include(x => x.BillFlats)
@@ -50,7 +46,6 @@ namespace Business.Concretes
 
                 }) ;
         }
-
         public IQueryable<FlatDTO> FlatDTOsByBillId(int billId)
         {
             return repository.GetAll().Include(b => b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr => usr.User).Include(x => x.BillFlats)
@@ -75,7 +70,6 @@ namespace Business.Concretes
 
                 });
         }
-
         public ReturnObjectDTO GetFlat(int id)
         {
             var flat = Flats().Include(b => b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr => usr.User)
@@ -99,41 +93,26 @@ namespace Business.Concretes
                 }).FirstOrDefault(x => x.Id == id);
             return new ReturnObjectDTO() { data = flat, successMessage = "İşlem Başarılı" };
         }
-
         public List<FlatDTO> GetAllFlats()
         {
             var flats = repository.GetAllEntities().Include(b => b.Block).Include(u => u.FlatType).Include(ur => ur.UserType).Include(usr => usr.User)
 
                 .Select(x => new FlatDTO()
                 {
-                    Id = x.Id
-                                          ,
-                    BlockId = x.BlockId
-                                          ,
-                    BlockName = x.Block.Name
-                                          ,
-                    Description = x.Description
-                                          ,
-                    No = x.No
-                                          ,
-                    FlatTypeId = x.FlatTypeId
-                                          ,
-                    FlatTypeName = x.FlatType.Name
-                                          ,
-                    Floor = x.Floor
-                                          ,
-                    UserId = x.UserId
-                                          ,
-                    UserEmail = x.User.Email
-                                          ,
-                    UserFirstName = x.User.FirstName
-                                          ,
-                    UserLastName = x.User.LastName
-                                          ,
-                    UserPhoneNumber = x.User.PhoneNumber
-                                          ,
-                    UserTypeId = x.UserTypeId
-                                          ,
+                    Id = x.Id,
+                    BlockId = x.BlockId,
+                    BlockName = x.Block.Name,
+                    Description = x.Description,
+                    No = x.No,
+                    FlatTypeId = x.FlatTypeId,
+                    FlatTypeName = x.FlatType.Name,
+                    Floor = x.Floor,
+                    UserId = x.UserId,
+                    UserEmail = x.User.Email,
+                    UserFirstName = x.User.FirstName,
+                    UserLastName = x.User.LastName,
+                    UserPhoneNumber = x.User.PhoneNumber,
+                    UserTypeId = x.UserTypeId,
                     UserTypeName = x.UserType.Name
                 }).ToList();
             return flats;
@@ -168,16 +147,14 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO UpdateFlat(int id, FlatDTO flat, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateFlat(int id, FlatDTO flat, string updatedBy = "")
         {
             if (id != flat.Id)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı." };
             }
 
-            var entity = repository.GetById(id);// GetFlat(id);
+            var entity = repository.GetById(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı.(2)" };
@@ -202,11 +179,9 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO DeleteFlat(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteFlat(int id, string updatedBy = "")
         {
-            var entity = repository.GetById(id);//GetFlat(id);
+            var entity = repository.GetById(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Silinecek Kayıt Bilgisi Bulunamadı.(2)" };

@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Collections.Generic;
 
 namespace EntityFramework.Context.Configurations
 {
@@ -16,8 +15,5 @@ namespace EntityFramework.Context.Configurations
             builder.Property(x => x.Mount).IsRequired();   
 
         }
-
- 
-
     }
 }

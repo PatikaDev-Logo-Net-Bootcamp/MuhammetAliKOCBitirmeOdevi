@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Collections.Generic;
 
 namespace EntityFramework.Context.Configurations
 {
@@ -14,12 +13,6 @@ namespace EntityFramework.Context.Configurations
             builder.Property(x => x.BillId).IsRequired();
             builder.Property(x => x.FlatId).IsRequired();
             builder.Property(x => x.Amount).IsRequired();
-
-            //builder.Property(x => x.Amount).HasColumnType("decimal").IsRequired();
-
         }
-
-
-
     }
 }

@@ -34,19 +34,14 @@ namespace UI.Controllers
 
         public  IActionResult BillListUnPaid(int Yearid = -1, int Mountid = -1)
         {
-
             ViewBag.Years = Year.Years;
-            ViewBag.Mounts = Mount.Mounts;
-             
+            ViewBag.Mounts = Mount.Mounts;             
 
             ViewData["CurrentFilterYearid"] = Yearid;
             ViewData["CurrentFilterMountid"] = Mountid;
  
-
- 
             var currentUser = _userManager.GetUserAsync(User).Result;
             var billflats = _billFlatService.GetUserBillFlats(Yearid, Mountid, currentUser.Id, 0);      
-
 
             return View(billflats);
         }
@@ -54,19 +49,14 @@ namespace UI.Controllers
 
         public IActionResult BillListPaid(int Yearid = -1, int Mountid = -1)
         {
-
             ViewBag.Years = Year.Years;
             ViewBag.Mounts = Mount.Mounts;
-
 
             ViewData["CurrentFilterYearid"] = Yearid;
             ViewData["CurrentFilterMountid"] = Mountid;
 
-
-
             var currentUser = _userManager.GetUserAsync(User).Result;
             var billflats = _billFlatService.GetUserBillFlats(Yearid, Mountid, currentUser.Id, 1);
-
 
             return View(billflats);
         }

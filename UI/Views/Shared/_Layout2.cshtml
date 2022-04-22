@@ -7,10 +7,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- 
-  
- 
-
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - UI</title>
@@ -20,8 +16,6 @@
 </head>
 <body>
     @{
-        //var user = TempData["Student"] as User;
-        //var user = UserManager.FindById(User.Identity.GetUserId());
         var currentUser = _userManager.GetUserAsync(User).Result;
         var currentUserRoles = _userManager.GetRolesAsync(currentUser).Result;
 

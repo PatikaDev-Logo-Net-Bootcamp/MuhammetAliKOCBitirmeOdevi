@@ -5,8 +5,6 @@ using EntityFramework.Repository.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -19,18 +17,15 @@ namespace Business.Concretes
             this.repository = repository;
             this.unitOfWork = unitOfWork;
         }
-
         public IQueryable<Block> Blocks()
         {
             return repository.GetAll();
         }
-
         public ReturnObjectDTO GetBlock(int id)
         {
             var block =  Blocks().FirstOrDefault(x => x.Id == id);
             return new ReturnObjectDTO() { data = block, successMessage = "İşlem Başarılı" };
         }
-
         public List<BlockDTO> GetAllBlocks()
         {
             var blocks =  repository.GetAll().Select(x=>new BlockDTO() {Id=x.Id, Address = x.Address, Description = x.Description, Name = x.Name }).ToList();
@@ -60,9 +55,7 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess= false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO UpdateBlock(int id, BlockDTO block, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateBlock(int id, BlockDTO block, string updatedBy = "")
         {
             if (id != block.Id)
             {
@@ -90,16 +83,13 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO DeleteBlock(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteBlock(int id, string updatedBy = "")
         {
             var entity = repository.GetById(id);//GetBlock(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Silinecek Kayıt Bilgisi Bulunamadı.(2)" };
             }
-
             try
             {
                 repository.Delete(entity);

@@ -5,8 +5,6 @@ using EntityFramework.Repository.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -24,13 +22,11 @@ namespace Business.Concretes
         {
             return repository.GetAll();
         }
-
         public ReturnObjectDTO GetUserType(int id)
         {
             var userType =  UserTypes().FirstOrDefault(x => x.Id == id);
             return new ReturnObjectDTO() { data = userType, successMessage = "İşlem Başarılı" };
         }
-
         public List<UserTypeDTO> GetAllUserTypes()
         {
             var userTypes =  repository.GetAll().Select(x=>new UserTypeDTO() { Id = x.Id, Name = x.Name}).ToList();
@@ -58,16 +54,14 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess= false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO UpdateUserType(int id, UserTypeDTO userType, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateUserType(int id, UserTypeDTO userType, string updatedBy = "")
         {
             if (id != userType.Id)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı." };
             }
 
-            var entity = repository.GetById(id);// GetUserType(id);
+            var entity = repository.GetById(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Güncellenecek Kayıt Bilgisi Bulunamadı.(2)" };
@@ -86,11 +80,9 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO DeleteUserType(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteUserType(int id, string updatedBy = "")
         {
-            var entity = repository.GetById(id);//GetUserType(id);
+            var entity = repository.GetById(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Silinecek Kayıt Bilgisi Bulunamadı.(2)" };

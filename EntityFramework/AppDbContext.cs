@@ -42,10 +42,6 @@ IdentityRoleClaim<string>, IdentityUserToken<string>>
             {
                 entity.ToTable("Role");
             });
-            //builder.Entity<IdentityUserRole<string>>(entity =>
-            //{
-            //    entity.ToTable("UserRoles");
-            //});
             builder.Entity<IdentityUserClaim<string>>(entity =>
             {
                 entity.ToTable("UserClaims");
@@ -62,7 +58,6 @@ IdentityRoleClaim<string>, IdentityUserToken<string>>
             {
                 entity.ToTable("UserTokens");
             });
-
             builder.Entity<UserRole>(userRole =>
             {
                 userRole.ToTable("UserRoles");
@@ -77,9 +72,6 @@ IdentityRoleClaim<string>, IdentityUserToken<string>>
                     .WithMany(r => r.UserRoles)
                     .HasForeignKey(ur => ur.UserId);
             });
-
-
-            //modelBuilder.ApplyConfiguration(new CompanyConfiguration());
         }
     }
 }

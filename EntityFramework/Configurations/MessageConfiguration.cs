@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Collections.Generic;
 
 namespace EntityFramework.Context.Configurations
 {
@@ -11,11 +10,6 @@ namespace EntityFramework.Context.Configurations
         {
             builder.ToTable("Messages");
             builder.HasKey(x => x.Id);
-  
-
         }
-
- 
-
     }
 }

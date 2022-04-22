@@ -1,10 +1,5 @@
 ﻿using EntityFramework.Context;
 using EntityFramework.Repository.Abstracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EntityFramework.Repository.Concretes
 {
@@ -20,7 +15,6 @@ namespace EntityFramework.Repository.Concretes
         {
             Context.SaveChanges();
         }
-
         public void Dispose()
         {
             Context?.Dispose();

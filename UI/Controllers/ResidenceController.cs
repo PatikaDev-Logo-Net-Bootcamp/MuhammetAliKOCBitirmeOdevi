@@ -4,7 +4,6 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 
@@ -39,16 +38,9 @@ namespace UI.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         public JsonResult AddBlock(BlockListDTO blockList)
         {
-            /* var errors = ModelState
-     .Where(x => x.Value.Errors.Count > 0)
-     .Select(x => new { x.Key, x.Value.Errors })
-     .ToArray();
-            */
-
             BlockDTO block = blockList.Block;
             var res = new ReturnObjectDTO();
 
@@ -75,12 +67,6 @@ namespace UI.Controllers
         [HttpPost]
         public JsonResult UpdateBlock(BlockListDTO blockList)
         {
-            /* var errors = ModelState
-     .Where(x => x.Value.Errors.Count > 0)
-     .Select(x => new { x.Key, x.Value.Errors })
-     .ToArray();
-            */
-
             BlockDTO block = blockList.Block;
             var res = new ReturnObjectDTO();
 
@@ -103,9 +89,6 @@ namespace UI.Controllers
 
             return new JsonResult(res);
         }
-
-
-
 
         public IActionResult FlatList()
         {
@@ -134,16 +117,9 @@ namespace UI.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         public JsonResult AddFlat(FlatListDTO flatList)
         {
-            /* var errors = ModelState
-     .Where(x => x.Value.Errors.Count > 0)
-     .Select(x => new { x.Key, x.Value.Errors })
-     .ToArray();
-            */
-
             FlatDTO flat = flatList.Flat;
             var res = new ReturnObjectDTO();
 
@@ -170,12 +146,6 @@ namespace UI.Controllers
         [HttpPost]
         public JsonResult UpdateFlat(FlatListDTO flatList)
         {
-            /* var errors = ModelState
-     .Where(x => x.Value.Errors.Count > 0)
-     .Select(x => new { x.Key, x.Value.Errors })
-     .ToArray();
-            */
-
             FlatDTO flat = flatList.Flat;
             var res = new ReturnObjectDTO();
 

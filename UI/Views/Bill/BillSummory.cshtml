@@ -63,8 +63,8 @@
                     </select>
 
                 </div>
-            </div>    
- 
+            </div>
+
             <div class="col-md-2" style="padding-left:0px; padding-right:0px;">
                 <div class="form-group">
                     <label>&nbsp</label><br />
@@ -80,63 +80,57 @@
 </form>
 
 
-<div class ="row">
+<div class="row">
     <div class="col-md-6">
 
 
 
-<table class="table table-hover">
-    <thead>
-        <tr>
+        <table class="table table-hover">
+            <thead>
+                <tr>
 
-            <th scope="col">
-                Ödeme Durumu
-            </th>
-            <th scope="col">
-                Miktar
-            </th>
+                    <th scope="col">
+                        Ödeme Durumu
+                    </th>
+                    <th scope="col">
+                        Miktar
+                    </th>
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr> 
-                <td class="">
-                    @item.Text
-                </td>
-                <td class="">
-                    @item.Amount
-                </td> 
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="">
+                            @item.Text
+                        </td>
+                        <td class="">
+                            @item.Amount
+                        </td>
 
-            </tr>
-        }
-    </tbody>
-</table>
-
-     </div>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
-
- 
-
-
-
 
 
 @section Scripts {
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    $(document).ready( function () {
+        $(document).ready(function () {
 
-         $("#Yearid").val($("#Yearidhidden").val());
-         $("#Mountid").val($("#Mountidhidden").val());
-         $("#BillTypeid").val($("#BillTypeidhidden").val());
-         
-    });
+            $("#Yearid").val($("#Yearidhidden").val());
+            $("#Mountid").val($("#Mountidhidden").val());
+            $("#BillTypeid").val($("#BillTypeidhidden").val());
 
-</script>
+        });
 
-    }
+    </script>
+
+}
 
 

@@ -10,7 +10,6 @@ namespace EntityFramework.Context.Configurations
         {
             builder.ToTable("Cars");
             builder.HasKey(x => x.Id);
-
         }
     }
 }

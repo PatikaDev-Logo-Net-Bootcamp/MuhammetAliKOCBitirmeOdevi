@@ -5,8 +5,6 @@ using EntityFramework.Repository.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -24,13 +22,11 @@ namespace Business.Concretes
         {
             return repository.GetAll();
         }
-
         public ReturnObjectDTO GetBillType(int id)
         {
             var billType =  BillTypes().FirstOrDefault(x => x.Id == id);
             return new ReturnObjectDTO() { data = billType, successMessage = "İşlem Başarılı" };
         }
-
         public List<BillTypeDTO> GetAllBillTypes()
         {
             var billTypes =  repository.GetAll().Select(x=>new BillTypeDTO() { Id = x.Id, Name = x.Name}).ToList();
@@ -58,9 +54,7 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess= false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO UpdateBillType(int id, BillTypeDTO billType, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateBillType(int id, BillTypeDTO billType, string updatedBy = "")
         {
             if (id != billType.Id)
             {
@@ -86,11 +80,9 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-        public ReturnObjectDTO DeleteBillType(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteBillType(int id, string updatedBy = "")
         {
-            var entity = repository.GetById(id);//GetBillType(id);
+            var entity = repository.GetById(id);
             if (entity == null)
             {
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ. Silinecek Kayıt Bilgisi Bulunamadı.(2)" };

@@ -1,9 +1,5 @@
 ﻿using Business.DTO;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Statics
 {
@@ -21,8 +17,7 @@ namespace Business.Statics
                                                                  new KodDTO(9,"Eylül"),
                                                                  new KodDTO(10,"Ekim"),
                                                                  new KodDTO(11,"Kasım"),
-                                                                 new KodDTO(12,"Aralık")                                                           
-
+                                                                 new KodDTO(12,"Aralık")
         };
     }
 }

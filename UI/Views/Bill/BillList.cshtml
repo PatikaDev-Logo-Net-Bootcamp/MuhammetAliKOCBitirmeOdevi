@@ -65,7 +65,7 @@
                 </div>
             </div>
 
-                        <div class="col-md-2">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label>Ödeme Durumu</label>
 
@@ -108,7 +108,6 @@
         <tr>
 
             <th scope="col">
-                @* <a asp-action="BillList" asp-route-billId="@ViewBag.BillId" asp-route-sortOrder="@ViewData["BlockSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Daire</a>*@
                 Daire
             </th>
             <th scope="col">
@@ -147,14 +146,14 @@
                 <td class="Paid">
                     @if (item.IsPaid)
                     {
-                       <span style='color:green;'>Ödendi</span>
+                        <span style='color:green;'>Ödendi</span>
                     }
                     else
                     {
-                      <span style='color:Red;'>Ödenmedi</span>
+                        <span style='color:Red;'>Ödenmedi</span>
                     }
 
- 
+
                 </td>
 
             </tr>
@@ -182,7 +181,7 @@
    asp-route-Yearid="@ViewData["CurrentFilterYearid"]"
    asp-route-Mountid="@ViewData["CurrentFilterMountid"]"
    asp-route-BillTypeid="@ViewData["CurrentFilterBillTypeid"]"
-      asp-route-isPaidid="@ViewData["CurrentFilterisPaidid"]"
+   asp-route-isPaidid="@ViewData["CurrentFilterisPaidid"]"
    asp-route-billId="@ViewData["BillId"]"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
@@ -192,24 +191,20 @@
 </a>
 
 
-
-
-
-
 @section Scripts {
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    $(document).ready( function () {
+        $(document).ready(function () {
 
-         $("#Yearid").val($("#Yearidhidden").val());
-         $("#Mountid").val($("#Mountidhidden").val());
-         $("#BillTypeid").val($("#BillTypeidhidden").val());
-          $("#isPaidid").val($("#isPaididhidden").val());
-    });
+            $("#Yearid").val($("#Yearidhidden").val());
+            $("#Mountid").val($("#Mountidhidden").val());
+            $("#BillTypeid").val($("#BillTypeidhidden").val());
+            $("#isPaidid").val($("#isPaididhidden").val());
+        });
 
-</script>
+    </script>
 
-    }
+}
 
 

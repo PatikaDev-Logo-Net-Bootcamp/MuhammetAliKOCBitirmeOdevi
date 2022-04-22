@@ -8,9 +8,6 @@
 
 <h2>Ödenmemiş Faturalar</h2>
 
-
-
-
 <form asp-action="BillListUnPaid" method="get">
     <div class="form-actions no-color">
 
@@ -28,9 +25,6 @@
                             <option value="@item.Id">@item.Name</option>
                         }
                     </select>
-
-
-
                 </div>
             </div>
 
@@ -46,7 +40,6 @@
                         }
 
                     </select>
-
                 </div>
             </div>
 
@@ -59,8 +52,6 @@
             </div>
         </div>
 
-
-
     </div>
 
 </form>
@@ -70,7 +61,6 @@
         <tr>
 
             <th scope="col">
-                @* <a asp-action="BillList" asp-route-billId="@ViewBag.BillId" asp-route-sortOrder="@ViewData["BlockSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Daire</a>*@
                 Daire
             </th>
             <th scope="col">
@@ -88,9 +78,6 @@
             <th>
                 İşlem
             </th>
-
-
-
         </tr>
     </thead>
     <tbody>
@@ -120,23 +107,15 @@
                         <span style='color:Red;'>Ödenmedi</span>
                     }
 
-
                 </td>
                 <td>
                     <button type="button" class="btn btn-success btnOdeme" data-billflatid="@item.Id">Ödeme Yap</button>
                 </td>
 
-
             </tr>
         }
     </tbody>
 </table>
-
-
-
-
-
-
 
 
 @section Scripts {

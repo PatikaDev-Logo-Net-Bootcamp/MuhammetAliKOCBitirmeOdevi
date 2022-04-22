@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -38,16 +36,11 @@ namespace Business.Concretes
                     Amount = x.Amount,
                     BillDTO = new BillDTO()
                     {
-                        Id = x.Bill.Id
-                                            ,
-                        BillTypeId = x.Bill.BillTypeId
-                                            ,
-                        BillTypeName = x.Bill.BillType.Name
-                                            ,
-                        Description = x.Bill.Description
-                                            ,
-                        Mount = x.Bill.Mount
-                                            ,
+                        Id = x.Bill.Id,
+                        BillTypeId = x.Bill.BillTypeId,
+                        BillTypeName = x.Bill.BillType.Name,
+                        Description = x.Bill.Description,
+                        Mount = x.Bill.Mount,
                         Year = x.Bill.Year
                     },
                     FlatDTO = new FlatDTO()
@@ -68,7 +61,6 @@ namespace Business.Concretes
                         UserTypeId = x.Flat.UserTypeId,
                         UserTypeName = x.Flat.UserType.Name
                     }
-
                 }).FirstOrDefault(x => x.Id == id);
             return new ReturnObjectDTO() { data = billFlat, successMessage = "İşlem Başarılı" };
         }
@@ -86,16 +78,11 @@ namespace Business.Concretes
                     Amount = x.Amount,
                     BillDTO = new BillDTO()
                     {
-                        Id = x.Bill.Id
-                                            ,
-                        BillTypeId = x.Bill.BillTypeId
-                                            ,
-                        BillTypeName = x.Bill.BillType.Name
-                                            ,
-                        Description = x.Bill.Description
-                                            ,
-                        Mount = x.Bill.Mount
-                                            ,
+                        Id = x.Bill.Id,
+                        BillTypeId = x.Bill.BillTypeId,
+                        BillTypeName = x.Bill.BillType.Name,
+                        Description = x.Bill.Description,
+                        Mount = x.Bill.Mount,
                         Year = x.Bill.Year
                     },
                     FlatDTO = new FlatDTO()
@@ -124,7 +111,7 @@ namespace Business.Concretes
         {
             var isPaidBoll = Convert.ToBoolean(isPaidid);
             var billFlats = repository.GetAllEntities().Include(u => u.Bill).ThenInclude(u => u.BillType).Include(u => u.Flat).ThenInclude(u => u.Block).Include(u => u.Flat).ThenInclude(u => u.User).Include(u => u.Flat).ThenInclude(u => u.UserType)
-                .Where(x=>(yearid==-1 || x.Bill.Year == yearid) && (mountid==-1 || x.Bill.Mount==mountid) && (billtypeid == 0 ||x.Bill.BillTypeId == billtypeid) && (isPaidid == -1 || x.IsPaid== isPaidBoll))
+                .Where(x => (yearid == -1 || x.Bill.Year == yearid) && (mountid == -1 || x.Bill.Mount == mountid) && (billtypeid == 0 || x.Bill.BillTypeId == billtypeid) && (isPaidid == -1 || x.IsPaid == isPaidBoll))
                 .Select(x => new BillFlatDTO()
                 {
                     Id = x.Id,
@@ -133,20 +120,15 @@ namespace Business.Concretes
                     Description = x.Description,
                     Amount = x.Amount,
                     IsPaid = x.IsPaid,
-                     PayUserId = x.PayUserId,
-                     PayTime    = x.PayTime,
+                    PayUserId = x.PayUserId,
+                    PayTime = x.PayTime,
                     BillDTO = new BillDTO()
                     {
-                        Id = x.Bill.Id
-                                            ,
-                        BillTypeId = x.Bill.BillTypeId
-                                            ,
-                        BillTypeName = x.Bill.BillType.Name
-                                            ,
-                        Description = x.Bill.Description
-                                            ,
-                        Mount = x.Bill.Mount
-                                            ,
+                        Id = x.Bill.Id,
+                        BillTypeId = x.Bill.BillTypeId,
+                        BillTypeName = x.Bill.BillType.Name,
+                        Description = x.Bill.Description,
+                        Mount = x.Bill.Mount,
                         Year = x.Bill.Year
                     },
                     FlatDTO = new FlatDTO()
@@ -170,6 +152,7 @@ namespace Business.Concretes
                 });
             return billFlats;
         }
+       
         public ReturnObjectDTO AddBillFlat(BillFlatDTO billFlat)
         {
             try
@@ -187,8 +170,6 @@ namespace Business.Concretes
                 repository.Add(billFlatEntity);
                 unitOfWork.Commit();
 
-                //billFlat.Id = billFlatEntity.Id;
-
                 var resData = GetBillFlat(billFlatEntity.Id).data;
                 return new ReturnObjectDTO() { data = resData, successMessage = "İşlem Başarılı" };
             }
@@ -198,8 +179,7 @@ namespace Business.Concretes
             }
         }
 
-
-        public ReturnObjectDTO UpdateBillFlat(int id, BillFlatDTO billFlat, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO UpdateBillFlat(int id, BillFlatDTO billFlat, string updatedBy = "")
         {
             if (id != billFlat.Id)
             {
@@ -232,8 +212,6 @@ namespace Business.Concretes
 
         public ReturnObjectDTO Pay(int id, string userid)
         {
- 
-
             var entity = repository.GetById(id);// GetBillFlat(id);
             if (entity == null)
             {
@@ -242,14 +220,14 @@ namespace Business.Concretes
 
             entity.IsPaid = true;
             entity.PayUserId = userid;
-            entity.PayTime = DateTime.Now;       
+            entity.PayTime = DateTime.Now;
 
             try
             {
                 repository.Update(entity);
                 unitOfWork.Commit();
-               
-                return new ReturnObjectDTO() {   successMessage = "İşlem Başarılı" };
+
+                return new ReturnObjectDTO() { successMessage = "İşlem Başarılı" };
             }
             catch (Exception)
             {
@@ -257,8 +235,7 @@ namespace Business.Concretes
             }
         }
 
-
-        public ReturnObjectDTO DeleteBillFlat(int id, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO DeleteBillFlat(int id, string updatedBy = "")
         {
             var entity = repository.GetById(id);//GetBillFlat(id);
             if (entity == null)
@@ -279,7 +256,7 @@ namespace Business.Concretes
 
         }
 
-        public ReturnObjectDTO AddOrUpdateBillFlat(List<BillFlatAjaxDTO> billflatdtos, string updatedBy = "Api Kullanicisi")
+        public ReturnObjectDTO AddOrUpdateBillFlat(List<BillFlatAjaxDTO> billflatdtos, string updatedBy = "")
         {
             var res = new List<BillFlatDTO>();
 
@@ -322,11 +299,7 @@ namespace Business.Concretes
                     }
 
                 }
-
-                //repository.AddRange(addList);
-                //repository.UpdateRange(updateList);
-                unitOfWork.Commit();
-
+               unitOfWork.Commit();
 
                 foreach (var item in addList)
                 {
@@ -337,8 +310,6 @@ namespace Business.Concretes
                     res.Add((BillFlatDTO)GetBillFlat(item.Id).data);
                 }
 
-                //res.AddRange(addList.Select(x => new BillFlatDTO() { Id = x.Id, Amount = x.Amount, Description = x.Description, BillId = x.BillId, FlatId = x.FlatId }).ToList());
-                //res.AddRange(updateList.Select(x => new BillFlatDTO() { Id = x.Id, Amount = x.Amount, Description = x.Description, BillId = x.BillId, FlatId = x.FlatId }).ToList());
                 return new ReturnObjectDTO() { data = res, successMessage = "İşlem Başarılı" };
             }
             catch (Exception)
@@ -346,9 +317,6 @@ namespace Business.Concretes
                 return new ReturnObjectDTO() { isSuccess = false, errorMessage = "İşlem BAŞARISIZ." };
             }
         }
-
-
-
 
         public List<BillFlatDTO> GetUserBillFlats(int yearid, int mountid, string userid, int isPaidid)
         {
@@ -367,16 +335,11 @@ namespace Business.Concretes
                     PayUserId = x.PayUserId,
                     BillDTO = new BillDTO()
                     {
-                        Id = x.Bill.Id
-                                            ,
-                        BillTypeId = x.Bill.BillTypeId
-                                            ,
-                        BillTypeName = x.Bill.BillType.Name
-                                            ,
-                        Description = x.Bill.Description
-                                            ,
-                        Mount = x.Bill.Mount
-                                            ,
+                        Id = x.Bill.Id,
+                        BillTypeId = x.Bill.BillTypeId,
+                        BillTypeName = x.Bill.BillType.Name,
+                        Description = x.Bill.Description,
+                        Mount = x.Bill.Mount,
                         Year = x.Bill.Year
                     },
                     FlatDTO = new FlatDTO()

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Business.DTO
 {
@@ -13,7 +8,6 @@ namespace Business.DTO
         [Required(ErrorMessage = "Açıklama girilmesi zorunlu!")]
         public string Aciklama { get; set; }
         public string Plaka { get; set; }
-
         public string UserId { get; set; }
     }
 }
