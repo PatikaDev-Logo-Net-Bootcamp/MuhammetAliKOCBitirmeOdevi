@@ -127,3 +127,8 @@
 
 - Güvenli çıkış işlemi menünün alt kısmında bulunan buton yardımıyla yapılabilmektedir. 
 
+--Son olarak kullanıcılar yetkisi olmayan bir sayfasa girme giriminde bulunursalar Erişim Engellendi sayfasına yönlendiriliyorlar.
+
+<img width="593" alt="Accessdenied" src="https://user-images.githubusercontent.com/71590181/164701228-3699010a-52ef-460e-8e22-ae8df757d010.PNG">
+
+
