@@ -11,13 +11,13 @@ namespace UI.Controllers
     [Authorize]
     public class AuthorizeController : Controller
     {
-        private readonly ILogger<UserController> _logger;
+        private readonly ILogger<AuthorizeController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
 
 
-        public AuthorizeController(ILogger<UserController> logger, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
+        public AuthorizeController(ILogger<AuthorizeController> logger, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
         {
             _logger = logger;
             _userManager = userManager;
