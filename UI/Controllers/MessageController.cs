@@ -33,14 +33,14 @@ namespace UI.Controllers
 
             var currentUser = _userManager.GetUserAsync(User).Result;            
 
-            var messagedUsers = _userManager.Users.Where(x => x.Id != currentUser.Id && ( x.ReceivedMessages.Any(y => y.ReceiveUserId == x.Id || y.SendUserId == x.Id) || (x.SendedMessages.Any(y => y.ReceiveUserId == x.Id || y.SendUserId == x.Id)))).Select(x => new UserDTO()
+            var messagedUsers = _userManager.Users.Where(x => x.Id != currentUser.Id && ((x.ReceivedMessages.Count(y => y.SendUserId == currentUser.Id) > 0 || (x.SendedMessages.Count(y => y.ReceiveUserId == currentUser.Id) > 0)))).Select(x => new UserDTO()
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 UserName = x.UserName,
                 Email = x.Email,
-                LastMessageDate = _messageService.Messages().Where(m=>(m.SendUserId == x.Id && m.ReceiveUserId == currentUser.Id) || (m.SendUserId == currentUser.Id && m.ReceiveUserId == x.Id)).OrderByDescending(m=>m.DateCreated).FirstOrDefault().DateCreated,               
+                LastMessageDate = _messageService.Messages().Where(m=>(m.SendUserId == x.Id && m.ReceiveUserId == currentUser.Id) || (m.SendUserId == currentUser.Id && m.ReceiveUserId == x.Id)).OrderByDescending(m=>m.DateCreated).FirstOrDefault().DateCreated,             
 
                 UnLookedMessagesCount = _messageService.Messages().Where(m => m.SendUserId == x.Id && m.ReceiveUserId == currentUser.Id && m.IsLooked==false).Count()
             }).OrderBy(x=>x.LastMessageDate).ThenBy(x=>x.UnLookedMessagesCount).ToList();

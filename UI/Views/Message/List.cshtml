@@ -301,7 +301,8 @@
 
             $("#SendMessage").on("click", function () {
 
-                let receiverUserId = chatDiscussionElement.data("chatuserid");
+                //let receiverUserId = chatDiscussionElement.data("chatuserid");
+                let receiverUserId            = chatdiscussion.dataset.chatuserid;
                 let text = $("#message").val();
 
                 var data = { receiverUserId: receiverUserId, text: text }
@@ -374,7 +375,8 @@
                 success: function (result) {
                     if (result.isSuccess) {
 
-                        let chatUserIdKontrol = chatDiscussionElement.data("chatuserid");
+                        //let chatUserIdKontrol = chatDiscussionElement.data("chatuserid");
+                        let chatUserIdKontrol = chatdiscussion.dataset.chatuserid;
 
                         /*kontol et! ajax sorgusu devam ederken kullanıcı başka bir kullanıcı ile sohbet etmeye başlamış olabilir. Eğer öyleyse birşey yapma!*/
                         if (chatUserIdKontrol != chatUserId)
