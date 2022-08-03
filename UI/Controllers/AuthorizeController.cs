@@ -47,6 +47,14 @@ namespace UI.Controllers
                         _logger.LogInformation($"{model.Email} Maail user logged in.");
                         return RedirectToAction("Index", "Home");
                     }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Kullanıcı Adı yada Şifrenizi Kontrol Ediniz.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Kullanıcı Adı yada Şifrenizi Kontrol Ediniz.");
                 }
 
             }

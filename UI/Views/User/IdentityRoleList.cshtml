@@ -304,8 +304,10 @@
                         $("#UserNameForUpdate").val(result.data.userName);
                         $("#EmailForUpdate").val(result.data.email);
                         $("#PhoneNumberForUpdate").val(result.data.phoneNumber);
+                        //console.log(result.data.roles);
+                        if(result.data.roles.length>0){
                         $("#RoleSelectedForUpdate").val(result.data.roles[0].id);
-
+                        }
 
 
                         $('#modalUpdate').modal();

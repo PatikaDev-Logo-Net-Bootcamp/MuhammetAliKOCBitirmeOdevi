@@ -21,7 +21,7 @@ namespace UI
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 try
                 {
-                    var context = services.GetRequiredService<AppDbContext>();
+                    //var context = services.GetRequiredService<AppDbContext>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<Role>>();
                     await ContextSeed.SeedRoleAsync(userManager, roleManager);
