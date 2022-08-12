@@ -20,7 +20,6 @@ namespace API.Controllers
             this.jwtService = jwtService;
         }
 
-        /*Token buradan alınır.*/
         [AllowAnonymous]
         [HttpPost]
         [Route("authenticate")]
